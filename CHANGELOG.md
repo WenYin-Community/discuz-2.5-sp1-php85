@@ -44,6 +44,12 @@
 - `dreferer()` 限制同站跳转；`HTTP_HOST`/`PHP_SELF` 过滤。
 - nginx 屏蔽 `forumdata/`、`utilities/`，禁止附件目录执行脚本，`install.php` 仅内网可访问。
 
+### 显示与部署修复
+
+- 修复中文显示为方块/替换字符：PHP 默认 `default_charset=UTF-8` 导致响应头与 GBK 正文不一致。`config.php` 的 `$headercharset` 改为 1，并在 `docker/php.ini` 设置 `default_charset = gb2312`。
+- 修复初始数据编码：安装 SQL 必须以 GBK 字节导入，否则 `游客/管理员` 等初始文本会以 UTF-8 字节写入 gbk 库。
+- 修复 `install.php` 源码泄露：nginx 精确匹配 location 需显式配置 fastcgi，否则 PHP 源码会被当作静态文件下载。
+
 ### 部署提示
 
 - 覆盖部署时请勿覆盖 `config.php` 与 `forumdata/`（缓存、编译模板、日志）。

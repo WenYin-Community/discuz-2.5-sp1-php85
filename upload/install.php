@@ -177,7 +177,7 @@ $PHP_SELF	= ($_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME
 @set_time_limit(1000);
 @include DISCUZ_ROOT.'./config.php';
 
-header('Content-Type: text/html; charset='.$lang['charset']);
+header('Content-Type: text/html; charset='.(empty($lang['charset']) ? 'gb2312' : $lang['charset']));
 $version = '2.5F_SP1';
 
 function loginit($log) {

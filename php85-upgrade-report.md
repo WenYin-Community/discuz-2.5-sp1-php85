@@ -93,6 +93,8 @@ PHP 8 把大量“未定义变量/数组下标”提升为 E_WARNING 并输出�
 - 所有源码文件保持 **GB2312/GBK + CRLF**，未做任何 UTF-8 转换；新增/修改的注释以 GBK 写回（工具：`iconv -f gb2312`）。
 - `htmlspecialchars()` 统一改为字节安全的 `dhtmlspecialchars()`（13 处）；仅 `install.php` 与 `include/db_mysql_error.php`（不加载 `global.php` 的上下文）使用显式字符集 `htmlspecialchars($s, ENT_COMPAT, 'ISO-8859-1')`，与 PHP 5 的字节透传行为一致。
 - 页面继续声明 `charset=gb2312`；数据库/表/连接均为 `gbk`。
+- **HTTP 响应头必须与正文一致**：PHP 的 `default_charset` 默认是 UTF-8，会在响应头写入 `charset=UTF-8`，浏览器据此解码 GBK 正文会把中文显示成方块/替换字符。修复：`config.php` 的 `$headercharset` 设为 1（由 common.php 发送 `charset=gb2312`），并在 `docker/php.ini` 设置 `default_charset = gb2312` 覆盖未加载 common.php 的页面。
+- **初始数据必须以 GBK 字节导入**：`install.php` 内嵌 SQL 的导入脚本若按 UTF-8 写出，会把“游客/管理员”等初始数据变成 UTF-8 字节存进 gbk 库，页面出现方块。重新以 GBK 编码执行安装 SQL 后，`cdb_usergroups.grouptitle` 等字段的 HEX 与 GBK 编码一致，页面 0 个非法字节。
 - 前台表单以 GBK 提交（浏览器按 `charset=gb2312` 编码），实测写入字节与 GBK 编码逐字节一致。
 
 ## 7. 运行环境差异（php-fpm vs mod_php）
@@ -113,6 +115,7 @@ PHP 8 把大量“未定义变量/数组下标”提升为 E_WARNING 并输出�
 - `dreferer()` 限制跳转目标必须同站，堵住开放重定向。
 - `$PHP_SELF` 过滤 CR/LF 与引号；`HTTP_HOST` 做白名单校验。
 - nginx 屏蔽 `forumdata/`、`utilities/` 直链，禁止附件目录执行脚本，`install.php` 仅内网可访问。
+- **注意**：nginx 的精确匹配 `location = /install.php` 不会继承 `~ \.php$` 的 fastcgi 配置。若该块内只写 allow/deny，nginx 会把 install.php 当作静态文件返回，**直接泄露源码**。已在块内显式加入 `fastcgi_pass/include fastcgi_params/SCRIPT_FILENAME`，实测返回 `text/html; charset=gb2312` 且正文无 `<?php`。
 
 ## 9. 验证记录
 

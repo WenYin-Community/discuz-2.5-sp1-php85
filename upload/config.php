@@ -18,7 +18,7 @@
 	$cookiedomain = '';					// cookie 作用域	
 	$cookiepath = '/';					// cookie 作用路径		
 					
-	$headercharset = 0;					// 强制设置字符集,只乱码时使用
+	$headercharset = 1;					// 强制设置字符集,只乱码时使用
 	$errorreport = 1;					// 是否报告PHP错误 0= admin(safe), 1 = every one
 	$onlinehold = 900;					// 在线保持时间(单位:秒)
 	$pconnect = 0;						// 数据库持久连接 0=关闭, 1=打开

@@ -28,7 +28,7 @@ $discuz_action = 111;
 $cachelife_time = 300;		// Life span for cache of searching in specified range of time
 $cachelife_text = 3600;		// Life span for cache of searching in specified range of full text
 
-if(!submitcheck('searchsubmit', 1) && !$page) {
+if(empty($searchid) && !$page && !submitcheck('searchsubmit', 1)) {
 
 	$forumselect = forumselect();
 	include template('search');
@@ -39,6 +39,8 @@ if(!submitcheck('searchsubmit', 1) && !$page) {
 	$ascdesc = $ascdesc == 'asc' ? 'asc' : 'desc';
 
 	if(isset($searchid)) {
+
+		$searchid = intval($searchid);
 
 		require DISCUZ_ROOT.'./include/misc.php';
 

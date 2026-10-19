@@ -75,7 +75,8 @@ PHP 8 把大量“未定义变量/数组下标”提升为 E_WARNING 并输出�
   - `cdb_caches` 的 `TYPE=HEAP MAX_ROWS=2000` 改为 `ENGINE=InnoDB`（MySQL 5.5+ 已移除 `TYPE=`，且 MEMORY 不支持 `TEXT` 列）。
   - 建库语句追加 `DEFAULT CHARACTER SET gbk`，并在库已存在时执行 `ALTER DATABASE ... DEFAULT CHARACTER SET gbk`。
   - 修复 `$query - $db->query(...)` 笔误（PHP 8 下对对象做减法会致命）。
-- 实测：35 张表全部导入成功，初始数据（设置/用户组/表情/风格/模板/统计）完整。
+- `cdb_members.password` 放宽为 `varchar(255)` 以容纳 bcrypt 哈希。
+- 实测：35 张表全部导入成功，初始数据（设置/用户组/表情/风格/模板/统计）完整；安装向导（语言→配置→环境检查→创建管理员）全程 0 告警。
 - 服务器配置：`--character-set-server=gbk --collation-server=gbk_chinese_ci --sql-mode=`（严格模式会让大量“缺列 INSERT”失败）。
 
 ## 5. 模板与缓存
@@ -108,6 +109,7 @@ PHP 8 把大量“未定义变量/数组下标”提升为 E_WARNING 并输出�
 - 输入中的身份变量（`adminid/groupid/discuz_uid/discuz_user/discuz_pw/discuz_secques/accessmasks` 等）从全局提取中剔除，无法再用 URL/表单覆盖会话身份。
 - `extract()` 改用 `EXTR_SKIP`；`daddslashes` 始终转义。
 - 认证 cookie（`_discuz_uid/_discuz_pw/_discuz_secques/sid`）加 `HttpOnly`。
+- 密码由 md5 升级为 bcrypt（`password_hash`），历史 md5 登录后自动升级；`submitcheck()` 的 GET 提交也强制 formhash。
 - 会话/安全令牌生成由 `mt_rand` 改为 `random_int`。
 - 后台二次密码比较改为 `hash_equals`（密码存储仍是 md5，老用户可正常登录）。
 - 附件上传：白名单为空时回退内置安全白名单，并始终拒绝 `php/php4/php5/php7/php8/phtml/pht/phar/shtml/htaccess` 等可执行扩展名。
@@ -131,13 +133,13 @@ PHP 8 把大量“未定义变量/数组下标”提升为 E_WARNING 并输出�
 | bbcode | `[img]`、`[img=w,h]`、`[url]` | 正确转换，无内容丢失 |
 | 后台 | 菜单及 20+ 模块 | 全部可访问，0 告警 |
 
-## 10. 已知限制与未实施项
+## 10. 遗留问题处理记录（本次已全部处理）
 
-- **密码仍为 md5**（无盐）。改为 `password_hash` 会导致所有老用户无法登录，且属于认证逻辑红线，本次未改。
-- `submitcheck()` 的 `$allowget` 对 GET 提交仍跳过 formhash（保持 login.txt 中记录的快速登录接口）；POST 均校验 formhash。
-- 未做模板级 XSS 全面审计（老模板存在大量直接输出变量的位置），仅修复了移植相关的错误页/重定向/主机头问题。
-- `utilities/` 下的升级脚本已去除已删除函数调用，但未做完整回归（属于一次性工具，不应部署到生产）。
-- `include/db_mysql_error.php` 的邮件通知在容器内无 MTA，不会真正发信（不影响页面）。
+- **密码哈希**：由 md5 升级为 `password_hash(PASSWORD_DEFAULT)`（bcrypt，cost 12）。新增 `dpassword_hash/dpassword_verify/dpassword_needs_rehash`；兼容历史 md5 并在登录成功后自动升级。涉及注册、登录、改密、找回密码、后台添加/修改会员、后台二次验证、安装程序。`cdb_members.password` 由 `varchar(32)` 放宽为 `varchar(255)`（bcrypt 哈希 60 字符，原字段会截断）。
+- **submitcheck 的 GET 绕过**：GET 与 POST 一律校验 `formhash` 与来源主机，`$allowget` 仅表示允许 GET 方法。搜索结果页（`searchid`）作为只读视图单独放行并对 `searchid` 强制 `intval`；所有表单（登录、搜索、后台各模块）本身均带 formhash。注意：`login.txt` 中记录的无令牌快速登录 GET 接口不再可用。
+- **XSS**：修复后台框架页 `action/extr/sid` 反射（未认证即可触发）、`Referer` 进入登录/注册隐藏域的注入、`dreferer()` 的引号/尖括号/换行过滤；`install.php` 的 `action/language` 输入补齐 `isset`。用户可控内容（主题、帖子、短消息、签名）在下游均有 `dhtmlspecialchars`/discuzcode 处理。
+- **utilities/**：去除全部已删除函数（`set_magic_quotes_runtime`）与裸 `mysql_*` 调用（`upgrade1.php`），`restore.php`/`install.php` 的 SQL 解析告警（空行取 `$query[0]`、未初始化数组键）已修。历史 2.2→2.5 升级脚本需要 2.2 数据库才能完整回归，当前环境无法复现；脚本仍属于一次性工具，不应部署。
+- **邮件**：容器内不含 MTA，新增 `docker/capture-mail.sh` 作为 `sendmail_path`，`mail()` 的邮件写入 `forumdata/mail.log`，找回密码等依赖邮件的流程可在本地验证（实测中文正文与标题正常）。
 
 ## 11. 回滚方案
 

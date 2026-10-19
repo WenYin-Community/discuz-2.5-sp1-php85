@@ -122,8 +122,9 @@ function splitsql($sql){
 	unset($sql);
 	foreach($queriesarray as $query) {
 		$queries = explode("\n", trim($query));
+		$ret[$num] = '';
 		foreach($queries as $query) {
-			$ret[$num] .= $query[0] == "#" ? NULL : $query;
+			$ret[$num] .= (isset($query[0]) && $query[0] == "#") ? NULL : $query;
 		}
 		$num++;
 	}			

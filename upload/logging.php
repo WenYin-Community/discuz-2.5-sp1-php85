@@ -65,19 +65,24 @@ if($action == 'logout') {
 		}
 
 		$secques = ($questionid && $answer) ? quescrypt($questionid, $answer): '';
-		$errorlog = "$timestamp\t$username\t".substr($password, 0, 2);
-		for($i = 3; $i < strlen($password); $i++) {
+		$passwordhash = md5($password);
+		$errorlog = "$timestamp\t$username\t".substr($passwordhash, 0, 2);
+		for($i = 3; $i < strlen($passwordhash); $i++) {
 			$errorlog .= '*';
 		}
-		$errorlog .= substr($password, -1)."\t".($secques ? "Ques #$questionid" : '')."\t$onlineip\n";
+		$errorlog .= substr($passwordhash, -1)."\t".($secques ? "Ques #$questionid" : '')."\t$onlineip\n";
 
-		$password = md5($password);
-
-		$query = $db->query("SELECT m.uid AS discuz_uid, m.username AS discuz_user, m.password AS discuz_pw, m.adminid, m.groupid, m.credit, m.styleid AS styleidmem, m.lastvisit, m.lastpost, u.type as usertype, u.creditshigher, u.creditslower, u.allowinvisible
+		$query = $db->query("SELECT m.uid AS discuz_uid, m.username AS discuz_user, m.password AS discuz_pw, m.adminid, m.groupid, m.credit, m.secques, m.styleid AS styleidmem, m.lastvisit, m.lastpost, u.type as usertype, u.creditshigher, u.creditslower, u.allowinvisible
 					FROM $table_members m LEFT JOIN $table_usergroups u USING (groupid)
-					WHERE username='$username' AND password='$password' AND secques='$secques'");
+					WHERE username='$username'");
 		$memberrow = $db->fetch_array($query);
-		if(is_array($memberrow)) {
+		if(is_array($memberrow) && dpassword_verify($password, $memberrow['discuz_pw']) && $memberrow['secques'] == $secques) {
+			// 历史 md5 或旧算法: 登录成功后自动升级为 password_hash
+			if(dpassword_needs_rehash($memberrow['discuz_pw'])) {
+				$newhash = dpassword_hash($password);
+				$db->query("UPDATE $table_members SET password='$newhash' WHERE uid='$memberrow[discuz_uid]'");
+				$memberrow['discuz_pw'] = $newhash;
+			}
 			// 登录必须覆盖已有的同名全局变量(adminid/groupid/discuz_uid 等), 因此用 EXTR_OVERWRITE
 			extract($memberrow, EXTR_OVERWRITE);
 		} else {
@@ -117,7 +122,7 @@ if($action == 'logout') {
 					$_DCACHE['settings']['styleid']) : $_POST['styleid'];
 			
 			$_cookietime = isset($_POST['cookietime']) ? $_POST['cookietime'] :
-					($_COOKIE['_cookietime'] ? $_COOKIE['_cookietime'] : 0);
+					(!empty($_COOKIE['_cookietime']) ? $_COOKIE['_cookietime'] : 0);
 			$cookietime = empty($_cookietime) ? 0 : $timestamp + $_cookietime;
 
 			setcookie('_cookietime', $_cookietime, $timestamp + 31536000, $cookiepath, $cookiedomain);

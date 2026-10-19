@@ -155,12 +155,12 @@ if(!isset($action)) {
 		require DISCUZ_ROOT.'./include/discuzcode.php';
 
 		if($newpassword) {
-			if(md5($oldpassword) != $discuz_pw) {
+			if(!dpassword_verify($oldpassword, $discuz_pw)) {
 				showmessage('profile_passwd_wrong', NULL, 'HALTED');
 			} elseif(!$newpassword || $newpassword != addslashes($newpassword)) {
 				showmessage('profile_passwd_illegal');
 			}
-			$newpassword = md5($newpassword);
+			$newpassword = dpassword_hash($newpassword);
 			$newpasswdadd = ", password='$newpassword'";
 		} else {
 			$newpasswdadd = '';
@@ -169,7 +169,7 @@ if(!isset($action)) {
 		if ($questionidnew == -1 || (!$discuz_secques && $questionidnew == 0 && strlen($answernew) == 0)) {
 			$secquesnew = $discuz_secques;
 		} else {
-			if(md5($oldpassword) != $discuz_pw) {
+			if(!dpassword_verify($oldpassword, $discuz_pw)) {
 				showmessage('secques_change_passwd_wrong', NULL, 'HALTED');
 			}
 			$secquesnew = quescrypt($questionidnew, $answernew);
@@ -185,7 +185,7 @@ if(!isset($action)) {
 		$emailold = $db->result($query, 0);
 		if($emailnew != $emailold) {
 			$emailchange = TRUE;
-			if(md5($oldpassword) != $discuz_pw) {
+			if(!dpassword_verify($oldpassword, $discuz_pw)) {
 				showmessage('mail_change_passwd_wrong', NULL, 'HALTED');
 			}
 			if(!$doublee) {

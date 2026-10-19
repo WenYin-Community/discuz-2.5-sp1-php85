@@ -120,7 +120,7 @@ if(!submitcheck('regsubmit')) {
 		}
 	}
 
-	$password = md5($password);
+	$password = dpassword_hash($password);
 	$secques = quescrypt($questionid, $answer);
 
 	$dateformatnew = str_replace('mm', 'n', $dateformatnew);

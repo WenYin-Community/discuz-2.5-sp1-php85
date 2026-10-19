@@ -78,7 +78,7 @@ function runquery($query) {
 	foreach($expquery as $sql) {
 		$sql = trim($sql);
 		if($sql != "" && $sql[0] != "#") {
-			mysql_query(str_replace("cdb_", $tablepre, $sql)) or die(mysql_error());
+			$GLOBALS['db']->query(str_replace("cdb_", $tablepre, $sql)) or die($GLOBALS['db']->error());
 		}
 	}
 }

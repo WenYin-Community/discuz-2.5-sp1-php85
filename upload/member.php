@@ -158,7 +158,7 @@ if($action == 'online') {
 	if(!submitcheck('getpwsubmit') || $newpasswd1 != $newpasswd2) {
 		include template('getpasswd');
 	} else {
-		$password = md5($newpasswd1);
+		$password = dpassword_hash($newpasswd1);
 		$query = $db->query("UPDATE $table_members SET password='$password', identifying='' WHERE uid='$uid'");
 		showmessage('getpasswd_succeed');
 	}	

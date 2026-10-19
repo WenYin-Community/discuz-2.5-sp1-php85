@@ -6,8 +6,8 @@
 </head>
 
 <frameset cols="160,*" frameborder="no" border="0" framespacing="0" rows="*"> 
-<frame name="menu" noresize scrolling="yes" src="admincp.php?action=menu&sid=<?=$sid?>">
+<frame name="menu" noresize scrolling="yes" src="admincp.php?action=menu&sid=<?=urlencode($sid)?>">
 <frameset rows="20,*" frameborder="no" border="0" framespacing="0" cols="*"> 
-<frame name="top" noresize scrolling="no" src="admincp.php?action=top&sid=<?=$sid?>">
-<frame name="main" noresize scrolling="yes" src="admincp.php?action=<?=$action?>&extr=<?=$extr?>&sid=<?=$sid?>">
+<frame name="top" noresize scrolling="no" src="admincp.php?action=top&sid=<?=urlencode($sid)?>">
+<frame name="main" noresize scrolling="yes" src="admincp.php?action=<?=urlencode($action)?>&extr=<?=urlencode($extr)?>&sid=<?=urlencode($sid)?>">
 </frameset></frameset></html>

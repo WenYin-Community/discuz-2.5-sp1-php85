@@ -170,9 +170,9 @@ http://www.Discuz.com；北京康盛世纪科技有限公司的官方网站为 http://www.comsenz.c
 error_reporting(7);
 // PHP 8 起 set_magic_quotes_runtime() 已移除, 安装程序无需再做魔术引号设置
 define('IN_DISCUZ', TRUE);
-$action		= $_POST['action'] ? $_POST['action'] : $_GET['action'];
-$language	= $_POST['language'] ? $_POST['language'] : $_GET['language'];
-$PHP_SELF	= ($_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME']).'?language='.$language;
+$action		= isset($_POST['action']) && $_POST['action'] ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
+$language	= isset($_POST['language']) && $_POST['language'] ? $_POST['language'] : (isset($_GET['language']) ? $_GET['language'] : 'chinese_gb2312');
+$PHP_SELF	= (isset($_SERVER['PHP_SELF']) && $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : (isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '')).'?language='.urlencode($language);
 
 @set_time_limit(1000);
 @include DISCUZ_ROOT.'./config.php';
@@ -198,8 +198,9 @@ function runquery($sql) {
 	$num = 0;
 	foreach(explode(";\n", trim($sql)) as $query) {
 		$queries = explode("\n", trim($query));
+		$ret[$num] = '';
 		foreach($queries as $query) {
-			$ret[$num] .= $query[0] == '#' ? NULL : $query;
+			$ret[$num] .= (isset($query[0]) && $query[0] == '#') ? NULL : $query;
 		}
 		$num++;
 	}
@@ -588,7 +589,7 @@ if(!$action) {
 
 } elseif($action == 'environment') {
 
-	if($_POST['saveconfig'] && is_writeable('./config.php')) {
+	if(!empty($_POST['saveconfig']) && is_writeable('./config.php')) {
 
 		$dbhost = $_POST['dbhost'];
 		$dbuser = $_POST['dbuser'];
@@ -632,8 +633,8 @@ if(!$action) {
 		$msg .= "<font color=\"#FF0000\">{$lang['php_version_406']}</font>\t";
 	}
 
-	if(@ini_get(file_uploads)) {
-		$max_size = @ini_get(upload_max_filesize);
+	if(@ini_get('file_uploads')) {
+		$max_size = @ini_get('upload_max_filesize');
 		$curr_upload_status = $lang['attach_enabled'].$max_size;
 		$msg .= $lang['attach_enabled_info'].$max_size."\t";
 	} else {
@@ -1236,7 +1237,7 @@ DROP TABLE IF EXISTS cdb_members;
 CREATE TABLE cdb_members (
   uid mediumint(8) unsigned NOT NULL auto_increment,
   username varchar(15) NOT NULL default '',
-  password varchar(32) NOT NULL default '',
+  password varchar(255) NOT NULL default '',
   secques varchar(8) NOT NULL default '',
   gender tinyint(1) NOT NULL default '0',
   adminid smallint(3) NOT NULL default '0',
@@ -1756,7 +1757,7 @@ EOT;
 	runquery($sql);
 	$db->query("DELETE FROM {$tablepre}members");
 	$db->query("INSERT INTO {$tablepre}members (username, password, adminid, groupid, regip, regdate, lastvisit, lastpost, email, dateformat, timeformat, showemail, newsletter, timeoffset)
-		VALUES ('$username', '".md5($password1)."', '1', '1', 'hidden', '".time()."', '".time()."', '".time()."', '$email', 'Y-n-j', 'h:i A', '1', '1', '8');");
+		VALUES ('$username', '".password_hash($password1, PASSWORD_DEFAULT)."', '1', '1', 'hidden', '".time()."', '".time()."', '".time()."', '$email', 'Y-n-j', 'h:i A', '1', '1', '8');");
 
 echo"          </td>\n";
 echo"        </tr>\n";

@@ -60,7 +60,7 @@ if($action == 'addmember') {
 
 		$newgroupid = explode('|', $newgroupid);
 		$db->query("INSERT INTO $table_members (username, password, gender, adminid, groupid, regip, regdate, lastvisit, lastactivity, postnum, credit, email, tpp, ppp, styleid, dateformat, timeformat, showemail, newsletter, timeoffset)
-			VALUES ('$newusername', '".md5($newpassword)."', '0', '$newgroupid[0]', '$newgroupid[1]', 'Manual Acting', '$timestamp', '$timestamp', '$timestamp', '0', '0', '$newemail', '0', '0', '0', '{$_DCACHE['settings']['dateformat']}', '{$_DCACHE['settings']['timeformat']}', '1', '1', '{$_DCACHE['settings']['timeoffset']}')");
+			VALUES ('$newusername', '".dpassword_hash($newpassword)."', '0', '$newgroupid[0]', '$newgroupid[1]', 'Manual Acting', '$timestamp', '$timestamp', '$timestamp', '0', '0', '$newemail', '0', '0', '0', '{$_DCACHE['settings']['dateformat']}', '{$_DCACHE['settings']['timeformat']}', '1', '1', '{$_DCACHE['settings']['timeoffset']}')");
 
 		if($emailnotify == 'yes') {
 			sendmail($newemail, 'add_member_subject', 'add_member_message');
@@ -444,7 +444,7 @@ if($action == 'addmember') {
 		$regdatenew = strtotime($regdatenew);
 		$lastvisitnew = strtotime($lastvisitnew);
 
-		$passwordadd = $passwordnew ? ", password='".md5($passwordnew)."'" : NULL;
+		$passwordadd = $passwordnew ? ", password='".dpassword_hash($passwordnew)."'" : NULL;
 		$secquesadd = $clearquestion ? ", secques=''" : NULL;
 
 		$dateformatnew = str_replace('mm', 'n', $dateformatnew);

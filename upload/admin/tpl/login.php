@@ -1,6 +1,6 @@
 <?php  if(!defined('IN_ADMINCP')) exit('Access Denied'); ?>
 <br><br><br><br><br><br>
-<form method="post" action="admincp.php?extr=<?=$extr?>&action=<?=$action?>">
+<form method="post" action="admincp.php?extr=<?=urlencode($extr)?>&action=<?=urlencode($action)?>">
 <input type="hidden" name="cploginsubmit" value="1">
 <table cellspacing="0" cellpadding="0" border="0" width="60%" align="center">
 <tr><td bgcolor="<?=BORDERCOLOR?>">

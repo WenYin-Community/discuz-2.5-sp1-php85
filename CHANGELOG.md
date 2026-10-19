@@ -50,6 +50,14 @@
 - 修复初始数据编码：安装 SQL 必须以 GBK 字节导入，否则 `游客/管理员` 等初始文本会以 UTF-8 字节写入 gbk 库。
 - 修复 `install.php` 源码泄露：nginx 精确匹配 location 需显式配置 fastcgi，否则 PHP 源码会被当作静态文件下载。
 
+### 遗留问题处理
+
+- 密码哈希由 md5 升级为 `password_hash`（bcrypt），登录成功时自动升级历史 md5；`cdb_members.password` 放宽为 `varchar(255)`。
+- `submitcheck()` 对 GET/POST 一律校验 formhash；搜索结果页按只读视图放行。
+- 修复后台框架页 `action/extr/sid` 反射型 XSS、Referer 隐藏域注入；`install.php` 输入补齐守卫并去掉 `ini_get()` 裸常量。
+- `utilities/` 去除残留 `mysql_*`；`install.php`/`restore.php` 的 SQL 解析告警修复。
+- 新增本地邮件捕获（`docker/capture-mail.sh`），`mail()` 输出到 `forumdata/mail.log`。
+
 ### 部署提示
 
 - 覆盖部署时请勿覆盖 `config.php` 与 `forumdata/`（缓存、编译模板、日志）。

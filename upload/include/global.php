@@ -114,6 +114,8 @@ function dreferer() {
 	if(!strpos($referer, '.php') || strpos($referer, 'logging.php')) {
 		$referer = 'index.php';
 	}
+	// 防 XSS / 头注入: Referer 会进入表单隐藏域与跳转链接, 去掉引号、尖括号与换行
+	$referer = str_replace(array("\r", "\n", '"', "'", '<', '>'), '', $referer);
 	// 只允许跳回本站, 防止借助 Referer 构造开放重定向
 	if(preg_match("#^([a-z]+:)?//#i", $referer)) {
 		$refhost = preg_replace("#^([a-z]+:)?//([^/]+).*#i", "\\2", $referer);
@@ -247,6 +249,28 @@ function parse_output_link($m) {
 	return transsid($m[3], '<a'.$m[1].'href='.$m[2]);
 }
 
+// 密码哈希: 新密码使用 password_hash, 历史 md5 在登录成功后自动升级
+function dpassword_hash($password) {
+	return password_hash($password, PASSWORD_DEFAULT);
+}
+
+function dpassword_verify($password, $stored) {
+	if(!is_string($stored) || $stored === '') {
+		return FALSE;
+	}
+	if(preg_match('/^[a-f0-9]{32}$/i', $stored)) {
+		return hash_equals(strtolower($stored), md5($password));
+	}
+	return password_verify($password, $stored);
+}
+
+function dpassword_needs_rehash($stored) {
+	if(preg_match('/^[a-f0-9]{32}$/i', $stored)) {
+		return TRUE;
+	}
+	return password_needs_rehash($stored, PASSWORD_DEFAULT);
+}
+
 function quescrypt($questionid, $answer) {
 	return $questionid > 0 && $answer != '' ? substr(md5($answer.md5($questionid)), 16, 8) : '';
 }
@@ -302,12 +326,16 @@ function showstars($num) {
 function submitcheck($var, $allowget = 0) {
 	global $_SERVER;
 	if(!empty($GLOBALS[$var])) {
-		if($allowget || ($_SERVER['REQUEST_METHOD'] == 'POST' && $GLOBALS['formhash'] == formhash() &&
-			(empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST'])))) {
-			return TRUE;
-		} else {
+		$ispost = isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST';
+		if(!$ispost && !$allowget) {
 			showmessage('submit_invalid');
 		}
+		// 安全加固: GET 与 POST 一律校验 formhash 与来源主机(旧版 GET 会跳过令牌)
+		if(!empty($GLOBALS['formhash']) && $GLOBALS['formhash'] == formhash() &&
+			(empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST']))) {
+			return TRUE;
+		}
+		showmessage('submit_invalid');
 	} else {
 		return FALSE;
 	}

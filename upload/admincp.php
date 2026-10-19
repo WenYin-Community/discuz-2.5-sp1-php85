@@ -118,7 +118,7 @@ if($action == 'menu') {
 		if(is_array($_GET)) {
 			foreach($_GET as $key => $val) {
 				if($key != 'action' && $key != 'sid') {
-					$extra .= htmlspecialchars("$semicolon$key=$val");
+					$extra .= dhtmlspecialchars("$semicolon$key=$val");
 					$semicolon = '; ';
 				}
 			}
@@ -191,7 +191,7 @@ output();
 
 function cplog($success=''){
 	global $action,$timestamp, $discuz_user, $adminid, $onlineip, $extra,$lang,$cpsuccess,$cpaccess,$groupid;
-	$safeaction = htmlspecialchars($action);
+	$safeaction = dhtmlspecialchars($action);
 	if($safeaction && !in_array($safeaction, array('main', 'top', 'menu', 'illegallog',   'karmalog', 'modslog', 'cplog', 'home')) || $cpaccess<2){
 		@$fp = fopen(DISCUZ_ROOT.'./forumdata/cplog.php', 'a');
 		@flock($fp, 2);

@@ -71,6 +71,7 @@ if($action == 'forumadd') {
 <?
 
 		$modsorig = $comma = '';
+		$forums = array();
 		$query = $db->query("SELECT fid, type, status, name, fup, displayorder, moderator FROM $table_forums ORDER BY displayorder");
 		while($forum = $db->fetch_array($query)) {
 			$forums[] = $forum;

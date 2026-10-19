@@ -151,7 +151,7 @@ function showsetting($setname, $varname, $value, $type = 'radio', $width = '60%'
 	} elseif($type == 'text') {
 		echo "<input type=\"text\" size=\"30\" value=\"$value\" name=\"$varname\">\n";
 	} elseif($type == "textarea") {
-		echo "<textarea rows=\"5\" name=\"$varname\" cols=\"30\">".htmlspecialchars($value)."</textarea>";
+		echo "<textarea rows=\"5\" name=\"$varname\" cols=\"30\">".dhtmlspecialchars($value)."</textarea>";
 	} else {
 		echo $type;
 	}
@@ -183,7 +183,7 @@ function showconf($settings, $width = '50%') {
 	} elseif($type == 'text') {
 		echo "<input type=\"text\" size=\"30\" value=\"$value\" name=\"$varname\">\n";
 	} elseif($type == "textarea") {
-		echo "<textarea rows=\"5\" name=\"$varname\" cols=\"30\">".htmlspecialchars($value)."</textarea>";
+		echo "<textarea rows=\"5\" name=\"$varname\" cols=\"30\">".dhtmlspecialchars($value)."</textarea>";
 	} elseif($type == "select") {
 		$select_array = explode("\n",$extra);
 		echo "<select name=\"$varname\" style=\"width:160\">\n";

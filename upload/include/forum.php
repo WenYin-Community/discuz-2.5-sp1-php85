@@ -33,7 +33,7 @@ function forum(&$forum) {
 		$forum['icon'] = '<a href="forumdisplay.php?fid='.$forum['fid'].'">'.image($forum['icon'], '', 'align="left"').'</a>';
 	}
 
-	$forum['lastpost'] = explode("\t", $forum['lastpost']);
+	$forum['lastpost'] = array_pad(explode("\t", $forum['lastpost']), 3, '');
 	$forum['folder'] = $lastvisit < $forum['lastpost'][1] ? '<img src="'.IMGDIR.'/red_forum.gif">' : '<img src="'.IMGDIR.'/forum.gif">';
 
 	if($forum['lastpost'][0]) {

@@ -12,17 +12,26 @@
 
 require './include/common.php';
 
+if(!isset($thread) || !is_array($thread)) {
+	$thread = array('subject' => '');
+}
 if($tid) {
 	$query = $db->query("SELECT * FROM $table_threads WHERE tid='$tid'");
 	$thread = $db->fetch_array($query);
+	if(!is_array($thread)) {
+		$thread = array('subject' => '');
+	}
 }
 
-if($forum['type'] == 'forum') {
+if(!empty($forum['type']) && $forum['type'] == 'forum') {
 	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($forum['name']).' - '.$thread['subject'];
-} elseif($forum['type'] == 'sub') {
+} elseif(!empty($forum['type']) && $forum['type'] == 'sub') {
 	$query = $db->query("SELECT name, fid FROM $table_forums WHERE fid='{$forum['fup']}'");
 	$fup = $db->fetch_array($query);
+	if(!is_array($fup)) {
+		$fup = array('fid' => '', 'name' => '');
+	}
 	$navigation = "&raquo; <a href=\"forumdisplay.php?fid={$fup['fid']}\">{$fup['name']}</a> &raquo; <a href=\"forumdisplay.php?fid=$fid\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($fup['name']).' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 }

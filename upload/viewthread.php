@@ -49,7 +49,7 @@ if (defined('ViewLastPost')) {
 
 $tid = $thread['tid'];
 $codecount = 0;
-$oldtopics = $_COOKIE['oldtopics'] ? $_COOKIE['oldtopics'] : "\t";
+$oldtopics = isset($_COOKIE['oldtopics']) && $_COOKIE['oldtopics'] ? $_COOKIE['oldtopics'] : "\t";
 if(!strstr($oldtopics, "\t$tid\t")) {
 	$oldtopics .= "$tid\t";
 	setcookie('oldtopics', $oldtopics, $timestamp + 900, $cookiepath, $cookiedomain);

@@ -51,22 +51,22 @@ if (!$$stats_cachekey){
 $query = $db->query("SELECT * FROM $table_stats WHERE type IN ($vartype) ORDER BY type");
 	while($stats = $db->fetch_array($query)) {
 		switch($stats['type']) {
-			case total:
+			case 'total':
 				$stats_total[$stats['var']] = $stats['count'];
 				break;
-			case os:
+			case 'os':
 				$stats_os[$stats['var']] = $stats['count'];
 				if($stats['count'] > $maxos) {
 					$maxos = $stats['count'];
 				}
 				break;
-			case browser:
+			case 'browser':
 				$stats_browser[$stats['var']] = $stats['count'];
 				if($stats['count'] > $maxbrowser) {
 				$maxbrowser = $stats['count'];
 				}
 				break;
-			case month:
+			case 'month':
 				$stats_month[$stats['var']] = $stats['count'];
 				if($stats['count'] > $maxmonth) {
 				$maxmonth = $stats['count'];
@@ -74,14 +74,14 @@ $query = $db->query("SELECT * FROM $table_stats WHERE type IN ($vartype) ORDER B
 				$maxmonth_month = $stats['var'] - $maxmonth_year * 100;
 				}
 				break;
-			case week:
+			case 'week':
 				$stats_week[$stats['var']] = $stats['count'];
 				if($stats['count'] > $maxweek) {
 					$maxweek = $stats['count'];
 					$maxweek_day = $stats['var'];
 				}
 				break;
-			case hour:
+			case 'hour':
 				$stats_hour[$stats['var']] = $stats['count'];
 				if($stats['count'] > $maxhour) {
 					$maxhour = $stats['count'];
@@ -278,10 +278,10 @@ function statsdata($type, $max, $sort = 1) {
 	foreach($datarray as $var => $count) {
 		$barno ++;
 		switch($type) {
-			case month:
+			case 'month':
 				$var = substr($var, 0, 4).'-'.substr($var, -2);
 				break;
-			case week:
+			case 'week':
 				switch($var) {
 					case 00: $var = 'Sunday'; break;
 					case 01: $var = 'Monday'; break;
@@ -292,7 +292,7 @@ function statsdata($type, $max, $sort = 1) {
 					case 06: $var = 'Saturday'; break;
 				}
 				break;
-			case hour:
+			case 'hour':
 				$var = intval($var);
 				if($var <= 12) {
 					$var = "$var AM";

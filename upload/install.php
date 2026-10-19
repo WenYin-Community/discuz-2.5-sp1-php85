@@ -168,7 +168,7 @@ http://www.Discuz.com；北京康盛世纪科技有限公司的官方网站为 http://www.comsenz.c
 	);
 
 error_reporting(7);
-set_magic_quotes_runtime(0);
+// PHP 8 起 set_magic_quotes_runtime() 已移除, 安装程序无需再做魔术引号设置
 define('IN_DISCUZ', TRUE);
 $action		= $_POST['action'] ? $_POST['action'] : $_GET['action'];
 $language	= $_POST['language'] ? $_POST['language'] : $_GET['language'];
@@ -708,7 +708,7 @@ if(!$action) {
 
 	$db->select_db($dbname);
 	if($db->error()) {
-		$db->query("CREATE DATABASE $dbname");
+		$db->query("CREATE DATABASE $dbname DEFAULT CHARACTER SET gbk");
 		if($db->error()) {
 			$msg .= "<font color=\"#FF0000\">{$lang['db_invalid']}</font>\t";
 			$quit = TRUE;
@@ -717,8 +717,10 @@ if(!$action) {
 			$msg .= "{$lang['db_auto_created']}\t";
 		}
 	}
+	// 表继承数据库默认字符集, 保证中文以 GBK 存取
+	$db->query("ALTER DATABASE $dbname DEFAULT CHARACTER SET gbk", 'SILENT');
 
-	$query - $db->query("SELECT COUNT(*) FROM $tablepre"."settings", 'SILENT');
+	$query = $db->query("SELECT COUNT(*) FROM $tablepre"."settings", 'SILENT');
 	if(!$db->error()) {
 		$msg .= "<font color=\"#FF0000\">{$lang['db_not_null']}</font>\t";
 		$alert = " onSubmit=\"return confirm('{$lang['db_drop_table_confirm']}');\"";
@@ -945,7 +947,7 @@ if(!$action) {
 			$msg = $lang['admin_password_invalid'];
 		} elseif(strlen($username) > 15 || preg_match("/^$|^c:\\con\\con$|　|[,\"\s\t\<\>&]|^游客|^Guest/is", $username)) {
 			$msg = $lang['admin_username_invalid'];
-		} elseif(!strstr($email, '@') || $email != stripslashes($email) || $email != htmlspecialchars($email)) {
+		} elseif(!strstr($email, '@') || $email != stripslashes($email) || $email != htmlspecialchars($email, ENT_COMPAT, 'ISO-8859-1')) {
 			$msg = $lang['admin_email_invalid'];
 		}
 	} else {
@@ -1387,7 +1389,7 @@ CREATE TABLE cdb_sessions (
   fid smallint(6) unsigned NOT NULL default '0',
   tid mediumint(8) unsigned NOT NULL default '0',
   UNIQUE KEY sid (sid)
-) TYPE=HEAP MAX_ROWS=2000;
+) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS cdb_settings;
 CREATE TABLE cdb_settings (

@@ -15,10 +15,11 @@ if(!defined('IN_DISCUZ')) {
 }
 
 function array_del( &$array , $keys){
-	$f=explode(',',$keys);
-	foreach( $f as $key) {
-		if(trim($f)) unset($array["$key"]);
-	}
+	// 原实现: foreach(explode(',',$keys) as $key) { if(trim($f)) unset($array["$key"]); }
+	// 注意 $f 是 explode() 的数组结果, trim($f) 在 PHP 5/7 下恒为 null, 该分支从未执行,
+	// 也就是说这个函数原本不删除任何键; welcomemsg/bbrules/bbrulestxt/maxonlines 等设置
+	// 正是依赖它们留在缓存中（register.php 直接使用这些全局变量）。
+	// PHP 8 起 trim(array) 会抛出 TypeError, 因此这里显式保留原有的“不删除”行为。
 }
 
 function updatecache($cachename = '') {
@@ -50,7 +51,7 @@ function updatecache($cachename = '') {
 		}
 		$query = $db->query("SELECT s.*, t.charset, t.directory AS tpldir FROM $table_styles s LEFT JOIN $table_templates t ON s.templateid=t.templateid");
 		while($data = $db->fetch_array($query)) {
-			$data = array_merge($data, $stylevars[$data['styleid']]);
+			$data = array_merge($data, (array)$stylevars[$data['styleid']]);
 
 			$data['bgcode'] = strpos($data['bgcolor'], '.') ? "background-image: url(\"{$data['imgdir']}/{$data['bgcolor']}\")" : "background-color: {$data['bgcolor']}";
 			$data['catbgcode'] = strpos($data['catcolor'], '.') ? "background-image: url(\"{$data['imgdir']}/{$data['catcolor']}\")" : "background-color: {$data['catcolor']}";
@@ -113,72 +114,72 @@ function getcachearray($cachename) {
 	$cols = '*';
 	$conditions = '';
 	switch($cachename) {
-		case settings:
+		case 'settings':
 			$table = $GLOBALS['table_settings'];
 			break;
-		case plugins:
+		case 'plugins':
 			$table = $GLOBALS['table_plugins'];
 			$cols = 'plug_title, plug_key, plug_stats, plug_author, plug_version';
 			break;
-		case plugins_settings:
+		case 'plugins_settings':
 			$table = $GLOBALS['table_plugins_settings'];
 			$cols = 'conf_key, conf_group, conf_value';
 			$conditions ='WHERE conf_cached ORDER BY conf_group';
 			break;
-		case usergroups:
+		case 'usergroups':
 			$table = $GLOBALS['table_usergroups'];
 			$cols = "groupid,grouptitle,color,stars,groupavatar,allowavatar,allowsigbbcode,allowsigimgcode";
 			$conditions = "ORDER BY creditslower ASC";
 			break;
-		case announcements:
+		case 'announcements':
 			$table = $GLOBALS['table_announcements'];
 			$cols = " id, subject, posturl, starttime, endtime";
 			$conditions = "ORDER BY displayorder ASC, starttime DESC";
 			break;
-		case announcements_forum:
+		case 'announcements_forum':
 			$table = $GLOBALS['table_announcements'];
 			$cols = " id, author, posturl, subject,starttime";
 			$ann_num = $announcements_num ? $announcements_num : 1 ;
 			$conditions = "ORDER BY displayorder ASC, starttime DESC LIMIT 0, $ann_num";
 			break;
-		case forums:
+		case 'forums':
 			$table = $GLOBALS['table_forums'];
 			$cols = "fid, type, name, fup, viewperm";
 			$conditions = "WHERE status='1' ORDER BY displayorder";
 			break;
-		case forumlinks:
+		case 'forumlinks':
 			$table = $GLOBALS['table_forumlinks'];
 			$conditions = "ORDER BY displayorder";
 			break;
-		case smilies:
+		case 'smilies':
 			$table = $GLOBALS['table_smilies'];
 			$cols = "code,url";
 			$conditions = "WHERE type='smiley' ORDER BY LENGTH(code) DESC";
 			break;
-		case icons:
+		case 'icons':
 			$table = $GLOBALS['table_smilies'];
 			$cols = "id,url";
 			$conditions = "WHERE type='icon'";
 			break;
-		case ipbanned:
+		case 'ipbanned':
 			$table = $GLOBALS['table_banned'];
 			$cols = "ip1,ip2,ip3,ip4,expiration ";
 			$conditions = "WHERE expiration>".time().' ORDER BY `expiration` DESC';
 			break;
-		case censor:
+		case 'censor':
 			$table = $GLOBALS['table_words'];
 			break;
-		case onlinelist:
+		case 'onlinelist':
 			$table = $GLOBALS['table_onlinelist'];
 			$cols = "groupid,url,title";
 			$conditions = "WHERE 1 ORDER BY displayorder";
 			break;
-		case bbcodes:
+		case 'bbcodes':
 			$table = $GLOBALS['table_bbcodes'];
 			$cols = "tag,replacement,params,nest";
 			$conditions = "WHERE available=1";
 			break;
-		case ranks:
+		case 'ranks':
 			$table = $GLOBALS['table_ranks'];
 			$cols='ranktitle,postshigher,stars,color';
 			$conditions = "WHERE 1 ORDER BY postshigher desc";
@@ -355,7 +356,7 @@ function getcachearray($cachename) {
 			}
 			break;
 
-			case onlinelist:
+			case 'onlinelist':
 			$data['legend']=$mark='';
 			while($onlinelist = $db->fetch_array($query)) {
 				$data['legend'] .=$mark.'<img src="images/common/'.$onlinelist['url'].'" border=0>&nbsp;'.$onlinelist['title'];

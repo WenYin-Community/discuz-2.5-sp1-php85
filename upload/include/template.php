@@ -30,7 +30,7 @@ function parse_template($file, $templateid, $tpldir) {
 	$plugins_languagepack = DISCUZ_ROOT.'./plugins/plugin.lang.php';
 	if(file_exists($plugins_languagepack)) {
 		include $plugins_languagepack;
-		if (count($plglang)){
+		if (!empty($plglang) && is_array($plglang)){
 			$language = array_merge($language,$plglang);
 		}
 	}

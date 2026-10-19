@@ -13,7 +13,7 @@
 
 	<form method="post" action="admincp.php?action=<?=$action?>">
 	<input type="hidden" name="formhash" value="<?=FORMHASH?>">
-	<tr bgcolor="<?=ALTBG1?>"><td><?=$lang['logs_search']?></td><td><input type="text" name="keyword" size="40" value="<?=htmlspecialchars($keyword)?>"></td>
+	<tr bgcolor="<?=ALTBG1?>"><td><?=$lang['logs_search']?></td><td><input type="text" name="keyword" size="40" value="<?=dhtmlspecialchars($keyword)?>"></td>
 	<td><input type="submit" value="<?=$lang['submit']?>"></td></tr></form>
 </td></tr></table></td></tr></table></table>
 

@@ -42,7 +42,7 @@ if(!$page) {
 	$discuzcodes = array();
 	$query = $db->query("SELECT * FROM $table_bbcodes WHERE available='1'");
 	while($discuzcode = $db->fetch_array($query)) {
-		$discuzcode['explanation'] = htmlspecialchars($discuzcode['explanation']);
+		$discuzcode['explanation'] = dhtmlspecialchars($discuzcode['explanation']);
 		$discuzcodes[] = $discuzcode;
 	}
 
@@ -52,7 +52,7 @@ if(!$page) {
 
 	@include language('customfaq');
 	if(is_array($customfaq)) {
-		for($i = 0; $i < count($customfaq['item']); $i++) {
+		for($i = 0; $i < count((array)$customfaq['item']); $i++) {
 			$customfaq['item'][$i]['message'] = str_replace('  ', '&nbsp; ', nl2br($customfaq['item'][$i]['message']));
 		}
 	}

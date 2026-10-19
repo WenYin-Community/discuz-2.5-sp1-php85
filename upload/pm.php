@@ -183,7 +183,7 @@ if(empty($action)) {
 
 		}
 
-		$msgto_count = count($msgto);
+		$msgto_count = count((array)$msgto);
 		$maxpmsend = ceil($maxpmnum / 10);
 		if($msgto_count > $maxpmsend) {
 			showmessage('pm_send_toomany');

@@ -141,8 +141,9 @@ function image($imageinfo, $basedir = '', $remark = '') {
 function ipbanned($onlineip) {
 	global $timestamp, $cachelost;
 
+	$_DCACHE = array();
 	$cachelost .= (@include DISCUZ_ROOT.'./forumdata/cache/cache_ipbanned.php') ? '' : ' ipbanned';
-	if($_DCACHE['ipbanned']) {
+	if(!empty($_DCACHE['ipbanned'])) {
 		if($_DCACHE['ipbanned']['expiration'] < $timestamp) {
 			@unlink(DISCUZ_ROOT.'./forumdata/cache/cache_ipbanned.php');
 		}
@@ -225,15 +226,17 @@ function output() {
 	global $sid;
 
 	if(empty($GLOBALS['_COOKIE']['sid'])) {
-		$content = preg_replace(array(	"/\<a(\s*[^\>]+\s*)href\=([\"|\']?)([^\"\'\s]+)/ies",
-						"/(\<form.+?\>)/is"),
-					array(	"transsid('\\3','<a\\1href=\\2')",
-					 	"\\1\n<input type=\"hidden\" name=\"sid\" value=\"$sid\">"),
-					ob_get_contents());
+		$content = ob_get_contents();
+		$content = preg_replace_callback("/\<a(\s*[^\>]+\s*)href\=([\"|\']?)([^\"\'\s]+)/is", "parse_output_link", $content);
+		$content = preg_replace("/(\<form.+?\>)/is", "\\1\n<input type=\"hidden\" name=\"sid\" value=\"$sid\">", $content);
 		ob_end_clean();
-		$GLOBALS['gzipcompress'] ? ob_start('ob_gzhandler') : ob_start();
+		!empty($GLOBALS['gzipcompress']) ? ob_start('ob_gzhandler') : ob_start();
 		echo $content;
 	}
+}
+
+function parse_output_link($m) {
+	return transsid($m[3], '<a'.$m[1].'href='.$m[2]);
 }
 
 function quescrypt($questionid, $answer) {
@@ -265,7 +268,7 @@ function showmessage($show_message, $url_forward = '', $extra = '') {
 	$plugins_languagepack = DISCUZ_ROOT.'./plugins/plugin.lang.php';
 	if(file_exists($plugins_languagepack)) {
 		include_once $plugins_languagepack;
-		if (count($msglang)){
+		if (!empty($msglang) && is_array($msglang)){
 			$language = array_merge($language,$msglang);
 		}
 	}
@@ -328,6 +331,7 @@ function transsid($url, $tag = '') {
 	$tag = stripslashes($tag);
 	if(!$tag || (!preg_match("/^(http:\/\/|mailto:|#|javascript)/i", $url) && !strpos($url, 'sid='))) {
 		$pos = strpos($url, '#');
+		$urlret = '';
 		if($pos) {
 			$urlret = substr($url, $pos);
 			$url = substr($url, 0, $pos);

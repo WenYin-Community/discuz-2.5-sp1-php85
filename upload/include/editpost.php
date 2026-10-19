@@ -62,8 +62,8 @@ if(!submitcheck('editsubmit')) {
 	if($alloweditpoll && $thread['poll']) {
 		$query = $db->query("SELECT pollopts FROM $table_polls WHERE tid='$tid'");
 		$polloptions = unserialize($db->result($query, 0));
-		for($i = 0; $i < count($polloptions['options']); $i++) {
-			$polloptions['options'][$i][0] = htmlspecialchars(stripslashes($polloptions['options'][$i][0]))."\n";
+		for($i = 0; $i < count((array)$polloptions['options']); $i++) {
+			$polloptions['options'][$i][0] = dhtmlspecialchars(stripslashes($polloptions['options'][$i][0]))."\n";
 		}
 	} else {
 		$polloptions = '';

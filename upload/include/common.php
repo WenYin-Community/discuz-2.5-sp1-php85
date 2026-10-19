@@ -59,6 +59,24 @@ if(!$register_globals || !$magic_quotes_gpc) {
         $register_globals = 0;
 }
 
+// PHP 8 把“未定义变量/数组下标”从 E_NOTICE 提升为 E_WARNING, 旧代码会在页面上出现大量提示;
+// 这里按 PHP 5 的语义把常用的请求级变量预置为空值, 未提供的参数行为与旧版一致(均为假值)
+$predefined = array('navtitle', 'page', 'goto', 'p', 'action', 'order', 'ascdesc', 'desc', 'keyword',
+	'srchmem', 'fpage', 'id', 'urlret', 'signature', 'currtime', 'admins', 'regsubmit', 'statstatus',
+	'searchid', 'pid', 'digest', 'invisible', 'type', 'tid', 'fid');
+foreach($predefined as $prevar) {
+	if(!isset($$prevar)) {
+		$$prevar = '';
+	}
+}
+unset($prevar, $predefined);
+if(!isset($forum)) {
+	$forum = array();
+}
+if(!isset($forums)) {
+	$forums = array();
+}
+
 require DISCUZ_ROOT.'./config.php';
 require DISCUZ_ROOT.'./include/global.php';
 require DISCUZ_ROOT.'./include/db_'.$database.'.php';
@@ -84,11 +102,14 @@ $_DSESSION = $_DCACHE = array();
 
 $cachelost = (@include DISCUZ_ROOT.'./forumdata/cache/cache_settings.php') ? '' : 'settings';
 
-@extract($_DCACHE['settings'], EXTR_OVERWRITE);
+@extract((array)$_DCACHE['settings'], EXTR_OVERWRITE);
+if(!is_array($_DCACHE['settings'])) {
+	$_DCACHE['settings'] = array();
+}
 
 $tables = array('access', 'admingroups', 'adminsessions', 'attachments', 'attachtypes', 'announcements', 'banned', 'bbcodes', 'caches','failedlogins', 'favorites','forumlinks', 'forums', 'karmalog', 'members', 'onlinelist', 'polls', 'posts', 'ranks', 'searchindex', 'sessions', 'settings','smilies', 'stats', 'styles', 'stylevars', 'subscriptions', 'templates', 'threads', 'pms', 'usergroups', 'words', 'buddys','plugins','plugins_settings'); 
 
-if (count($plugins_table)) $tables = array_merge($plugins_table,$tables);
+if (!empty($plugins_table) && is_array($plugins_table)) $tables = array_merge($plugins_table,$tables);
 
 foreach($tables as $tablename) {
 	${'table_'.$tablename} = $tablepre.$tablename;
@@ -105,13 +126,14 @@ $db->connect($dbhost, $dbuser, $dbpw, $dbname, $pconnect);
 $db->select_db($dbname);
 unset($dbhost, $dbuser, $dbpw, $dbname, $pconnect);
 
-$sid = isset($_GET['sid']) ? $_GET['sid'] :(isset($_POST['sid']) ? $_POST['sid'] :$_COOKIE['sid']);
+$sid = isset($_GET['sid']) ? $_GET['sid'] :(isset($_POST['sid']) ? $_POST['sid'] :(isset($_COOKIE['sid']) ? $_COOKIE['sid'] : ''));
 
-$discuz_uid = $_COOKIE['_discuz_uid'];
-$discuz_pw = $_COOKIE['_discuz_pw'];
-$discuz_secques = $_COOKIE['_discuz_secques'];
+$discuz_uid = isset($_COOKIE['_discuz_uid']) ? $_COOKIE['_discuz_uid'] : '';
+$discuz_pw = isset($_COOKIE['_discuz_pw']) ? $_COOKIE['_discuz_pw'] : '';
+$discuz_secques = isset($_COOKIE['_discuz_secques']) ? $_COOKIE['_discuz_secques'] : '';
 
 $newpm = $newpmexists = $sessionexists = $adminid = $adminglobal = $user_lastactivity = $is_sessionuser = 0;
+$ipbanned = $accessmasks = $credit = 0;
 
 $userinfo="m.uid AS discuz_uid, m.username AS discuz_user, m.password AS discuz_pw, m.adminid, m.groupid, m.email, m.timeoffset,m.tpp, m.ppp, m.credit, m.timeformat, m.dateformat, m.signature, m.invisible, m.lastvisit, m.lastactivity as user_lastactivity, m.lastpost, m.newpm, m.accessmasks, m.regdate";
 
@@ -151,14 +173,14 @@ if(!$sessionexists) {
 	$sid = random(6);
 }
 
-@extract($_DSESSION, EXTR_OVERWRITE);
+@extract((array)$_DSESSION, EXTR_OVERWRITE);
 
 $lastvisit = empty($lastvisit) ? $timestamp - 86400 : $lastvisit;
 
 if(empty($discuz_uid) || empty($discuz_user)) {
 	$discuz_user = '';
 	$discuz_uid = $adminid = $credit =0;
-	$groupid = $groupid != 6 ? 7 : 6;
+	$groupid = (isset($groupid) && $groupid == 6) ? 6 : 7;
 } else {
 	$discuz_userss = $discuz_user;
 	$discuz_user = addslashes($discuz_user);
@@ -171,7 +193,7 @@ if($statstatus) {
 	require DISCUZ_ROOT.'./include/counter.php';
 }
 
-if($sid != $_COOKIE['sid']) {
+if(!isset($_COOKIE['sid']) || $sid != $_COOKIE['sid']) {
 	setcookie('sid', $sid, $timestamp + 2592000, $cookiepath, $cookiedomain);
 }
 
@@ -188,18 +210,28 @@ if($discuz_uid && $accessmasks) {
 if(!empty($tid)){
 	$query = $db->query("SELECT f.* $accessadd1 , t.* FROM $table_forums f, $table_threads t $accessadd2 WHERE t.tid='".intval($tid)."' AND f.fid=t.fid LIMIT 1");
 	$forum = $db->fetch_array($query);
-	$fid = $forum['fid'];
+	$fid = is_array($forum) && isset($forum['fid']) ? $forum['fid'] : 0;
 }elseif(!empty($fid)) {
 	$query = $db->query("SELECT f.* $accessadd1 FROM $table_forums f $accessadd2 WHERE f.fid='".intval($fid)."'", 'CACHE');
 	$forum = $db->fetch_array($query);
 }
+// PHP 8 起未定义数组下标会提示, 预置论坛常用字段(缺失时为假值, 与原逻辑一致)
+if(is_array($forum)) {
+	foreach(array('fid', 'fup', 'type', 'name', 'status', 'postperm', 'viewperm', 'getattachperm', 'allowpost', 'allowview', 'styleid', 'moderator', 'password') as $forumkey) {
+		if(!isset($forum[$forumkey])) {
+			$forum[$forumkey] = '';
+		}
+	}
+	unset($forumkey);
+}
+
 $styleid = !empty($_GET['styleid']) ? $_GET['styleid'] :
 		(!empty($_POST['styleid']) ? $_POST['styleid'] :
 		(!empty($_DSESSION['styleid']) ? $_DSESSION['styleid'] :
-		$_DCACHE['settings']['styleid']));
+		(isset($_DCACHE['settings']['styleid']) ? $_DCACHE['settings']['styleid'] : 0)));
 
 if(@!include DISCUZ_ROOT.'./forumdata/cache/style_'.intval(!empty($forum['styleid']) ? $forum['styleid'] : $styleid).'.php') {
-	$styleid = $_DCACHE['settings']['styleid'];
+	$styleid = (isset($_DCACHE['settings']['styleid']) ? $_DCACHE['settings']['styleid'] : 0);
 	$cachelost .= (@include DISCUZ_ROOT.'./forumdata/cache/style_'.$styleid.'.php') ? '' : ' style_'.$styleid;
 }
 

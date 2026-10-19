@@ -60,6 +60,10 @@ class dbstuff {
 	}
 
 	function fetch_array($query, $result_type = MYSQL_ASSOC) {
+		// a failed query returns false, keep the PHP 5 behaviour of yielding false
+		if(!($query instanceof mysqli_result)) {
+			return FALSE;
+		}
 		return mysqli_fetch_array($query, $result_type);
 	}
 

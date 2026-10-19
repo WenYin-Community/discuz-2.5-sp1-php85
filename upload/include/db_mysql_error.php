@@ -52,17 +52,17 @@ if($dberrno == 1114) {
 
 } else {
 
-	$discuz_user = $GLOBALS['_DSESSION']['discuz_user'] ? $GLOBALS['_DSESSION']['discuz_user'] : $GLOBALS['HTTP_COOKIE_VARS']['_discuz_user'];
+	$discuz_user = !empty($GLOBALS['_DSESSION']['discuz_user']) ? $GLOBALS['_DSESSION']['discuz_user'] : (isset($_COOKIE['_discuz_user']) ? $_COOKIE['_discuz_user'] : '');
 	if($message) {
 		$errmsg = "<b>Discuz! info</b>: $message\n\n";
 	}
 	if($discuz_user) {
 		$errmsg .= "<b>User</b>: $discuz_user\n";
 	}
-	$errmsg .= "<b>Time</b>: ".gmdate("Y-n-j g:ia", $timestamp + ($GLOBALS['timeoffset'] * 3600))."\n";
-	$errmsg .= "<b>Script</b>: ".$GLOBALS['PHP_SELF']."\n\n";
+	$errmsg .= "<b>Time</b>: ".gmdate("Y-n-j g:ia", $timestamp + (isset($GLOBALS['timeoffset']) ? $GLOBALS['timeoffset'] * 3600 : 0))."\n";
+	$errmsg .= "<b>Script</b>: ".(isset($GLOBALS['PHP_SELF']) ? $GLOBALS['PHP_SELF'] : '')."\n\n";
 	if($sql) {
-		$errmsg .= "<b>SQL</b>: ".htmlspecialchars($sql)."\n";
+		$errmsg .= "<b>SQL</b>: ".htmlspecialchars($sql, ENT_COMPAT, 'ISO-8859-1')."\n";
 	}
 	$errmsg .= "<b>Error</b>:  $dberror\n";
 	$errmsg .= "<b>Errno.</b>:  $dberrno";
@@ -70,10 +70,14 @@ if($dberrno == 1114) {
 	echo "</table></table></table></table></table>\n";
 	echo "<p style=\"font-family: Verdana, Tahoma; font-size: 11px; background: #FFFFFF;\">";
 	echo nl2br($errmsg);
-	if($GLOBALS['adminemail']) {
+	if(!empty($GLOBALS['adminemail'])) {
 		$errnos = array();
 		$errorlogs = '';
-		if($errlog = @file('./forumdata/dberror.log')) {
+		$errlog = @file('./forumdata/dberror.log');
+		if(!is_array($errlog)) {
+			$errlog = array();
+		}
+		if($errlog) {
 			for($i = 0; $i < count($errlog); $i++) {
 				$log = explode("\t", $errlog[$i]);
 				if(($timestamp - $log[0]) > 86400) {
@@ -86,7 +90,7 @@ if($dberrno == 1114) {
 		if(!in_array($dberrno, $errnos)) {
 			$errorlogs .= "$timestamp\t$dberrno\n";
 			echo "<br><br>An error report has been dispatched to our administrator.";
-			@sendmail($GLOBALS['adminemail'], '[Discuz!] MySQL Error Report',
+			if(function_exists('sendmail')) @sendmail($GLOBALS['adminemail'], '[Discuz!] MySQL Error Report',
 					"There seems to have been a problem with the database of your Discuz! Board\n\n".
 					strip_tags($errmsg)."\n\n".
 					"Please check-up your MySQL server and forum scripts, similar errors will not be reported again in recent 24 hours\n".

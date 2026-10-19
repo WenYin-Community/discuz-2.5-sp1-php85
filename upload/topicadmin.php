@@ -25,18 +25,27 @@ $tid   = $tid ? $tid :'';
 $page  = intval($page);
 $fpage = intval($fpage);
 
+if(!isset($thread) || !is_array($thread)) {
+	$thread = array('subject' => '');
+}
 if($tid) {
 	$query = $db->query("SELECT * FROM $table_threads WHERE tid='$tid'");
 	$thread = $db->fetch_array($query);
+	if(!is_array($thread)) {
+		$thread = array('subject' => '');
+	}
 	$thread['subject'] .= $action == 'delthread' ? ", etc." : NULL;
 }
 
-if($forum['type'] == 'forum') {
+if(!empty($forum['type']) && $forum['type'] == 'forum') {
 	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 } else {
 	$query = $db->query("SELECT name, fid, moderator FROM $table_forums WHERE fid='{$forum['fup']}'");
 	$fup = $db->fetch_array($query);
+	if(!is_array($fup)) {
+		$fup = array('fid' => '', 'name' => '');
+	}
 	$navigation = "&raquo; <a href=\"forumdisplay.php?fid={$fup['fid']}\">{$fup['name']}</a> &raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($fup['name']).' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 }
@@ -179,7 +188,7 @@ if($action == 'moderate') {
 	if(!submitcheck('delpostsubmit')) {
 
 		$query = $db->query("SELECT COUNT(*) FROM $table_posts WHERE tid='$tid'");
-		if(count($delete) < $db->result($query, 0)) {
+		if(count((array)$delete) < $db->result($query, 0)) {
 
 			$deleteid = '';
 			foreach($delete as $id) {
@@ -211,7 +220,7 @@ if($action == 'moderate') {
 
 		if ($actionpost < 1) {
 			showmessage('admin_delpost_invalid');
-		}elseif($actionpost <> count($delete)){
+		}elseif($actionpost <> count((array)$delete)){
 			showmessage('admin_moderate_accesserror', NULL, 'HALTED');
 		}elseif($actionpost >= $totalpost ){
 			header("Location: {$boardurl}topicadmin.php?action=delete&fid=$fid&tid=$tid&page=$page&fpage=$fpage");

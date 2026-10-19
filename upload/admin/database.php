@@ -44,7 +44,7 @@ if($action == 'export') {
 			$tables = array('access', 'admingroups', 'attachtypes', 'announcements', 'banned', 'bbcodes', 'forumlinks', 'forums', 'members', 'onlinelist', 'ranks', 'settings', 'smilies', 'stats', 'styles', 'stylevars', 'templates', 'usergroups', 'words', 'plugins','plugins_settings');
 		}
 
-		if (count($plugins_table)){
+		if (!empty($plugins_table) && is_array($plugins_table)){
 			$tables = array_merge($plugins_table,$tables);
 		}
 
@@ -139,9 +139,9 @@ if($action == 'export') {
 		foreach($exportlog as $dateline => $info) {
 			$info['dateline'] = is_int($dateline) ? gmdate("$dateformat $timeformat", $dateline + $timeoffset * 3600) : $lang['unknown'];
 			switch($info['type']) {
-				case full: $info['type'] = $lang['database_export_full']; break;
-				case standard: $info['type'] = $lang['database_export_standard']; break;
-				case mini: $info['type'] = $lang['database_export_mini']; break;
+				case 'full': $info['type'] = $lang['database_export_full']; break;
+				case 'standard': $info['type'] = $lang['database_export_standard']; break;
+				case 'mini': $info['type'] = $lang['database_export_mini']; break;
 			}
 			$info['size'] = sizecount($info['size']);
 			$info['volume'] = $info['method'] == 'multivol' ? $info['volume'] : '';

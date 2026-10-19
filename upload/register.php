@@ -27,7 +27,7 @@ if(!$regstatus) {
 
 $query = $db->query("SELECT * FROM $table_settings WHERE variable IN ('censoruser', 'doublee', 'bbrules', 'bbrulestxt', 'welcomemsg', 'welcomemsgtxt')");
 while($setting = $db->fetch_array($query)) {
-	$$setting['variable'] = $setting['value'];
+	${$setting['variable']} = $setting['value'];
 }
 
 $query = $db->query("SELECT groupid, allowcstatus, allowavatar, allowsigbbcode, allowsigimgcode, maxsigsize FROM $table_usergroups WHERE ".($regverify == 1 ? "groupid='8'" : "creditshigher<=0 AND 0<creditslower LIMIT 1"));
@@ -54,7 +54,11 @@ if(!submitcheck('regsubmit')) {
 		$imgcodeis = $groupinfo['allowsigimgcode'] ? 'On' : 'Off';
 		$check24 = $check12 = '';
 		$timeformat == 'H:i' ? $check24 = 'checked' : $check12 = 'checked';
-		$toselect = array((float)strval($_DCACHE['settings']['timeoffset']) => 'selected="selected"');
+		$toselect = array();
+		foreach(array('-12','-11','-10','-9','-8','-7','-6','-5','-4','-3.5','-3','-2','-1','0','1','2','3','3.5','4','4.5','5','5.5','5.75','6','6.5','7','8','9','9.5','10','11','12') as $tzk) {
+			$toselect[$tzk] = '';
+		}
+		$toselect[(float)strval($_DCACHE['settings']['timeoffset'])] = 'selected="selected"';
 
 		$dateformatorig = $dateformat;
 		$dateformatorig = str_replace('n', 'mm', $dateformatorig);

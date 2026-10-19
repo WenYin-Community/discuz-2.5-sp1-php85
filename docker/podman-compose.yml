@@ -33,6 +33,8 @@ services:
   php:
     image: localhost/wenyinos-php:8.5-fpm
     container_name: discuz25-php
+    # 容器内 uid 1000 映射为宿主当前用户, fpm 池进程才能写 forumdata/ 且文件归属不变
+    userns_mode: keep-id
     volumes:
       - ../upload:/var/www/html:Z
       - ./php.ini:/usr/local/etc/php/conf.d/zz-discuz.ini:ro,Z

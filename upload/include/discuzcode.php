@@ -45,7 +45,7 @@ function credithide($creditsrequire, $message) {
 function codedisp($code) {
 	global $thisbg, $codecount, $post_codecount, $codehtml;
 	$post_codecount++;
-	$code = htmlspecialchars(str_replace('\\"', '"', preg_replace("/^[\n\r]*(.+?)[\n\r]*$/is", "\\1", $code)));
+	$code = dhtmlspecialchars(str_replace('\\"', '"', preg_replace("/^[\n\r]*(.+?)[\n\r]*$/is", "\\1", $code)));
 	$codehtml[$post_codecount] = "<blockquote class=\"code\"><b class=\"smalltxt\">CODE:</b>&nbsp;&nbsp;<a href=\"###\" class=\"smalltxt\" onclick=\"copycode(findobj('code$codecount'));\">[Copy to clipboard]</a><hr size=1 color=\"".BORDERCOLOR."\"><div style=\"padding:5px; font-family:Courier New;\" id=\"code$codecount\">$code</div></blockquote>";
 
 	$codecount++;
@@ -67,8 +67,8 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 	global $credit, $tid, $discuz_uid, $codehtml, $post_codecount, $thisbg, $highlight, $table_posts, $db, $searcharray, $replacearray, $ismoderator,$phpcodehtml,$post_phpcodecount;
 
 	if(!$bbcodeoff && $allowbbcode) {
-		$message = preg_replace("/\s*\[code\](.+?)\[\/code\]\s*/ies", "codedisp('\\1')", $message);
-	    $message = preg_replace("/\s*\[php\](.+?)\[\/php\]\s*/ies", "phpcodedisp('\\1')", $message);
+		$message = preg_replace_callback("/\s*\[code\](.+?)\[\/code\]\s*/is", "parse_bb_code", $message);
+	    $message = preg_replace_callback("/\s*\[php\](.+?)\[\/php\]\s*/is", "parse_bb_php", $message);
 	}
 
 	if(!$allowhtml) {
@@ -117,8 +117,8 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 			);
 
 			if($GLOBALS['_DCACHE']['bbcodes']) {
-				$searcharray['bbcode_regexp'] = array_merge($searcharray['bbcode_regexp'], $searcharray['bbcode_regexp'], $GLOBALS['_DCACHE']['bbcodes']['searcharray']);
-				$replacearray['bbcode_regexp'] = array_merge($replacearray['bbcode_regexp'], $replacearray['bbcode_regexp'], $GLOBALS['_DCACHE']['bbcodes']['replacearray']);
+				$searcharray['bbcode_regexp'] = array_merge($searcharray['bbcode_regexp'], $searcharray['bbcode_regexp'], (array)$GLOBALS['_DCACHE']['bbcodes']['searcharray']);
+				$replacearray['bbcode_regexp'] = array_merge($replacearray['bbcode_regexp'], $replacearray['bbcode_regexp'], (array)$GLOBALS['_DCACHE']['bbcodes']['replacearray']);
 				unset($GLOBALS['_DCACHE']['bbcodes']);
 			}
 
@@ -147,7 +147,7 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 					$message = preg_replace("/\[hide\](.+?)\[\/hide\]/is", "<b>**** Hidden to Non-Reply Visitors *****</b>", $message);
 				}
 			}
-			$message = preg_replace("/\[hide=(\d+)\]\s*(.+?)\s*\[\/hide\]/ies", "credithide(\\1,'\\2')", $message);
+			$message = preg_replace_callback("/\[hide=(\d+)\]\s*(.+?)\s*\[\/hide\]/is", "parse_bb_hide", $message);
 		}
 
 	}
@@ -250,4 +250,16 @@ function clear_bbcode($code){
 	}
 	return $code;
 }
+function parse_bb_code($m) {
+	return codedisp($m[1]);
+}
+
+function parse_bb_php($m) {
+	return phpcodedisp($m[1]);
+}
+
+function parse_bb_hide($m) {
+	return credithide($m[1], $m[2]);
+}
+
 ?>

@@ -92,7 +92,7 @@ if($previewpost || (!$previewpost && !$topicsubmit && !$replysubmit && !$editsub
 		$smcols = $smcols ? $smcols : 3;
 		$smilies .= '<tr>';
 		foreach(array_reverse($_DCACHE['smilies']) as $key => $smiley) {
-			$smilies .= '<td align="center" valign="top"><img src="'.SMDIR.'/'.$smiley['url'].'" border="0" onmouseover="this.style.cursor=\'hand\';" onclick="AddText(\''.htmlspecialchars(addcslashes($smiley['code'], '\\\'')).'\');"></td>'."\n";
+			$smilies .= '<td align="center" valign="top"><img src="'.SMDIR.'/'.$smiley['url'].'" border="0" onmouseover="this.style.cursor=\'hand\';" onclick="AddText(\''.dhtmlspecialchars(addcslashes($smiley['code'], '\\\'')).'\');"></td>'."\n";
 			$smilies .= !(++$key % $smcols) ? '</tr><tr>' : NULL;
 		}
 	} else {

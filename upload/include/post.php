@@ -226,7 +226,10 @@ function updatemember($operator, $uid, $credits) {
 function updateforumcount($fid) {
 	global $db, $table_threads, $table_forums;
 	$query = $db->query("SELECT COUNT(*) AS threadcount, SUM(t.replies)+COUNT(*) AS replycount FROM $table_threads t, $table_forums f WHERE f.fid='$fid' AND t.fid=f.fid");
-	extract($db->fetch_array($query));
+	$countrow = $db->fetch_array($query);
+	if(is_array($countrow)) {
+		extract($countrow, EXTR_SKIP);
+	}
 
 	$query = $db->query("SELECT subject, lastpost, lastposter FROM $table_threads USE INDEX(displayorder) WHERE fid='$fid' ORDER BY lastpost DESC LIMIT 1");
 	$thread = $db->fetch_array($query);

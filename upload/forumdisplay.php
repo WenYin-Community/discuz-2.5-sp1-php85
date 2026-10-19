@@ -31,7 +31,7 @@ if(isset($showoldetails)) {
 	$showoldetails = false;
 }
 
-if(!$forum['fid'] || $forum['type'] == 'group' || ($adminid<>1 && !$forum['status'])) {
+if(empty($forum['fid']) || (!empty($forum['type']) && $forum['type'] == 'group') || ($adminid<>1 && empty($forum['status']))) {
 	showmessage('forum_nonexistence', NULL, 'HALTED');
 }
 

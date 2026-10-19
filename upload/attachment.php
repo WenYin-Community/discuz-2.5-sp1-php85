@@ -16,6 +16,9 @@ $discuz_action = 14;
 
 $query = $db->query("SELECT a.*, t.fid FROM $table_attachments a LEFT JOIN $table_threads t ON a.tid=t.tid WHERE aid='$aid'");
 $attach = $db->fetch_array($query);
+if(!is_array($attach)) {
+	showmessage('attachment_nonexistence');
+}
 
 $isimage = 0;
 $filename = DISCUZ_ROOT.$attachdir.'/'.$attach['attachment'];
@@ -41,6 +44,9 @@ $query = $db->query("SELECT f.getattachperm, a.allowgetattach FROM $table_forums
 			LEFT JOIN $table_access a ON a.uid='$discuz_uid' AND a.fid=f.fid
 			WHERE f.fid='{$attach['fid']}'");
 $forum = $db->fetch_array($query);
+if(!is_array($forum)) {
+	$forum = array('allowgetattach' => '', 'getattachperm' => '');
+}
 
 if(!$forum['allowgetattach']) {
 	if(!$forum['getattachperm'] && !$allowgetattach) {

@@ -1,0 +1,52 @@
+version: "3.9"
+
+# Discuz! 2.5F SP1 GBK —— PHP 8.5 + MySQL 5.7 本地验证栈
+# 启动：cd docker && podman-compose up -d
+# 访问：http://127.0.0.1:8081/
+
+services:
+  mysql:
+    image: docker.io/library/mysql:5.7
+    container_name: discuz25-mysql
+    command:
+      - --character-set-server=gbk
+      - --collation-server=gbk_chinese_ci
+      - --sql-mode=
+      - --skip-name-resolve
+      - --max_allowed_packet=32M
+    environment:
+      MYSQL_ROOT_PASSWORD: change_me_root
+      MYSQL_DATABASE: discuz25
+      MYSQL_USER: discuz25
+      MYSQL_PASSWORD: change_me_dev
+      TZ: Asia/Shanghai
+    ports:
+      - "3317:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql:Z
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pchange_me_root"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  php:
+    image: localhost/wenyinos-php:8.5-fpm
+    container_name: discuz25-php
+    volumes:
+      - ../upload:/var/www/html:Z
+      - ./php.ini:/usr/local/etc/php/conf.d/zz-discuz.ini:ro,Z
+      - ./php-fpm.conf:/usr/local/etc/php-fpm.d/zz-discuz.conf:ro,Z
+    depends_on:
+      - mysql
+
+  nginx:
+    image: docker.io/library/nginx:alpine
+    container_name: discuz25-nginx
+    ports:
+      - "8081:80"
+    volumes:
+      - ../upload:/var/www/html:Z
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro,Z
+    depends_on:
+      - php

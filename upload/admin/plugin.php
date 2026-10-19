@@ -455,7 +455,7 @@ if($mod == 'add') {
 }
 
 function is_key( $str ){
-		return ereg("^[a-zA-Z]+[a-zA-Z0-9_]+$", $str);
+		return preg_match("/^[a-zA-Z]+[a-zA-Z0-9_]+$/", $str);
 }
 
 function plugin_updatecache($all = 1){

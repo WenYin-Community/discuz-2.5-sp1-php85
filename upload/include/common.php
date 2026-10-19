@@ -68,19 +68,14 @@ $predefined = array('navtitle', 'page', 'goto', 'p', 'order', 'ascdesc', 'desc',
 	'pid', 'digest', 'invisible', 'type', 'tid', 'topicsubmit',
 	'replysubmit', 'editsubmit', 'subject', 'navigation', 'viewperm', 'usesigcheck', 'urloffcheck',
 	'smileoffcheck', 'smileyoffcheck', 'codeoffcheck', 'poll', 'polloptions', 'ismoderator',
-	'searchsubmit');
+	'searchsubmit', 'uid', 'orderby', 'titleonly', 'srchuname', 'srchuid', 'srchtxt', 'srchfrom',
+	'srchtype', 'touser', 'pmid', 'srchfid', 'before');
 foreach($predefined as $prevar) {
 	if(!isset($$prevar)) {
 		$$prevar = '';
 	}
 }
 unset($prevar, $predefined);
-if(!isset($forum)) {
-	$forum = array();
-}
-if(!isset($forums)) {
-	$forums = array();
-}
 
 require DISCUZ_ROOT.'./config.php';
 require DISCUZ_ROOT.'./include/global.php';
@@ -88,8 +83,13 @@ require DISCUZ_ROOT.'./include/db_'.$database.'.php';
 
 $timestamp = time();
 
-$PHP_SELF = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
-$boardurl = 'http://'.$_SERVER['HTTP_HOST'].substr($PHP_SELF, 0, strrpos($PHP_SELF, '/') + 1);
+$PHP_SELF = !empty($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : (isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '');
+$PHP_SELF = str_replace(array("\r", "\n", '"', "'", '<', '>'), '', $PHP_SELF);
+$httphost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+if(!preg_match('/^(\[[0-9a-fA-F:]+\]|[a-zA-Z0-9\.\-]+)(:[0-9]+)?$/', $httphost)) {
+	$httphost = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
+}
+$boardurl = 'http://'.$httphost.substr($PHP_SELF, 0, strrpos($PHP_SELF, '/') + 1);
 $discuz_root = DISCUZ_ROOT; 
 $url_redirect = '';
 
@@ -199,7 +199,7 @@ if($statstatus) {
 }
 
 if(!isset($_COOKIE['sid']) || $sid != $_COOKIE['sid']) {
-	setcookie('sid', $sid, $timestamp + 2592000, $cookiepath, $cookiedomain);
+	setcookie('sid', $sid, $timestamp + 2592000, $cookiepath, $cookiedomain, false, true);
 }
 
 $tpp = empty($_DSESSION['tpp']) ? $topicperpage : $_DSESSION['tpp'];
@@ -221,7 +221,7 @@ if(!empty($tid)){
 	$forum = $db->fetch_array($query);
 }
 // PHP 8 起未定义数组下标会提示, 预置论坛常用字段(缺失时为假值, 与原逻辑一致)
-if(is_array($forum)) {
+if(isset($forum) && is_array($forum)) {
 	foreach(array('fid', 'fup', 'type', 'name', 'status', 'postperm', 'viewperm', 'getattachperm', 'allowpost', 'allowview', 'styleid', 'moderator', 'password') as $forumkey) {
 		if(!isset($forum[$forumkey])) {
 			$forum[$forumkey] = '';
@@ -273,9 +273,9 @@ if($headercharset) {
 $gzipcompress ? ob_start('ob_gzhandler') : ob_start();
 
 if(isset($allowvisit) && $allowvisit == 0) {
-	setcookie('_discuz_uid', $discuz_uid, $timestamp + 86400 * 365, $cookiepath, $cookiedomain);
-	setcookie('_discuz_pw', $discuz_pw, $timestamp + 86400 * 365, $cookiepath, $cookiedomain);
-	setcookie('_discuz_secques', $discuz_secques, $timestamp + 86400 * 365, $cookiepath, $cookiedomain);
+	setcookie('_discuz_uid', $discuz_uid, $timestamp + 86400 * 365, $cookiepath, $cookiedomain, false, true);
+	setcookie('_discuz_pw', $discuz_pw, $timestamp + 86400 * 365, $cookiepath, $cookiedomain, false, true);
+	setcookie('_discuz_secques', $discuz_secques, $timestamp + 86400 * 365, $cookiepath, $cookiedomain, false, true);
 	showmessage('user_banned', NULL, 'HALTED');
 } elseif($bbclosed && !((defined('CURRSCRIPT') && CURRSCRIPT == 'logging' && $action == 'login') || $adminid == 1)) {
 	clearcookies();

@@ -21,6 +21,7 @@ require './include/common.php';
 require DISCUZ_ROOT.'./include/forum.php';
 
 $discuz_action = 2;
+$highlight = isset($highlight) ? $highlight : '';
 
 if(isset($showoldetails)) {
 	switch ($showoldetails) {

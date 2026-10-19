@@ -22,7 +22,7 @@ require "./include/db_mysql.php";
 require "./include/discuzcode.php";
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-@set_magic_quotes_runtime(0);
+
 
 $action = ($HTTP_POST_VARS['action']) ? $HTTP_POST_VARS['action'] : $HTTP_GET_VARS['action'];
 $step = $HTTP_GET_VARS['step'];

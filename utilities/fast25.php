@@ -19,7 +19,7 @@ require "./config.php";
 require "./include/db_mysql.php";
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-@set_magic_quotes_runtime(0);
+
 
 $action = ($_POST['action']) ? $_POST['action'] : $_GET['action'];
 $step = $_GET['step'];

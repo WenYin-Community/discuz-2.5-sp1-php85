@@ -14,6 +14,15 @@
 1 用户名限制的问题
 */
 require './include/common.php';
+// PHP 8: 注册表单的可选字段未提交时预置为空值(与原逻辑的假值一致)
+foreach(array('questionid', 'answer', 'dateformatnew', 'timeformatnew', 'tppnew', 'pppnew', 'year', 'month',
+	'day', 'msn', 'oicq', 'icq', 'yahoo', 'site', 'bio', 'locationnew', 'gendernew', 'showemail',
+	'newsletter', 'styleidnew', 'timeoffsetnew') as $regvar) {
+	if(!isset($$regvar)) {
+		$$regvar = '';
+	}
+}
+unset($regvar);
 
 $discuz_action = 5;
 
@@ -155,6 +164,7 @@ if(!submitcheck('regsubmit')) {
 	}
 
 	require DISCUZ_ROOT.'./include/cache.php';
+
 	updatecache('settings');
 
 	$discuz_uid = $uid;
@@ -166,9 +176,9 @@ if(!submitcheck('regsubmit')) {
 	$styleid = $styleid ? $styleid : $_DCACHE['settings']['styleid'];
 
 	setcookie('cookietime', 2592000, $timestamp + 86400 * 365, $cookiepath, $cookiedomain);
-	setcookie('_discuz_uid', $discuz_uid, $timestamp + 2592000, $cookiepath, $cookiedomain);
-	setcookie('_discuz_pw', $discuz_pw, $timestamp + 2592000, $cookiepath, $cookiedomain);
-	setcookie('_discuz_secques', $discuz_secques, $timestamp + 2592000, $cookiepath, $cookiedomain);
+	setcookie('_discuz_uid', $discuz_uid, $timestamp + 2592000, $cookiepath, $cookiedomain, false, true);
+	setcookie('_discuz_pw', $discuz_pw, $timestamp + 2592000, $cookiepath, $cookiedomain, false, true);
+	setcookie('_discuz_secques', $discuz_secques, $timestamp + 2592000, $cookiepath, $cookiedomain, false, true);
 	if($regverify == 1){
 		sendmail($email, 'email_verify_subject', 'email_verify_message');
 		showmessage('profile_email_verify');

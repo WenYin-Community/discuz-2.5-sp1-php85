@@ -42,7 +42,7 @@ if($tid) {
 if(!empty($forum['type']) && $forum['type'] == 'forum') {
 	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($forum['name']).' - '.$thread['subject'];
-} else {
+} elseif(!empty($forum['fup'])) {
 	$query = $db->query("SELECT name, fid, moderator FROM $table_forums WHERE fid='{$forum['fup']}'");
 	$fup = $db->fetch_array($query);
 	if(!is_array($fup)) {
@@ -258,7 +258,8 @@ if($action == 'moderate') {
 		for($i = 1; $i <= 3; $i++) {
 			$stylecheck[$i] = $stylestr[$i - 1] ? 'checked' : NULL;
 		}
-		$colorcheck = array($string[1] => 'checked');
+		$colorcheck = array_fill(0, 9, '');
+		$colorcheck[$string[1]] = 'checked';
 		
 		include template('topicadmin_highlight');
 

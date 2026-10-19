@@ -119,7 +119,7 @@
                     <!--{if $thread['new']}-->
                     <a href="redirect.php?tid=$thread[tid]&goto=newpost$highlight#newpost"><img src="{IMGDIR}/firstnew.gif" border="0" align="absmiddle"></a> 
                     <!--{/if}-->
-                    <!--{if $thread['moved']}-->
+                    <!--{if !empty($thread['moved'])}-->
                     <!--{if $ismoderator}-->
                     <a href="topicadmin.php?action=delete&tid=$thread[moved]">{lang 
                     thread_moved}:</a> 
@@ -197,7 +197,7 @@
               &nbsp;<a href="###" onclick="document.moderate.submit()" class="bold"> 
               {lang moderate_submit} </a> </td>
           </tr>
-          <!--{elseif $ismoderator && !$modshortcut && allowdelpost}-->
+          <!--{elseif $ismoderator && !$modshortcut && $allowdelpost}-->
           <input type="hidden" name="operation" value='delete'>
           <!--{/if}-->
           <!--{else}-->

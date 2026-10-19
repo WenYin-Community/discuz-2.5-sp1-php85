@@ -15,13 +15,14 @@ require './include/common.php';
 require DISCUZ_ROOT.'./include/misc.php';
 require DISCUZ_ROOT.'./forumdata/cache/cache_forums.php';
 
+$forums = isset($forums) ? $forums : '';
 $page = intval($page) ? intval($page) : 1;
 $start_limit = ($page - 1) * $tpp;
 
 $forumsarray = array();
 foreach((is_array($forums) ? $forums : explode('_', $forums)) as $forum) {
 	$forum = intval(trim($forum));
-	if($forum) {
+	if(!empty($forum)) {
 		$forumsarray[] = $forum;
 	}
 }
@@ -51,7 +52,8 @@ if(!$threadcount) {
 if(!$order || !in_array($order, array('dateline', 'lastpost', 'replies', 'views'))) {
 	$order = 'digest';
 }
-$ordercheck = array($order => 'selected="selected"');
+$ordercheck = array('dateline' => '', 'digest' => '', 'lastpost' => '', 'replies' => '', 'views' => '');
+$ordercheck[$order] = 'selected="selected"';
 
 $forumsarray = $threadlist = array();
 $query = $db->query("SELECT * FROM {$tablepre}threads WHERE digest>'0' AND fid IN ($fids) AND displayorder>='0' $keywordadd ORDER BY $order DESC LIMIT $start_limit, $tpp");

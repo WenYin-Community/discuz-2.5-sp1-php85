@@ -24,13 +24,16 @@ if(!$operation) {
 		$forumselect = '<select name="forum"><option value="">&nbsp;&nbsp;> '.$lang['select'].'</option>'.
 			'<option value="">&nbsp;</option>'.forumselect().'</select>';
 
-		if($forum) {
+		if(!empty($forum)) {
 			$forumselect = preg_replace("/(\<option value=\"$forum\")(\>)/", "\\1 selected=\"selected\" \\2", $forumselect);
 		}
 
-		$checksticky = array(intval($sticky) => 'checked');
-		$checkdigest = array(intval($digest) => 'checked');
-		$checkattach = array(intval($attach) => 'checked');
+		$checksticky = array(0 => '', 1 => '', 2 => '');
+		$checkdigest = array(0 => '', 1 => '', 2 => '');
+		$checkattach = array(0 => '', 1 => '', 2 => '');
+		$checksticky[intval($sticky)] = 'checked';
+		$checkdigest[intval($digest)] = 'checked';
+		$checkattach[intval($attach)] = 'checked';
 		include CP_TPL.'moderate_search.php';
 
 } else {
@@ -112,7 +115,7 @@ if(submitcheck('searchsubmit')) {
 
 	$sql = '';
 
-	if($forum) {
+	if(!empty($forum)) {
 		$sql .= " AND fid='$forum'";
 	}
 

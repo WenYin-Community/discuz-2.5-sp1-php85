@@ -52,6 +52,7 @@ if($adminid == 1) {
 	}
 	$dbsize = $dbsize ? sizecount($dbsize) : $lang['unknown'];
 
+	$showattach = isset($showattach) ? $showattach : 0;
 	if ($showattach) { 
 		$attachsize = dirsize(DISCUZ_ROOT.$attachdir);
 		$attachsize = is_numeric($attachsize) ? sizecount($attachsize) : $lang['unknown'];
@@ -64,7 +65,7 @@ cpheader();
 
 ?>
 <font class="mediumtxt">
-<b><?=$lang['welcome_to']?> <a href="http://www.Discuz.net" target="_blank">Discuz! <?=$version?></a> Administrators' Control Panel</b><br>
+<b><?=$lang['home_welcome_to']?> <a href="http://www.Discuz.net" target="_blank">Discuz! <?=$version?></a> Administrators' Control Panel</b><br>
 Copyright&copy; <a href="http://www.discuz.com" target="_blank">Comsenz Technology Ltd</a>, 2002-2004.
 
 <br><br><br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">

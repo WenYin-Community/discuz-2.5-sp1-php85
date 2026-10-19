@@ -69,7 +69,12 @@ if($dberrno == 1114) {
 
 	echo "</table></table></table></table></table>\n";
 	echo "<p style=\"font-family: Verdana, Tahoma; font-size: 11px; background: #FFFFFF;\">";
-	echo nl2br($errmsg);
+	$isadmin = !empty($GLOBALS['adminid']) && $GLOBALS['adminid'] == 1;
+	if($isadmin) {
+		echo nl2br($errmsg);
+	} else {
+		echo 'The forum database is temporarily unavailable. Please try again later.';
+	}
 	if(!empty($GLOBALS['adminemail'])) {
 		$errnos = array();
 		$errorlogs = '';

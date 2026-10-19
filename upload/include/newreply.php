@@ -19,11 +19,12 @@ if(!defined('IN_DISCUZ')) {
 }
 
 $discuz_action = 12;
+$repquote = isset($repquote) ? $repquote : '';
 
 if(!$discuz_uid && !((!$forum['replyperm'] && $allowpost) || ($forum['replyperm'] && strstr($forum['replyperm'], "\t$groupid\t")))) {
 	header('Location: logging.php?action=login&referer='.rawurlencode("$PHP_SELF?action=$action&fid=$fid&tid=$tid&pid=$pid&repquote=$repquote"));
 	exit();
-} elseif(!$forum['allowreply']) {
+} elseif(empty($forum['allowreply'])) {
 	if(!$forum['replyperm'] && !$allowpost) {
 		showmessage('group_nopermission', NULL, 'HALTED');
 	} elseif($forum['replyperm'] && !strstr($forum['replyperm'], "\t$groupid\t")) {

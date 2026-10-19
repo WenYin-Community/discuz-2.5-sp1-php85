@@ -18,7 +18,7 @@ define('CURRSCRIPT',  'post');
 
 require './include/common.php';
 
-if(!is_array($forum)) {
+if(!isset($forum) || !is_array($forum)) {
 	showmessage($tid ? 'thread_nonexistence' : 'forum_nonexistence');
 }
 

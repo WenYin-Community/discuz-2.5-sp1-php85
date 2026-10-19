@@ -12,6 +12,9 @@
 
 require './include/common.php';
 
+$favadd = isset($favadd) ? $favadd : '';
+$buddy = isset($buddy) ? $buddy : '';
+
 $discuz_action = 7;
 
 if(!$discuz_uid) {
@@ -90,14 +93,17 @@ if(!isset($action)) {
 		$invisiblechecked = $member['invisible'] ? 'checked="checked"' : NULL;
 		$emailchecked = $member['showemail'] ? 'checked="checked"' : NULL;
 		$newschecked = $member['newsletter'] ? 'checked="checked"' : NULL;
-		$tppchecked = array($member['tpp'] => 'selected="selected"');
-		$pppchecked = array($member['ppp'] => 'selected="selected"');
+		$tppchecked = array(0 => '', 10 => '', 20 => '', 30 => '');
+		$tppchecked[$member['tpp']] = 'selected="selected"';
+		$pppchecked = array(0 => '', 5 => '', 10 => '', 15 => '');
+		$pppchecked[$member['ppp']] = 'selected="selected"';
 		$toselect = array();
 		foreach(array('-12', '-11', '-10', '-9', '-8', '-7', '-6', '-5', '-4', '-3.5', '-3', '-2', '-1', '0', '1', '2', '3', '3.5', '4', '4.5', '5', '5.5', '5.75', '6', '6.5', '7', '8', '9', '9.5', '10', '11', '12') as $tzk) {
 			$toselect[$tzk] = '';
 		}
 		$toselect[strval((float)$member['timeoffset'])] = 'selected="selected"';
 
+		$checkmale = $checkfemale = $checkunknown = '';
 		if($member['gender'] == 1) {
 			$checkmale = 'checked';
 		} elseif($member['gender'] == 2) {
@@ -116,7 +122,11 @@ if(!isset($action)) {
 
 		$bday = explode('-', $member['bday']);
 		$bday[0] = $bday[0] == '0000' ? '' : $bday[0];
-		$month = array(intval($bday[1]) => "selected=\"selected\"");
+		$month = array();
+		for($mnum = 0; $mnum <= 12; $mnum++) {
+			$month[$mnum] = '';
+		}
+		$month[intval($bday[1])] = "selected=\"selected\"";
 
 		$dayselect = '';
 		for($num = 1; $num <= 31; $num++) {
@@ -132,6 +142,7 @@ if(!isset($action)) {
 		$member['dateformat'] = str_replace('j', 'dd', $member['dateformat']);
 		$member['dateformat'] = str_replace('y', 'yy', $member['dateformat']);
 		$member['dateformat'] = str_replace('Y', 'yyyy', $member['dateformat']);
+		$check24 = $check12 = '';
 		$member['timeformat'] == 'H:i' ? $check24 = 'checked="checked"' : $check12 = 'checked="checked"';
 		
 		$imgcodeis = $allowsigimgcode ? 'On' : 'Off';

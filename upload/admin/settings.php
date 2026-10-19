@@ -135,7 +135,8 @@ if(!submitcheck('settingsubmit')) {
 		showtype('', 'bottom');
 	
 	}elseif( $options=='21'){
-        $checkattach = array($settings['attachsave'] => 'checked');
+        $checkattach = array(0 => '', 1 => '', 2 => '');
+		$checkattach[$settings['attachsave']] = 'checked';
 		showtype('settings_attach_upload','top');
 		showsetting('settings_attach_upload_max', 'settingsnew[attach_max]', $settings['attach_max'], 'text');
 		showsetting('settings_attach_upload_newpost', 'settingsnew[attach_newpost]', $settings['attach_newpost'], 'text');

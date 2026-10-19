@@ -64,7 +64,12 @@ function attach_upload_file($attach, $attach_name, $attach_size, $attach_fname, 
 	$filename  = $attach_name;
 	$attach_ext = $extension = strtolower(fileext($attach_name));
 
-	if($attachextensions && @!eregi($attach_ext, $attachextensions)) {
+	// 安全加固: 白名单为空时回退到内置安全白名单, 并始终拒绝可执行/脚本扩展名
+	if(!$attachextensions) {
+		$attachextensions = 'chm,pdf,zip,rar,tar,tgz,gif,jpg,jpeg,png';
+	}
+	$deny_exts = array('php', 'php3', 'php4', 'php5', 'php7', 'php8', 'phtml', 'pht', 'phar', 'shtml', 'shtm', 'htaccess', 'htpasswd', 'cgi', 'pl', 'asp', 'aspx', 'jsp', 'exe', 'dll', 'so', 'bat', 'cmd', 'sh');
+	if(in_array($attach_ext, $deny_exts) || @!preg_match('/'.preg_quote($attach_ext, '/').'/i', $attachextensions)) {
 		showmessage('post_attachment_ext_notallowed');
 	}
 

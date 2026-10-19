@@ -31,9 +31,9 @@ function cutstr($string, $length) {
 
 function clearcookies() {
 	global $timestamp, $cookiepath, $cookiedomain, $discuz_uid, $discuz_user, $discuz_pw, $discuz_secques, $adminid, $groupid, $credit;
-	setcookie('_discuz_uid', '', $timestamp - 86400 * 365, $cookiepath, $cookiedomain);
-	setcookie('_discuz_pw', '', $timestamp - 86400 * 365, $cookiepath, $cookiedomain);
-	setcookie('_discuz_secques', '', $timestamp - 86400 * 365, $cookiepath, $cookiedomain);
+	setcookie('_discuz_uid', '', $timestamp - 86400 * 365, $cookiepath, $cookiedomain, false, true);
+	setcookie('_discuz_pw', '', $timestamp - 86400 * 365, $cookiepath, $cookiedomain, false, true);
+	setcookie('_discuz_secques', '', $timestamp - 86400 * 365, $cookiepath, $cookiedomain, false, true);
 	$groupid = 7;
 	$discuz_uid = $adminid = $credit = 0;
 	$discuz_user = $discuz_pw = $discuz_secques = '';
@@ -106,13 +106,21 @@ function unhtmlspecialchars($string) {
 function dreferer() {
 	global $referer;
 
-	$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
-	if(empty($referer) && isset($HTTP_REFERER)) {
+	$HTTP_REFERER = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+	if(empty($referer) && $HTTP_REFERER) {
 		$referer = preg_replace("/(?:([\?&]sid\=[a-z0-9]{8}&?))/i", '', $HTTP_REFERER);
 		$referer = substr($referer, -1) == '?' ? substr($referer, 0, -1) : $referer;
 	}
 	if(!strpos($referer, '.php') || strpos($referer, 'logging.php')) {
 		$referer = 'index.php';
+	}
+	// 只允许跳回本站, 防止借助 Referer 构造开放重定向
+	if(preg_match("#^([a-z]+:)?//#i", $referer)) {
+		$refhost = preg_replace("#^([a-z]+:)?//([^/]+).*#i", "\\2", $referer);
+		$curhost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+		if(strcasecmp($refhost, $curhost) !== 0) {
+			$referer = 'index.php';
+		}
 	}
 	return $referer;		
 }
@@ -247,9 +255,8 @@ function random($length) {
 	$hash = '';
 	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
 	$max = strlen($chars) - 1;
-	mt_srand((float)microtime() * 1000000);
 	for($i = 0; $i < $length; $i++) {
-		$hash .= $chars[mt_rand(0, $max)];
+		$hash .= $chars[random_int(0, $max)];
 	}
 	return $hash;
 }

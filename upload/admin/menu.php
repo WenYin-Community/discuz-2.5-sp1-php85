@@ -23,7 +23,9 @@
 <tr><td bgcolor="<?=ALTBG1?>" align="center" class="smalltxt"><a href="admincp.php?action=menu&expand=1_2_3_4_5_6_7_8_9_10_11_12_13">[EXPAND]</a> &nbsp; <a href="admincp.php?action=menu&expand=0">[REDUCE]</a></td></tr>
 <?
 
-		if(preg_match("/(^|_)$change($|_)/is", $expand)) {
+		$expand = isset($expand) ? $expand : '';
+		$change = isset($change) ? $change : '';
+		if($change && preg_match("/(^|_)$change($|_)/is", $expand)) {
 			$expandlist = explode('_', $expand);
 			$expand = $underline = '';
 			foreach($expandlist as $count) {
@@ -39,13 +41,13 @@
 		if($expand || $expand == '0') {
 			setcookie('expand_menu', $expand, $timestamp + 2592000, $cookiepath, $cookiedomain);
 		} else {
-			$expand = $_COOKIE['expand_menu'];
+			$expand = isset($_COOKIE['expand_menu']) ? $_COOKIE['expand_menu'] : '';
 		}
 
 		$pluginsarray = array();
 		$pluginsarray[] = array('name' => $lang['plug_add'], 'url' => 'admincp.php?action=plugin&mod=add');
 		$pluginsarray[] = array('name' => $lang['plug_center'], 'url' => 'admincp.php?action=plugin&mod=list');
-		$plugins=$_DCACHE['plugins'];
+		$plugins = isset($_DCACHE['plugins']) ? $_DCACHE['plugins'] : array();
 
 		$menucount = 0;
 

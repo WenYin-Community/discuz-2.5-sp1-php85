@@ -20,6 +20,17 @@ if(!defined('IN_ADMINCP')) {
 
 @set_time_limit(600);
 
+// PHP 8: 预置后台各模块的可选请求参数, 未提供时为空值(与原逻辑的假值一致)
+// 注意 showattach / tids / change / expand 在代码中用 isset() 判断, 不能预置
+foreach(array('edit', 'mod', 'extr', 'export', 'options', 'do', 'sticky', 'viewsmore', 'viewsless',
+	'users', 'repliesmore', 'repliesless', 'find', 'keyword', 'orderby', 'ascdesc', 'operation',
+	'noreplydays', 'befordays', 'attach', 'keywords') as $cpvar) {
+	if(!isset($$cpvar)) {
+		$$cpvar = '';
+	}
+}
+unset($cpvar);
+
 function cpmsg($message, $url_forward = '', $msgtype = 'message') {
 	extract($GLOBALS, EXTR_SKIP);
 	$message = dinterpolate(isset($msglang[$message]) ? $msglang[$message] : $message);
@@ -253,7 +264,7 @@ function sqldumptable($table, $startfrom = 0, $currsize = 0) {
 			$comma = "";
 			$tabledump .= "INSERT INTO $table VALUES(";
 			for($i = 0; $i < $numfields; $i++) {
-				$tabledump .= $comma."'".mysql_escape_string($row[$i])."'";
+				$tabledump .= $comma."'".addslashes($row[$i])."'";
 				$comma = ",";
 			}
 			$tabledump .= ");\n";

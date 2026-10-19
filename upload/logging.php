@@ -114,9 +114,9 @@ if($action == 'logout') {
 			$cookietime = empty($_cookietime) ? 0 : $timestamp + $_cookietime;
 
 			setcookie('_cookietime', $_cookietime, $timestamp + 31536000, $cookiepath, $cookiedomain);
-			setcookie('_discuz_uid', $discuz_uid, $cookietime, $cookiepath, $cookiedomain);
-			setcookie('_discuz_pw', $discuz_pw, $cookietime, $cookiepath, $cookiedomain);
-			setcookie('_discuz_secques', $secques, $cookietime, $cookiepath, $cookiedomain);
+			setcookie('_discuz_uid', $discuz_uid, $cookietime, $cookiepath, $cookiedomain, false, true);
+			setcookie('_discuz_pw', $discuz_pw, $cookietime, $cookiepath, $cookiedomain, false, true);
+			setcookie('_discuz_secques', $secques, $cookietime, $cookiepath, $cookiedomain, false, true);
 
 			$db->query("UPDATE $table_members SET lastvisit=lastactivity, lastactivity='$timestamp' $groupidadd $invisibleadd WHERE uid='$discuz_uid'", 'UNBUFFERED');
 

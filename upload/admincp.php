@@ -89,7 +89,7 @@ if($action == 'menu') {
 		cpmsg('noaccess');
 	}elseif($cpaccess == 1) {
 		if ($_POST['cploginsubmit']){
-			if ($admin_password && md5($admin_password)== $discuz_pw){
+			if ($admin_password && hash_equals($discuz_pw, md5($admin_password))){
 				$cpnologin =3;
 				$db->query("UPDATE $table_adminsessions SET errorlog='-1' WHERE uid='$discuz_uid'");
 				$extra = '<b>Loggin ADMINCP<b>';

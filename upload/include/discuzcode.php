@@ -65,6 +65,7 @@ function parseurl(&$message) {
 
 function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml = 0, $allowbbcode = 1, $allowimgcode = 1) {
 	global $credit, $tid, $discuz_uid, $codehtml, $post_codecount, $thisbg, $highlight, $table_posts, $db, $searcharray, $replacearray, $ismoderator,$phpcodehtml,$post_phpcodecount;
+	$title = '';
 
 	if(!$bbcodeoff && $allowbbcode) {
 		$message = preg_replace_callback("/\s*\[code\](.+?)\[\/code\]\s*/is", "parse_bb_code", $message);
@@ -90,7 +91,7 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 			$searcharray['bbcode_regexp'] = array(
 				"/\s*\[quote\][\n\r]*(.+?)[\n\r]*\[\/quote\]\s*/is",
 				"/(\[box=(#[0-9A-F]{6}|[a-z]+)\])[\n\r]*(.+?)[\n\r]*(\[\/box\])/is",
-				"/\[url\]\s*(www.|https?:\/\/|ftp:\/\/|gopher:\/\/|news:\/\/|telnet:\/\/|rtsp:\/\/|mms:\/\/){1}([^\[\"']+?)\s*\[\/url\]/ie",
+				"/\[url\]\s*(www.|https?:\/\/|ftp:\/\/|gopher:\/\/|news:\/\/|telnet:\/\/|rtsp:\/\/|mms:\/\/){1}([^\[\"']+?)\s*\[\/url\]/i",
 				"/\[url=www.([^\[\"']+?)\](.+?)\[\/url\]/is",
 				"/\[url=(https?|ftp|gopher|news|telnet|rtsp|mms){1}:\/\/([^\[\"']+?)\](.+?)\[\/url\]/is",
 				"/\[email\]\s*([A-Za-z0-9\-_.]+)@([A-Za-z0-9\-_]+[.][A-Za-z0-9\-_.]+)\s*\[\/email\]/i",
@@ -104,7 +105,7 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 			$replacearray['bbcode_regexp'] = array(
 				"<br><br><center><table border=\"0\" width=\"90%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td>&nbsp;&nbsp;Quote:</td></tr><tr><td><table border=\"0\" width=\"100%\" cellspacing=\"1\" cellpadding=\"10\" bgcolor=\"".BORDERCOLOR."\"><tr><td width=\"100%\" bgcolor=\"".ALTBG2."\" style=\"word-break:break-all\">\\1</td></tr></table></td></tr></table></center><br>",
 				"<blockquote style=\"background-color: \\2 ;\"><span class=\"bold\">$title</span>\\3</blockquote>",
-				"cuturl('\\1\\2')",
+				"parse_bb_url",
 				"<a href=\"http://www.\\1\" target=\"_blank\">\\2</a>",
 				"<a href=\"\\1://\\2\" target=\"_blank\">\\3</a>",
 				"<a href=\"mailto:\\1@\\2\">\\1@\\2</a>",
@@ -135,8 +136,18 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 			);       
 		}                
 
-		@$message = str_replace($searcharray['bbcode_str'], $replacearray['bbcode_str'],
-				preg_replace($searcharray['bbcode_regexp'], $replacearray['bbcode_regexp'], $message));
+		$bbcode_message = $message;
+		if(is_array($searcharray['bbcode_regexp']) && is_array($replacearray['bbcode_regexp'])) {
+			foreach($searcharray['bbcode_regexp'] as $bbcode_key => $bbcode_pattern) {
+				$bbcode_replace = isset($replacearray['bbcode_regexp'][$bbcode_key]) ? $replacearray['bbcode_regexp'][$bbcode_key] : '';
+				if(is_callable($bbcode_replace)) {
+					$bbcode_message = preg_replace_callback($bbcode_pattern, $bbcode_replace, $bbcode_message);
+				} else {
+					$bbcode_message = preg_replace($bbcode_pattern, $bbcode_replace, $bbcode_message);
+				}
+			}
+		}
+		@$message = str_replace($searcharray['bbcode_str'], $replacearray['bbcode_str'], $bbcode_message);
 
 		if(preg_match("/\[hide=?\d*\].+?\[\/hide\]/is", $message)) {
 			if(stristr($message, '[hide]')) {
@@ -155,17 +166,22 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 	if(!$bbcodeoff && $allowimgcode) {
 		if(empty($searcharray['imgcode']) || empty($replacearray['imgcode'])) {
 			$searcharray['imgcode'] = array(
-				"/\[swf\]\s*([^\[]+?)\s*\[\/swf\]/ies",
-				"/\[img\]\s*([^\[]+?)\s*\[\/img\]/ies",
-				"/\[img=(\d{1,3})[x|\,](\d{1,3})\]\s*([^\[]+?)\s*\[\/img\]/ies"
+				"/\[swf\]\s*([^\[]+?)\s*\[\/swf\]/is",
+				"/\[img\]\s*([^\[]+?)\s*\[\/img\]/is",
+				"/\[img=(\d{1,3})[x|\,](\d{1,3})\]\s*([^\[]+?)\s*\[\/img\]/is"
 			);
 			$replacearray['imgcode'] = array(
-				"bbcodeurl('\\1', ' <img src=\"images/attachicons/flash.gif\" align=\"absmiddle\"> <a href=\"%s\" target=\"_blank\">Flash: %s</a> ')",
-				"bbcodeurl('\\1', '<img src=\"%s\" border=\"0\" onload=\"if(this.width>screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.alt=\'Click here to open new window\';}\" onmouseover=\"if(this.resized) this.style.cursor=\'hand\';\" onclick=\"if(this.resized) {window.open(this.src);}\">')",
-				"bbcodeurl('\\3', '<img width=\"\\1\" height=\"\\2\" src=\"%s\" border=\"0\">')"
+				"parse_bb_swf",
+				"parse_bb_img",
+				"parse_bb_imgwh",
 			);
 		}
-		$message = preg_replace($searcharray['imgcode'], $replacearray['imgcode'], $message);
+		foreach($searcharray['imgcode'] as $img_key => $img_pattern) {
+			$img_callback = isset($replacearray['imgcode'][$img_key]) ? $replacearray['imgcode'][$img_key] : '';
+			if($img_callback) {
+				$message = preg_replace_callback($img_pattern, $img_callback, $message);
+			}
+		}
 	}
 
 	for($i = 0; $i <= $post_codecount; $i++) {
@@ -200,6 +216,22 @@ function cuturl($url) {
 	}
 	$urllink .= $url.'</a>';
 	return $urllink;
+}
+
+function parse_bb_url($m) {
+	return cuturl($m[1].$m[2]);
+}
+
+function parse_bb_swf($m) {
+	return bbcodeurl($m[1], ' <img src="images/attachicons/flash.gif" align="absmiddle"> <a href="%s" target="_blank">Flash: %s</a> ');
+}
+
+function parse_bb_img($m) {
+	return bbcodeurl($m[1], '<img src="%s" border="0" onload="if(this.width>screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.alt=\'Click here to open new window\';}" onmouseover="if(this.resized) this.style.cursor=\'hand\';" onclick="if(this.resized) {window.open(this.src);}">');
+}
+
+function parse_bb_imgwh($m) {
+	return bbcodeurl($m[3], '<img width="'.$m[1].'" height="'.$m[2].'" src="%s" border="0">');
 }
 
 function bbcodeurl($url, $tags) {

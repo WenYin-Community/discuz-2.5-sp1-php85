@@ -23,9 +23,9 @@ require "./include/db_mysql.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 @set_magic_quotes_runtime(0);
 
-$action = ($_POST[action]) ? $_POST[action] : $_GET[action];
-$step = $_GET[step];
-$start = $_GET[start];
+$action = ($_POST['action']) ? $_POST['action'] : $_GET['action'];
+$step = $_GET['step'];
+$start = $_GET['start'];
 
 $upgrade0 = <<<EOT
 DROP TABLE IF EXISTS cdb_upgrade;
@@ -464,7 +464,7 @@ if(!$action) {
 		runquery($upgrade2);
 		$query = $db->query("SELECT DISTINCT attachment FROM $table_threads WHERE attachment<>''");
 		while($t = $db->fetch_array($query)) {
-			$db->query("UPDATE $table_threads SET attachment='".attachtype($t['attachment'], 'id')."' WHERE attachment='$t[attachment]'");
+			$db->query("UPDATE $table_threads SET attachment='".attachtype($t['attachment'], 'id')."' WHERE attachment='{$t['attachment']}'");
 		}
 	} elseif($step == 12) {
 		runquery($upgrade3);
@@ -499,14 +499,14 @@ if(!$action) {
 		$query = $db->query("SELECT groupid, specifiedusers FROM $table_usergroups WHERE specifiedusers<>''");
 		while($g = $db->fetch_array($query)) {
 			$g['specifiedusers'] = "'".str_replace("\t", "','", trim($g['specifiedusers']))."'";
-			$db->query("UPDATE $table_members SET groupid='$g[groupid]', adminid='-1' WHERE username IN ($g[specifiedusers])");
+			$db->query("UPDATE $table_members SET groupid='{$g['groupid']}', adminid='-1' WHERE username IN ({$g['specifiedusers']})");
 		}
 		$db->query("ALTER TABLE $table_usergroups DROP INDEX creditshigher, DROP INDEX creditslower, ADD INDEX creditsrange (creditshigher, creditslower), DROP specifiedusers, DROP status, DROP maxmemonum, DROP ismoderator, DROP issupermod, DROP isadmin, ADD allowhidecode tinyint(1) NOT NULL AFTER allowsetattachperm, CHANGE grouptitle grouptitle CHAR(30) NOT NULL, CHANGE groupavatar groupavatar CHAR(60) NOT NULL, CHANGE attachextensions attachextensions CHAR(255) NOT NULL;");
 	} elseif($step == 13) {
 		$query = $db->query("ALTER TABLE $table_stats DROP INDEX type, DROP INDEX var, ADD PRIMARY KEY (type, var)", 'SILENT');
 		$query = $db->query("SELECT groupid, creditshigher, creditslower FROM $table_usergroups WHERE (creditshigher<>'0' OR creditslower<>'0') AND groupid>'8'");
 		while($g = $db->fetch_array($query)) {
-			$db->query("UPDATE $table_members SET groupid='$g[groupid]' WHERE groupid='0' AND credit>='$g[creditshigher]' AND credit<'$g[creditslower]'");
+			$db->query("UPDATE $table_members SET groupid='{$g['groupid']}' WHERE groupid='0' AND credit>='{$g['creditshigher']}' AND credit<'{$g['creditslower']}'");
 		}
 		$query = $db->query("SELECT * FROM $table_settings");
 		foreach($db->fetch_array($query) as $key => $val) {
@@ -528,7 +528,7 @@ if(!$action) {
 		$query = $db->query("SELECT tid, pollopts FROM $table_threads WHERE pollopts<>''");
 		while($thread = $db->fetch_array($query)) {
 			$thread['pollopts'] = addslashes($thread['pollopts']);
-			$db->query("INSERT INTO $table_polls (tid, pollopts) VALUES ('$thread[tid]', '$thread[pollopts]')");
+			$db->query("INSERT INTO $table_polls (tid, pollopts) VALUES ('{$thread['tid']}', '{$thread['pollopts']}')");
 		}
 		$db->query("ALTER TABLE $table_threads ADD poll tinyint(1) DEFAULT '0' NOT NULL AFTER pollopts");
 		$db->query("UPDATE $table_threads SET poll='1' WHERE pollopts<>''");
@@ -537,7 +537,7 @@ if(!$action) {
 
 		$query = $db->query("SELECT id, url FROM $table_smilies WHERE type='icon'");
 		while($icon = $db->fetch_array($query)) {
-			$db->query("UPDATE $table_threads SET iconid='$icon[id]' WHERE icon='$icon[url]'");
+			$db->query("UPDATE $table_threads SET iconid='{$icon['id']}' WHERE icon='{$icon['url']}'");
 		}
 		$db->query("ALTER TABLE $table_threads DROP icon");
 		$db->query("ALTER TABLE $table_threads CHANGE author author CHAR(15) NOT NULL, CHANGE subject subject CHAR(80) NOT NULL, CHANGE lastposter lastposter CHAR(15) NOT NULL");
@@ -552,14 +552,14 @@ if(!$action) {
 
 		$query = $db->query("SELECT styleid FROM $table_styles");
 		while($style = $db->fetch_array($query)) {
-			$db->query("INSERT INTO $table_stylevars (styleid, variable, substitute) VALUES ('$style[styleid]', 'maintablespace', '8')");
-			$db->query("INSERT INTO $table_stylevars (styleid, variable, substitute) VALUES ('$style[styleid]', 'maintablewidth', '98%')");
-			$db->query("INSERT INTO $table_stylevars (styleid, variable, substitute) VALUES ('$style[styleid]', 'maintablecolor', '#FFFFFF')");
+			$db->query("INSERT INTO $table_stylevars (styleid, variable, substitute) VALUES ('{$style['styleid']}', 'maintablespace', '8')");
+			$db->query("INSERT INTO $table_stylevars (styleid, variable, substitute) VALUES ('{$style['styleid']}', 'maintablewidth', '98%')");
+			$db->query("INSERT INTO $table_stylevars (styleid, variable, substitute) VALUES ('{$style['styleid']}', 'maintablecolor', '#FFFFFF')");
 		}
 		$uids = '0';
 		$query = $db->query("SELECT DISTINCT uid FROM $table_access");
 		while($a = $db->fetch_array($query)) {
-			$uids .= ",$a[uid]";
+			$uids .= ",{$a['uid']}";
 		}
 		$db->query("UPDATE $table_members SET accessmasks='1' WHERE uid IN ($uids)");
 		loginit('karmalog');
@@ -618,7 +618,7 @@ function user2id($table, $columnorig = 'username', $columnnew = 'uid', $keepold 
 	$query = $db->query("SELECT $table.$columnorig, $table_members.uid FROM $table LEFT JOIN $table_members ON $table.$columnorig=$table_members.username GROUP BY $table.$columnorig LIMIT $startrow, 100");
 	while($member = $db->fetch_array($query)) {
 		$converted = 1;
-		$db->query("UPDATE $table SET $columnnew='$member[uid]' WHERE $columnorig='".addslashes($member[$columnorig])."'");
+		$db->query("UPDATE $table SET $columnnew='{$member['uid']}' WHERE $columnorig='".addslashes($member[$columnorig])."'");
 	}
 	if(empty($converted)) {
 		if(empty($keepold)) {

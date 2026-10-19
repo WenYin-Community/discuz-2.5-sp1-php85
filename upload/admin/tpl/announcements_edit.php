@@ -7,13 +7,13 @@
 <tr class="header"><td colspan="2"><?=$lang['announce_edit']?></td></tr>
 
 <tr><td width="21%" bgcolor="<?=ALTBG1?>"><b><?=$lang['subject']?>:</b></td>
-<td width="79%" bgcolor="<?=ALTBG2?>"><input type="text" size="45" name="subjectnew" value="<?=$announce[subject]?>"></td></tr>
+<td width="79%" bgcolor="<?=ALTBG2?>"><input type="text" size="45" name="subjectnew" value="<?=$announce['subject']?>"></td></tr>
 
 <tr><td width="21%" bgcolor="<?=ALTBG1?>"><b><?=$lang['start_time']?>:</b><br><?=$lang['announce_time_comment']?></td>
-<td width="79%" bgcolor="<?=ALTBG2?>"><input type="text" size="45" name="starttimenew" value="<?=$announce[starttime]?>"></td></tr>
+<td width="79%" bgcolor="<?=ALTBG2?>"><input type="text" size="45" name="starttimenew" value="<?=$announce['starttime']?>"></td></tr>
 
 <tr><td width="21%" bgcolor="<?=ALTBG1?>"><b><?=$lang['end_time']?>:</b><br><?=$lang['announce_time_comment']?></td>
-<td width="79%" bgcolor="<?=ALTBG2?>"><input type="text" size="45" name="endtimenew" value="<?=$announce[endtime]?>"> <?=$lang['announce_end_time_comment']?></td></tr>
+<td width="79%" bgcolor="<?=ALTBG2?>"><input type="text" size="45" name="endtimenew" value="<?=$announce['endtime']?>"> <?=$lang['announce_end_time_comment']?></td></tr>
 
 <tr><td width="21%" bgcolor="<?=ALTBG1?>" valign="top"><b><?=$lang['announce_posturl']?>:</b><br><?=$lang['announce_posturl_comment']?></td>
 <td width="79%" bgcolor="<?=ALTBG2?>"><input type="text" size="45" name="posturlnew" value ="<?=$announce['posturl']?>"> </td></tr>

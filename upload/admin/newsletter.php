@@ -25,14 +25,14 @@ if(!submitcheck('newslettersubmit')) {
 	$query = $db->query("SELECT groupid, grouptitle FROM $table_usergroups WHERE groupid not in('5','6','7') ORDER BY type, creditslower"); 
 	while($group = $db->fetch_array($query)) {
 		$usergroups .= ($count++ % 3 == 0 ? '</tr><tr>' : '').
-			"<td width=\"33%\" nowrap><input type=\"checkbox\" name=\"usersendto[]\" value=\"$group[groupid]\">$group[grouptitle]</td>";
+			"<td width=\"33%\" nowrap><input type=\"checkbox\" name=\"usersendto[]\" value=\"{$group['groupid']}\">{$group['grouptitle']}</td>";
 	}
 
 	$count = 0;
 	$query = $db->query("SELECT admingid, admintitle FROM $table_admingroups ORDER BY admingid"); 
 	while($group = $db->fetch_array($query)) {
 		$admingroups .= ($count++ % 3 == 0 ? '</tr><tr>' : '').
-			"<td width=\"33%\" nowrap><input type=\"checkbox\" name=\"adminsendto[]\" value=\"$group[admingid]\">$group[admintitle]</td>";
+			"<td width=\"33%\" nowrap><input type=\"checkbox\" name=\"adminsendto[]\" value=\"{$group['admingid']}\">{$group['admintitle']}</td>";
 	}
 
 	include CP_TPL.'newsletter.php';
@@ -64,7 +64,7 @@ if(!submitcheck('newslettersubmit')) {
 	while($member = $db->fetch_array($query)) {
 		if($sendvia == 'pm') {
 			$db->query("INSERT INTO $table_pms (msgfrom, msgfromid, msgtoid, folder, new, subject, dateline, message)
-				VALUES('$discuz_user', '$discuz_uid', '$member[uid]', 'inbox', '1', '$subject', '$timestamp', '$message')");
+				VALUES('$discuz_user', '$discuz_uid', '{$member['uid']}', 'inbox', '1', '$subject', '$timestamp', '$message')");
 		} elseif($sendvia == 'email') {
 			$emails .= $comma.$member['email'];
 			$comma = ',';

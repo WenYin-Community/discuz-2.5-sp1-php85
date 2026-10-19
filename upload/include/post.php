@@ -213,7 +213,7 @@ function updatemember($operator, $uid, $credits) {
 								LEFT JOIN $table_usergroups u ON (u.creditshigher<>'0' || u.creditslower<>'0') AND m.credit$operator$credits*$posts>=u.creditshigher AND m.credit$operator$credits*$posts<u.creditslower
 								WHERE uid='$uid'");
 				if($member2 = $db->fetch_array($query)) {
-					$groupidadd = $member2['adminid'] == 0 ? ", groupid='$member2[groupid]'" : NULL;
+					$groupidadd = $member2['adminid'] == 0 ? ", groupid='{$member2['groupid']}'" : NULL;
 					$db->query("UPDATE $table_members SET postnum=postnum$operator$posts, credit=credit$operator($credits*$posts) $groupidadd WHERE uid='$uid'", 'UNBUFFERED');
 				}
 			} else {
@@ -232,7 +232,7 @@ function updateforumcount($fid) {
 	$thread = $db->fetch_array($query);
 	$thread['subject'] = addslashes($thread['subject']);
 	$thread['lastposter'] = addslashes($thread['lastposter']);
-	$db->query("UPDATE $table_forums SET posts='$replycount', threads='$threadcount', lastpost='$thread[subject]\t$thread[lastpost]\t$thread[lastposter]' WHERE fid='$fid'", 'UNBUFFERED');
+	$db->query("UPDATE $table_forums SET posts='$replycount', threads='$threadcount', lastpost='{$thread['subject']}\t{$thread['lastpost']}\t{$thread['lastposter']}' WHERE fid='$fid'", 'UNBUFFERED');
 }
 
 function updatethreadcount($tid) {
@@ -247,7 +247,7 @@ function updatethreadcount($tid) {
 	$query = $db->query("SELECT author, dateline FROM $table_posts WHERE tid='$tid' ORDER BY dateline DESC LIMIT 1");
 	$lastpost = $db->fetch_array($query);
 	$lastpost['author'] = addslashes($lastpost['author']);
-	$db->query("UPDATE $table_threads SET replies='$replycount', lastposter='$lastpost[author]', lastpost='$lastpost[dateline]' WHERE tid='$tid'", 'UNBUFFERED');
+	$db->query("UPDATE $table_threads SET replies='$replycount', lastposter='{$lastpost['author']}', lastpost='{$lastpost['dateline']}' WHERE tid='$tid'", 'UNBUFFERED');
 }
 
 ?>

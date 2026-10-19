@@ -34,7 +34,7 @@ if($action == 'addmember') {
 			} else {
 				$group['adminid'] = 0;
 			}
-			$groupselect .= "<option value=\"$group[adminid]|$group[groupid]\">$group[grouptitle]</option>\n";
+			$groupselect .= "<option value=\"{$group['adminid']}|{$group['groupid']}\">{$group['grouptitle']}</option>\n";
 		}
 		include CP_TPL.'member_add.php';
 
@@ -60,7 +60,7 @@ if($action == 'addmember') {
 
 		$newgroupid = explode('|', $newgroupid);
 		$db->query("INSERT INTO $table_members (username, password, gender, adminid, groupid, regip, regdate, lastvisit, lastactivity, postnum, credit, email, tpp, ppp, styleid, dateformat, timeformat, showemail, newsletter, timeoffset)
-			VALUES ('$newusername', '".md5($newpassword)."', '0', '$newgroupid[0]', '$newgroupid[1]', 'Manual Acting', '$timestamp', '$timestamp', '$timestamp', '0', '0', '$newemail', '0', '0', '0', '{$_DCACHE[settings][dateformat]}', '{$_DCACHE[settings][timeformat]}', '1', '1', '{$_DCACHE[settings][timeoffset]}')");
+			VALUES ('$newusername', '".md5($newpassword)."', '0', '$newgroupid[0]', '$newgroupid[1]', 'Manual Acting', '$timestamp', '$timestamp', '$timestamp', '0', '0', '$newemail', '0', '0', '0', '{$_DCACHE['settings']['dateformat']}', '{$_DCACHE['settings']['timeformat']}', '1', '1', '{$_DCACHE['settings']['timeoffset']}')");
 
 		if($emailnotify == 'yes') {
 			sendmail($newemail, 'add_member_subject', 'add_member_message');
@@ -78,11 +78,11 @@ if($action == 'addmember') {
 		
 		$query = $db->query("SELECT admingid, admintitle FROM $table_admingroups ORDER BY admingid");
 		while($agroup = $db->fetch_array($query)) {
-				$adminselect .= "<option value=\"$agroup[admingid]\" \$aselect[$agroup[admingid]]>$agroup[admintitle]</option>\n";
+				$adminselect .= "<option value=\"{$agroup['admingid']}\" \$aselect[{$agroup['admingid']}]>{$agroup['admintitle']}</option>\n";
 		}
 		$query = $db->query("SELECT groupid, grouptitle FROM $table_usergroups WHERE groupid >'3' and groupid<>'7' ORDER BY (creditshigher<>'0' || creditslower<>'0'), creditslower");
 		while($group = $db->fetch_array($query)) {
-			$groupselect .= "<option value=\"$group[groupid]\">$group[grouptitle]</option>\n";
+			$groupselect .= "<option value=\"{$group['groupid']}\">{$group['grouptitle']}</option>\n";
 		}
 		include CP_TPL.'member_search.php';
 
@@ -129,7 +129,7 @@ if($action == 'addmember') {
 
 			$query = $db->query("SELECT admingid, admintitle FROM $table_admingroups ORDER BY admingid");
 			while($agroup = $db->fetch_array($query)) {
-				$agselect .= "<option value=\"$agroup[admingid]\" \$aselect[$agroup[admingid]]>$agroup[admintitle]</option>\n";
+				$agselect .= "<option value=\"{$agroup['admingid']}\" \$aselect[{$agroup['admingid']}]>{$agroup['admintitle']}</option>\n";
 			}
 
 			$query = $db->query("SELECT groupid, type, grouptitle, creditshigher, creditslower FROM $table_usergroups WHERE groupid<>'7' ORDER BY (creditshigher<>'0' || creditslower<>'0'), creditslower");
@@ -141,27 +141,26 @@ if($action == 'addmember') {
 				} else {
 					$group['adminid'] = 0;
 				}
-				$ugselect .= "<option value=\"$group[adminid]|$group[groupid]\" \$uselect[$group[groupid]]>$group[grouptitle]</option>\n";
+				$ugselect .= "<option value=\"{$group['adminid']}|{$group['groupid']}\" \$uselect[{$group['groupid']}]>{$group['grouptitle']}</option>\n";
 			}
-			$agselect = addslashes($agselect);
-			$ugselect = addslashes($ugselect);
 
 			$query = $db->query("SELECT * FROM $table_members WHERE $conditions LIMIT $offset, $memberperpage");
 			while($member = $db->fetch_array($query)) {
 				$aselect = array($member['adminid'] => 'selected="selected"');
 				$uselect = array($member['groupid'] => 'selected="selected"');
 
-				eval("\$admingroups = \"$agselect\"; \$usergroups = \"$ugselect\";");
+				$admingroups = dinterpolate($agselect);
+				$usergroups = dinterpolate($ugselect);
 
-				$members .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$member[uid]\"></td>\n".
-					"<td bgcolor=\"".ALTBG2."\"><a href=\"viewpro.php?uid=$member[uid]\" target=\"_blank\">$member[username]</a></td>\n".
-					"<td bgcolor=\"".ALTBG1."\">$member[credit]</td>\n".
-					"<td bgcolor=\"".ALTBG2."\">$member[postnum]</td>\n".
-					"<td bgcolor=\"".ALTBG1."\"><select name=\"adminidnew[$member[uid]]\">$admingroups</td>\n".
-					"<td bgcolor=\"".ALTBG2."\"><select name=\"groupidnew[$member[uid]]\">$usergroups</td>\n".
-					"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"6\" name=\"usercstatus[$member[uid]]\" value=\"$member[customstatus]\"></td>\n".
-					"<td bgcolor=\"".ALTBG2."\"><a href=\"admincp.php?action=access&uid=$member[uid]\">[$lang[detail]]</a></td>\n".
-					"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=memberprofile&uid=$member[uid]\">[$lang[detail]]</a></td></tr>\n";
+				$members .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$member['uid']}\"></td>\n".
+					"<td bgcolor=\"".ALTBG2."\"><a href=\"viewpro.php?uid={$member['uid']}\" target=\"_blank\">{$member['username']}</a></td>\n".
+					"<td bgcolor=\"".ALTBG1."\">{$member['credit']}</td>\n".
+					"<td bgcolor=\"".ALTBG2."\">{$member['postnum']}</td>\n".
+					"<td bgcolor=\"".ALTBG1."\"><select name=\"adminidnew[{$member['uid']}]\">$admingroups</td>\n".
+					"<td bgcolor=\"".ALTBG2."\"><select name=\"groupidnew[{$member['uid']}]\">$usergroups</td>\n".
+					"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"6\" name=\"usercstatus[{$member['uid']}]\" value=\"{$member['customstatus']}\"></td>\n".
+					"<td bgcolor=\"".ALTBG2."\"><a href=\"admincp.php?action=access&uid={$member['uid']}\">[{$lang['detail']}]</a></td>\n".
+					"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=memberprofile&uid={$member['uid']}\">[{$lang['detail']}]</a></td></tr>\n";
 			}
 			include CP_TPL.'member_edit.php';
 
@@ -228,7 +227,7 @@ if($action == 'addmember') {
 
 			echo '<br><form method="post" action="admincp.php?action=mod_members&username='.rawurlencode($member['username']).'&formhash='.FORMHASH.'>';
 
-			showtype("$lang[members_edit] - $member[username]", 'top');
+			showtype("{$lang['members_edit']} - {$member['username']}", 'top');
 
 			if($allowbanuser) {
 				showsetting('members_edit_ban', '', '', '<input type="radio" name="bannew" value="" '.$check['none'].'> '.$lang['members_edit_ban_none'].'<br><input type="radio" name="bannew" value="post" '.$check['post'].'> '.$lang['members_edit_ban_post'].'<br><input type="radio" name="bannew" value="visit" '.$check['visit'].'> '.$lang['members_edit_ban_visit']);
@@ -252,7 +251,7 @@ if($action == 'addmember') {
 				} elseif($bannew == 'visit') {
 					$sql .= ', adminid=\'-1\', groupid=\'5\'';
 				} elseif($member['groupid'] == 4 || $member['groupid'] == 5) {
-					$query = $db->query("SELECT groupid FROM $table_usergroups WHERE creditshigher<'$member[credit]' AND creditslower>'$member[credit]'");
+					$query = $db->query("SELECT groupid FROM $table_usergroups WHERE creditshigher<'{$member['credit']}' AND creditslower>'{$member['credit']}'");
 					$sql  .= ', groupid=\''.$db->result($query, 0).'\'';
 				}
 			}
@@ -304,12 +303,12 @@ if($action == 'addmember') {
 							'getattach'	=> '');
 				}
 
-				$members .= "<tr><td bgcolor=\"".ALTBG1."\" width=\"25%\"><a href=\"admincp.php?action=forumdetail&fid=$forum[fid]\">$forum[name]</a></td>".
-						"<td bgcolor=\"".ALTBG2."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"defaultnew[$fid]\" value=\"1\" $check[default]></td>\n".
-						"<td bgcolor=\"".ALTBG1."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowviewnew[$fid]\" value=\"1\" $check[view]></td>\n".
-						"<td bgcolor=\"".ALTBG2."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowpostnew[$fid]\" value=\"1\" $check[post]></td>\n".
-						"<td bgcolor=\"".ALTBG1."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowreplynew[$fid]\" value=\"1\" $check[reply]></td>\n".
-						"<td bgcolor=\"".ALTBG2."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowgetattachnew[$fid]\" value=\"1\" $check[getattach]></td></tr>";
+				$members .= "<tr><td bgcolor=\"".ALTBG1."\" width=\"25%\"><a href=\"admincp.php?action=forumdetail&fid={$forum['fid']}\">{$forum['name']}</a></td>".
+						"<td bgcolor=\"".ALTBG2."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"defaultnew[$fid]\" value=\"1\" {$check['default']}></td>\n".
+						"<td bgcolor=\"".ALTBG1."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowviewnew[$fid]\" value=\"1\" {$check['view']}></td>\n".
+						"<td bgcolor=\"".ALTBG2."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowpostnew[$fid]\" value=\"1\" {$check['post']}></td>\n".
+						"<td bgcolor=\"".ALTBG1."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowreplynew[$fid]\" value=\"1\" {$check['reply']}></td>\n".
+						"<td bgcolor=\"".ALTBG2."\" width=\"15%\" align=\"center\"><input type=\"checkbox\" name=\"allowgetattachnew[$fid]\" value=\"1\" {$check['getattach']}></td></tr>";
 			}
 		}
 		include CP_TPL.'member_access.php';
@@ -351,10 +350,10 @@ if($action == 'addmember') {
 
 	if(!submitcheck('editsubmit')) {
 
-		$styleselect = "<select name=\"styleidnew\">\n<option value=\"\">$lang[default]</option>";
+		$styleselect = "<select name=\"styleidnew\">\n<option value=\"\">{$lang['default']}</option>";
 		$query = $db->query("SELECT styleid, name FROM $table_styles");
 		while($style = $db->fetch_array($query)) {
-			$styleselect .= "<option value=\"$style[styleid]\" ".($style['styleid'] == $member['styleid'] ? 'selected="selected"' : NULL).">$style[name]</option>\n";
+			$styleselect .= "<option value=\"{$style['styleid']}\" ".($style['styleid'] == $member['styleid'] ? 'selected="selected"' : NULL).">{$style['name']}</option>\n";
 		}
 		$styleselect .= '</select>';
 
@@ -369,7 +368,7 @@ if($action == 'addmember') {
 
 		echo "<br><form method=\"post\" action=\"admincp.php?action=memberprofile&uid=$uid&formhash=".FORMHASH."\">";
 
-		showtype("$lang[members_edit] - $member[username]", 'top');
+		showtype("{$lang['members_edit']} - {$member['username']}", 'top');
 		showsetting('members_edit_username', 'usernamenew', $member['username'], 'text');
 		showsetting('members_edit_password', 'passwordnew', '', 'text');
 		showsetting('members_edit_email', 'emailnew', $member['email'], 'text');
@@ -425,10 +424,10 @@ if($action == 'addmember') {
 			$db->query("UPDATE {$tablepre}announcements SET author='$usernamenew' WHERE author='$usernameold'");
 			$db->query("UPDATE {$tablepre}banned SET admin='$usernamenew' WHERE admin='$usernameold'");
 			$db->query("UPDATE {$tablepre}forums SET lastpost=REPLACE(lastpost, '\t$usernameold', '\t$usernamenew')");
-			$db->query("UPDATE {$tablepre}members SET username='$usernamenew' WHERE uid='$member[uid]'");
-			$db->query("UPDATE {$tablepre}pms SET msgfrom='$usernamenew' WHERE msgfromid='$member[uid]'");
-			$db->query("UPDATE {$tablepre}posts SET author='$usernamenew' WHERE authorid='$member[uid]'");
-			$db->query("UPDATE {$tablepre}threads SET author='$usernamenew' WHERE authorid='$member[uid]'");
+			$db->query("UPDATE {$tablepre}members SET username='$usernamenew' WHERE uid='{$member['uid']}'");
+			$db->query("UPDATE {$tablepre}pms SET msgfrom='$usernamenew' WHERE msgfromid='{$member['uid']}'");
+			$db->query("UPDATE {$tablepre}posts SET author='$usernamenew' WHERE authorid='{$member['uid']}'");
+			$db->query("UPDATE {$tablepre}threads SET author='$usernamenew' WHERE authorid='{$member['uid']}'");
 			$db->query("UPDATE {$tablepre}threads SET lastposter='$usernamenew' WHERE lastposter='$usernameold'");
 
 			$username = $usernamenew;
@@ -485,14 +484,14 @@ if($action == 'addmember') {
 			$disabled = $adminid != 1 && $banned['admin'] != $discuz_userss ? 'disabled' : NULL;
 			$banned['dateline'] = gmdate($dateformat, $banned['dateline'] + $timeoffset * 3600);
 			$banned['expiration'] = gmdate($dateformat, $banned['expiration'] + $timeoffset * 3600);
-			$theip = "$banned[ip1].$banned[ip2].$banned[ip3].$banned[ip4]";
+			$theip = "{$banned['ip1']}.{$banned['ip2']}.{$banned['ip3']}.{$banned['ip4']}";
 			$ipbanned .= "<tr align=\"center\">\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[$banned[id]]\" value=\"$banned[id]\" $disabled></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[{$banned['id']}]\" value=\"{$banned['id']}\" $disabled></td>\n".
 				"<td bgcolor=\"".ALTBG2."\">$theip</td>\n".
 				"<td bgcolor=\"".ALTBG1."\">".convertip($theip, "./")."</td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$banned[admin]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\">$banned[dateline]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"10\" name=\"expirationnew[$banned[id]]\" value=\"$banned[expiration]\" $disabled></td></tr>\n";
+				"<td bgcolor=\"".ALTBG2."\">{$banned['admin']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\">{$banned['dateline']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"10\" name=\"expirationnew[{$banned['id']}]\" value=\"{$banned['expiration']}\" $disabled></td></tr>\n";
 		}
 		include CP_TPL.'member_ipban.php';
 

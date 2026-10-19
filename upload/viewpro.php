@@ -37,7 +37,7 @@ $member['ranktitle'] = $member['rankcolor'] ? '<font color="'.$member['rankcolor
 
 $member['regdate'] = gmdate($dateformat, $member['regdate'] + ($timeoffset * 3600));
 $member['site'] = $member['site'] ? 'http://'.str_replace('http://', '', $member['site']) : '';
-$member['avatar'] = $member['avatar'] ? "<img src=\"$member[avatar]\" width=\"$member[avatarwidth]\" height=\"$member[avatarheight]\" border=\"0\">" : '<br><br><br>';
+$member['avatar'] = $member['avatar'] ? "<img src=\"{$member['avatar']}\" width=\"{$member['avatarwidth']}\" height=\"{$member['avatarheight']}\" border=\"0\">" : '<br><br><br>';
 $member['lastactivity'] = gmdate("$dateformat $timeformat", $member['lastactivity'] + ($timeoffset * 3600));
 $member['lastpost'] = $member['lastpost'] ? gmdate("$dateformat $timeformat", $member['lastpost'] + ($timeoffset * 3600)) : 'x';
 $member['bio'] = nl2br($member['bio']);

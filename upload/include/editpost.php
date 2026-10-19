@@ -72,14 +72,14 @@ if(!submitcheck('editsubmit')) {
 	if($allowpostattach) {
 		if($postinfo['aid']) {
 			require_once DISCUZ_ROOT.'./include/attachment.php';
-			$attachquery = $db->query("select * from $table_attachments where pid = '$postinfo[pid]' ORDER BY  aid");
+			$attachquery = $db->query("select * from $table_attachments where pid = '{$postinfo['pid']}' ORDER BY  aid");
 			while($attaches = $db->fetch_array($attachquery)) {
 				$extension = strtolower(fileext($attaches['filename']));
 				$attaches['attachicon'] = attachtype($extension."\t".$attaches['filetype']);
 				$attaches['attachsize'] = sizecount($attaches['filesize']);
 				$attaches['dateline'] =	$attaches['dateline']?gmdate("$dateformat $timeformat", $attaches['dateline'] + $timeoffset * 3600):gmdate("$dateformat $timeformat", $orig['dateline'] + $timeoffset * 3600);
-				$attaches[checkid] = substr(md5($attaches['filesize']),0,5);
-				$postinfo[attach_list][] = $attaches;
+				$attaches['checkid'] = substr(md5($attaches['filesize']),0,5);
+				$postinfo['attach_list'][] = $attaches;
 			}
 		}
 	}
@@ -177,16 +177,16 @@ if(!submitcheck('editsubmit')) {
 			while($att = $db->fetch_array($attachquery)) {
 				$saveaid = 1;
 				if(is_array($deleteaids) && count($deleteaids)){
-					if (in_array($att[aid],$deleteaids)){
-						$del_aids .=','.$att[aid];	@unlink(DISCUZ_ROOT.'./'.$attachdir.'/'.$att['attachment']);
+					if (in_array($att['aid'],$deleteaids)){
+						$del_aids .=','.$att['aid'];	@unlink(DISCUZ_ROOT.'./'.$attachdir.'/'.$att['attachment']);
 						$saveaid = 0;
 						$delAtt++;
 					}
 				}
 				if ($saveaid) {
-					if ($allowsetattachperm && $att[creditsrequire] != $origattachperm["$att[aid]"]){
-						$att[creditsrequire] = $origattachperm["$att[aid]"];
-						$db->query("UPDATE $table_attachments set creditsrequire='$att[creditsrequire]' WHERE aid='$att[aid]'", 'UNBUFFERED');
+					if ($allowsetattachperm && $att['creditsrequire'] != $origattachperm["{$att['aid']}"]){
+						$att['creditsrequire'] = $origattachperm["{$att['aid']}"];
+						$db->query("UPDATE $table_attachments set creditsrequire='{$att['creditsrequire']}' WHERE aid='{$att['aid']}'", 'UNBUFFERED');
 					}
 					$post_attaches_count ++;
 				}
@@ -208,7 +208,7 @@ if(!submitcheck('editsubmit')) {
 		if($post_attaches && $allowpostattach) {
 			foreach( $post_attaches as $v) {
 				$db->query("INSERT INTO $table_attachments (tid, pid ,uid, creditsrequire, filename, filetype, filesize, attachment, dateline, downloads)
-					VALUES ('$tid','$pid','$discuz_uid', '$v[creditsrequire]', '$v[filename]', '$v[filetype]', '$v[filesize]', '$v[attachment]','$timestamp', '0')");
+					VALUES ('$tid','$pid','$discuz_uid', '{$v['creditsrequire']}', '{$v['filename']}', '{$v['filetype']}', '{$v['filesize']}', '{$v['attachment']}','$timestamp', '0')");
 				$post_attaches_count++;
 			}
 			unset($post_attaches, $v);
@@ -254,7 +254,7 @@ if(!submitcheck('editsubmit')) {
 			$uids = $comma = '';
 			$query = $db->query("SELECT authorid FROM $table_posts WHERE tid='$tid'");
 			while($post = $db->fetch_array($query)) {
-				$uids .= "$comma$post[authorid]";
+				$uids .= "$comma{$post['authorid']}";
 				$comma = ',';
 			}
 			updatemember('-', $uids, $deletedcredits);
@@ -280,7 +280,7 @@ if(!submitcheck('editsubmit')) {
 	if(!$isorigauthor) {
 		@$fp = fopen(DISCUZ_ROOT.'./forumdata/modslog.php', 'a');
 		@flock($fp, 2);
-		@fwrite($fp, "$timestamp\t$discuz_user\t$groupid\t$onlineip\t$forum[fid]\t$forum[name]\t$thread[tid]\t$thread[subject]\t$modaction\n");
+		@fwrite($fp, "$timestamp\t$discuz_user\t$groupid\t$onlineip\t{$forum['fid']}\t{$forum['name']}\t{$thread['tid']}\t{$thread['subject']}\t$modaction\n");
 		@fclose($fp);
 	}
 

@@ -139,7 +139,7 @@ if(!submitcheck('regsubmit')) {
 	$identifyingnew = $regverify == 1 ? "$timestamp\t2\t$idstring" : '';
 
 	$db->query("INSERT INTO $table_members (username, password, secques, gender, adminid, groupid, regip, regdate, lastvisit, lastactivity, postnum, credit, email, site, icq, oicq, yahoo, msn, location, bday, bio, signature, customstatus, tpp, ppp, styleid, dateformat, timeformat, showemail, newsletter, invisible, timeoffset, identifying )
-		VALUES ('$username', '$password', '$secques', '$gendernew', '0', '$groupinfo[groupid]', '$onlineip', '$timestamp', '$timestamp', '$timestamp', '0', '0', '$email', '$site', '$icq', '$oicq', '$yahoo', '$msn', '$locationnew', '$bday', '$bio', '', '', '$tppnew', '$pppnew', '$styleidnew', '$dateformatnew', '$timeformatnew', '$showemail', '$newsletter', '0', '$timeoffsetnew', '$identifyingnew' )");
+		VALUES ('$username', '$password', '$secques', '$gendernew', '0', '{$groupinfo['groupid']}', '$onlineip', '$timestamp', '$timestamp', '$timestamp', '0', '0', '$email', '$site', '$icq', '$oicq', '$yahoo', '$msn', '$locationnew', '$bday', '$bio', '', '', '$tppnew', '$pppnew', '$styleidnew', '$dateformatnew', '$timeformatnew', '$showemail', '$newsletter', '0', '$timeoffsetnew', '$identifyingnew' )");
 	$uid = $db->insert_id();
 
 	if($welcomemsg && !empty($welcomemsgtxt)) {

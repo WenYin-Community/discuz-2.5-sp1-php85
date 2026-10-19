@@ -46,15 +46,15 @@ if(!submitcheck('replysubmit')) {
 		$quotefid = $thaquote['fid'];
 		$message = $thaquote['message'];
 
-		$time = gmdate("$dateformat $timeformat", $thaquote[dateline] + ($timeoffset * 3600));
+		$time = gmdate("$dateformat $timeformat", $thaquote['dateline'] + ($timeoffset * 3600));
 		$message = preg_replace("/\[hide=?\d*\](.+?)\[\/hide\]/is", "[b]**** Hidden message by originally poster *****[/b]", $message);
 		$message = preg_replace("/(\[quote])(.*)(\[\/quote])/siU", "", $message);
 		$message = cutstr(dhtmlspecialchars($message), 200);
 
 		$thaquote['useip'] = substr($thaquote['useip'], 0, strrpos($thaquote['useip'], '.')).'.x';
-		$thaquote['author'] = $thaquote['author'] ? "[i]$thaquote[author][/i]" : "[i]Guest[/i] from $thaquote[useip]";
+		$thaquote['author'] = $thaquote['author'] ? "[i]{$thaquote['author']}[/i]" : "[i]Guest[/i] from {$thaquote['useip']}";
 		$message = preg_replace("/\n{2}\[ Last edited by .+? on .+? at .+? \]$/s", '', $message);
-		$message = "[quote]Originally posted by $thaquote[author] at $time:\n$message [/quote]\n";
+		$message = "[quote]Originally posted by {$thaquote['author']} at $time:\n$message [/quote]\n";
 	}
 	
 	$multiattach = $allowpostattach && $attach_replypost ? array_fill(1,$attach_replypost,'1'):0;
@@ -101,7 +101,7 @@ if(!submitcheck('replysubmit')) {
 		if(is_array($post_attaches) && count($post_attaches) && $allowpostattach) {
 			foreach( $post_attaches as $v) {
 				$db->query("INSERT INTO $table_attachments (tid, uid ,creditsrequire, filename, filetype, filesize, attachment, dateline, downloads)
-				VALUES ('$tid', '$discuz_uid', '$v[creditsrequire]', '$v[filename]', '$v[filetype]', '$v[filesize]', '$v[attachment]', '$timestamp', '0')");
+				VALUES ('$tid', '$discuz_uid', '{$v['creditsrequire']}', '{$v['filename']}', '{$v['filetype']}', '{$v['filesize']}', '{$v['attachment']}', '$timestamp', '0')");
 				$v['aid'] = $db->insert_id();
 				$aid .= $tmark.''.$v['aid'];
 				$tmark = ' ,';
@@ -129,7 +129,7 @@ if(!submitcheck('replysubmit')) {
 
 	$db->query("UPDATE $table_forums SET lastpost='".addslashes($thread['subject'])."\t$timestamp\t$discuz_user', posts=posts+1 WHERE fid='$fid'", 'UNBUFFERED');
 	if ($forum['fup'] && $forum['type'] == 'sub' && !$forum['viewperm']) {
-		$db->query("UPDATE $table_forums SET lastpost='".addslashes($thread['subject'])."\t$timestamp\t$discuz_user'  WHERE fid='$forum[fup]'", 'UNBUFFERED');
+		$db->query("UPDATE $table_forums SET lastpost='".addslashes($thread['subject'])."\t$timestamp\t$discuz_user'  WHERE fid='{$forum['fup']}'", 'UNBUFFERED');
 	}
 
 	@$topicpages = ceil(($thread['replies'] + 2) / $ppp);

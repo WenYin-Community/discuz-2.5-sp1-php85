@@ -55,7 +55,7 @@ if(!$sessionexists) {
 	} else {
 		$visitor['os'] = 'Other';
 	}
-	$visitorsadd = "OR (type='browser' AND var='$visitor[browser]') OR (type='os' AND var='$visitor[os]')";
+	$visitorsadd = "OR (type='browser' AND var='{$visitor['browser']}') OR (type='os' AND var='{$visitor['os']}')";
 	$visitorsadd .= $discuz_user ? " OR (type='total' AND var='members')" : " OR (type='total' AND var='guests')";
 	$updatedrows = 7;
 } else {
@@ -63,11 +63,11 @@ if(!$sessionexists) {
 	$updatedrows = 4;
 }
 
-$db->query("UPDATE $table_stats SET count=count+1 WHERE (type='total' AND var='hits') $visitorsadd OR (type='month' AND var='$visitor[month]') OR (type='week' AND var='$visitor[week]') OR (type='hour' AND var='$visitor[hour]')");
+$db->query("UPDATE $table_stats SET count=count+1 WHERE (type='total' AND var='hits') $visitorsadd OR (type='month' AND var='{$visitor['month']}') OR (type='week' AND var='{$visitor['week']}') OR (type='hour' AND var='{$visitor['hour']}')");
 
 if($updatedrows > $db->affected_rows()) {
 	$db->query("INSERT INTO $table_stats (type, var, count)
-			VALUES ('month', '$visitor[month]', '1')", 'SILENT');
+			VALUES ('month', '{$visitor['month']}', '1')", 'SILENT');
 }
 
 ?>

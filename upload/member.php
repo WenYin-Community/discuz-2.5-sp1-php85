@@ -113,7 +113,7 @@ if($action == 'online') {
 	list($dateline, $operation, $idstring) = explode("\t", $member['identifying']);
 
 	if($operation == 2 && $idstring == $id) {
-		$query = $db->query("SELECT groupid FROM $table_usergroups WHERE type='member' AND $member[credit]>=creditshigher AND $member[credit]<creditslower LIMIT 1");
+		$query = $db->query("SELECT groupid FROM $table_usergroups WHERE type='member' AND {$member['credit']}>=creditshigher AND {$member['credit']}<creditslower LIMIT 1");
 		$db->query("UPDATE $table_members SET groupid='".$db->result($query, 0)."', identifying='' WHERE uid='$uid'");
 		showmessage('activate_succeed', 'index.php');
 	} else {
@@ -136,7 +136,7 @@ if($action == 'online') {
 		}
 
 		$idstring = random(6);
-		$db->query("UPDATE $table_members SET identifying='$timestamp\t1\t$idstring' WHERE uid='$member[uid]'");
+		$db->query("UPDATE $table_members SET identifying='$timestamp\t1\t$idstring' WHERE uid='{$member['uid']}'");
 
 		sendmail($member['email'], 'get_passwd_subject', 'get_passwd_message');
 		showmessage('getpasswd_send_succeed');

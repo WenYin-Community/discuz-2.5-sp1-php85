@@ -79,7 +79,7 @@ function postify($message, $smileyoff, $bbcodeoff, $allowsmilies = 1, $allowhtml
 
 		if(is_array($GLOBALS['_DCACHE']['smilies'])) {
 			foreach($GLOBALS['_DCACHE']['smilies'] as $smiliey) {
-				$message = str_replace($smiliey['code'], "<img src=\"".SMDIR."/$smiliey[url]\" align=\"absmiddle\" border=\"0\">",$message);
+				$message = str_replace($smiliey['code'], "<img src=\"".SMDIR."/{$smiliey['url']}\" align=\"absmiddle\" border=\"0\">",$message);
 			}
 		}
 	}
@@ -217,7 +217,7 @@ function phpcodedisp($code) {
         global $thisbg, $codecount, $post_phpcodecount, $phpcodehtml,$post;
         $post_phpcodecount++;
         $phpcode = phphighlite(str_replace("\\\"", "\"", $code));
-		$phpcodeid ="pcode_$post[pid]_$post_phpcodecount";
+		$phpcodeid ="pcode_{$post['pid']}_$post_phpcodecount";
 		$phpcodehtml[$post_phpcodecount] = "<blockquote class=\"code\"><b class=\"smalltxt\">PHP:</b>&nbsp;&nbsp;<a href=\"###\" class=\"smalltxt\" onclick=\"copycode(findobj('$phpcodeid'));\">[Copy to clipboard]</a><hr size=1 color=\"".BORDERCOLOR."\"><div style=\"padding:5px; font-family:Courier New;\" id=\"$phpcodeid\">$phpcode</div></blockquote>";
         $phpcodecount++;
         return "|\tDISCUZ_PHPCODE_$post_phpcodecount\t|";

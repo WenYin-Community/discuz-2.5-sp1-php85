@@ -34,7 +34,7 @@ if ($have_attachment) {
 	require_once DISCUZ_ROOT.'./include/attachment.php';
 	$query = $db->query("select * from $table_attachments where tid='$tid'");
 	while($attach = $db->fetch_array($query)) {
-		$attach[checkid] = substr(md5($attach['filesize']),0,5);
+		$attach['checkid'] = substr(md5($attach['filesize']),0,5);
 		$extension = strtolower(fileext($attach['filename']));
 		$attach['attachicon'] = attachtype($extension."\t".$attach['filetype']);
 		if($attachimgpost && in_array($extension, array('jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp'))) {
@@ -44,7 +44,7 @@ if ($have_attachment) {
 		}
 		$attach['attachsize'] = sizecount($attach['filesize']);
 		$attach['dateline'] = $attach['dateline']?gmdate("$dateformat $timeformat", $attach['dateline'] + $timeoffset * 3600): '';
-		$attachelist["$attach[pid]"][] = $attach;
+		$attachelist["{$attach['pid']}"][] = $attach;
 	}
 }
 

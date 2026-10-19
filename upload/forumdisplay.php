@@ -31,16 +31,16 @@ if(isset($showoldetails)) {
 	$showoldetails = false;
 }
 
-if(!$forum['fid'] || $forum['type'] == 'group' || ($adminid<>1 && !$forum[status])) {
+if(!$forum['fid'] || $forum['type'] == 'group' || ($adminid<>1 && !$forum['status'])) {
 	showmessage('forum_nonexistence', NULL, 'HALTED');
 }
 
 if($forum['type'] == 'forum') {
-	$navigation = "&raquo; $forum[name]";
+	$navigation = "&raquo; {$forum['name']}";
 	$navtitle = ' - '.strip_tags($forum['name']);
 } else {
 	$forumup = $_DCACHE['forums'][$forum['fup']]['name'];
-	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$forum[fup]\">$forumup</a> &raquo; $forum[name]";
+	$navigation = "&raquo; <a href=\"forumdisplay.php?fid={$forum['fup']}\">$forumup</a> &raquo; {$forum['name']}";
 	$navtitle = ' - '.strip_tags($forumup).' - '.strip_tags($forum['name']);
 }
 
@@ -172,13 +172,13 @@ while($thread = $db->fetch_array($query)) {
 		$pagelinks = '';
 		$topicpages = ceil($postsnum / $ppp);
 		for ($i = 1; $i <= $topicpages; $i++) {
-			$pagelinks .= "<a href=\"viewthread.php?tid=$thread[tid]&page=$i&fpage=$page\">$i</a> ";
+			$pagelinks .= "<a href=\"viewthread.php?tid={$thread['tid']}&page=$i&fpage=$page\">$i</a> ";
 			if($i == 6) {
 				$i = $topicpages + 1;
 			}
 		}
 		if($topicpages > 6) {
-			$pagelinks .= " .. <a href=\"viewthread.php?tid=$thread[tid]&page=$topicpages&fpage=$page\">$topicpages</a> ";
+			$pagelinks .= " .. <a href=\"viewthread.php?tid={$thread['tid']}&page=$topicpages&fpage=$page\">$topicpages</a> ";
 		}
 		$thread['multipage'] = '&nbsp; &nbsp;( <img src="'.IMGDIR.'/multipage.gif" align="absmiddle" boader="0"> '.$pagelinks.')';
 	} else {
@@ -212,7 +212,7 @@ while($thread = $db->fetch_array($query)) {
 		$thread['folder'] = 'lock_folder.gif';
 	} else {
 		$thread['folder'] = 'folder.gif';
-		if($lastvisit < $thread['lastpost'] && !strstr($_COOKIE['oldtopics'], "\t$thread[tid]\t")) {
+		if($lastvisit < $thread['lastpost'] && !strstr($_COOKIE['oldtopics'], "\t{$thread['tid']}\t")) {
 			$thread['new'] = 1;
 			$thread['folder'] = 'red_'.$thread['folder'];
 		} else {
@@ -232,7 +232,7 @@ while($thread = $db->fetch_array($query)) {
 	} else {
 		$thread['attachment'] = '';
 	}
-	$thread[subject] = cutstr($thread[subject],77);
+	$thread['subject'] = cutstr($thread['subject'],77);
 	$thread['dateline'] = gmdate($dateformat, $thread['dateline'] + $timeoffset * 3600);
 	$thread['lastpost'] = gmdate("$dateformat $timeformat", $thread['lastpost'] + $timeoffset * 3600);
 

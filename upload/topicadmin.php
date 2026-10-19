@@ -32,12 +32,12 @@ if($tid) {
 }
 
 if($forum['type'] == 'forum') {
-	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\">$forum[name]</a> &raquo; <a href=\"viewthread.php?tid=$tid\">$thread[subject]</a> ";
+	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 } else {
-	$query = $db->query("SELECT name, fid, moderator FROM $table_forums WHERE fid='$forum[fup]'");
+	$query = $db->query("SELECT name, fid, moderator FROM $table_forums WHERE fid='{$forum['fup']}'");
 	$fup = $db->fetch_array($query);
-	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fup[fid]\">$fup[name]</a> &raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\">$forum[name]</a> &raquo; <a href=\"viewthread.php?tid=$tid\">$thread[subject]</a> ";
+	$navigation = "&raquo; <a href=\"forumdisplay.php?fid={$fup['fid']}\">{$fup['name']}</a> &raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($fup['name']).' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 }
 
@@ -45,7 +45,7 @@ if(!$discuz_user || !$discuz_pw || !modcheck($discuz_user)) {
 	showmessage('admin_nopermission', NULL, 'HALTED');
 }
 
-$fupadd = $fup ? "OR (fid='$fup[fid]' && type<>'group')" : NULL;
+$fupadd = $fup ? "OR (fid='{$fup['fid']}' && type<>'group')" : NULL;
 
 if($action == 'moderate') {
 	if(!is_array($moderate) || !count($moderate)) {
@@ -66,7 +66,7 @@ if($action == 'moderate') {
 				} else {
 					$thread['attachment'] = '';
 				}
-				$thread[subject] = cutstr($thread[subject],77);
+				$thread['subject'] = cutstr($thread['subject'],77);
 				$thread['dateline'] = gmdate($dateformat, $thread['dateline'] + $timeoffset * 3600);
 				$thread['lastpost'] = gmdate("$dateformat $timeformat", $thread['lastpost'] + $timeoffset * 3600);
 				$threadlist[] = $thread;
@@ -120,7 +120,7 @@ if($action == 'moderate') {
 			$haveattach = 0;
 			$query = $db->query("SELECT authorid ,aid FROM $table_posts WHERE tid IN ($tids)");
 			while($post = $db->fetch_array($query)) {
-				$uids .= "$comma$post[authorid]";
+				$uids .= "$comma{$post['authorid']}";
 				$comma = ',';
 				if ($post['aid']) $haveattach++;
 			}
@@ -157,9 +157,9 @@ if($action == 'moderate') {
 			while($thread = $db->fetch_array($query)) {
 				if ($thread['fid'] == $fid && $thread['digest']<>$level){
 					$digest_mark=($level-intval($thread['digest']))*$digestcredits;
-					$db->query("UPDATE $table_threads SET digest='$level' WHERE tid='$thread[tid]'");
-					if($digest_mark && $discuz_uid != $thread[authorid]) {
-						$db->query("UPDATE $table_members SET credit=credit".($digest_mark > 0 ? '+' : '')."$digest_mark WHERE uid='$thread[authorid]'");
+					$db->query("UPDATE $table_threads SET digest='$level' WHERE tid='{$thread['tid']}'");
+					if($digest_mark && $discuz_uid != $thread['authorid']) {
+						$db->query("UPDATE $table_members SET credit=credit".($digest_mark > 0 ? '+' : '')."$digest_mark WHERE uid='{$thread['authorid']}'");
 					}
 				}
 			}
@@ -201,11 +201,11 @@ if($action == 'moderate') {
 		$query = $db->query("SELECT pid, authorid, aid FROM $table_posts WHERE tid='$tid'");
 		$totalpost = $db->num_rows($query);
 		while($post = $db->fetch_array($query)) {
-			if (in_array($post[pid], $delete)){
-				$uids .= "$comma$post[authorid]";
+			if (in_array($post['pid'], $delete)){
+				$uids .= "$comma{$post['authorid']}";
 				$comma = ',';
 				$actionpost ++;
-				if ($post['aid']) $aids .=','.$post[pid];
+				if ($post['aid']) $aids .=','.$post['pid'];
 			}
 		}
 
@@ -284,7 +284,7 @@ if($action == 'moderate') {
 		$db->query("UPDATE $table_threads SET digest='$level' WHERE tid='$tid'");
 
 		if($digest_mark && $discuz_uid != $thread['authorid'] ) {
-			$db->query("UPDATE $table_members SET credit=credit".($digest_mark > 0 ? '+' : '')."$digest_mark WHERE uid='$thread[authorid]'");
+			$db->query("UPDATE $table_members SET credit=credit".($digest_mark > 0 ? '+' : '')."$digest_mark WHERE uid='{$thread['authorid']}'");
 		}
 		modlog();
 		showmessage('admin_succeed', "forumdisplay.php?fid=$fid&page=$fpage");
@@ -299,7 +299,7 @@ if($action == 'moderate') {
 	$query  = $db->query("SELECT author, dateline FROM $table_posts WHERE tid='$tid' ORDER BY dateline DESC LIMIT 1");
 	$post = $db->fetch_array($query);
 
-	$db->query("UPDATE $table_threads SET replies='$replies', lastpost='$post[dateline]', lastposter='".addslashes($post['author'])."' WHERE tid='$tid'");
+	$db->query("UPDATE $table_threads SET replies='$replies', lastpost='{$post['dateline']}', lastposter='".addslashes($post['author'])."' WHERE tid='$tid'");
 	showmessage('admin_succeed', "viewthread.php?tid=$tid&fpage=$fpage");
 
 } elseif($action == 'delete'  && $allowdelpost) {
@@ -313,7 +313,7 @@ if($action == 'moderate') {
 		$query = $db->query("SELECT authorid,aid FROM $table_posts WHERE tid='$tid'");
 		$aids = 0;
 		while($post = $db->fetch_array($query)) {
-			$uids .= "$comma$post[authorid]";
+			$uids .= "$comma{$post['authorid']}";
 			$comma = ',';
 			if ($post['aid']) $aids++;
 		}
@@ -374,7 +374,7 @@ if($action == 'moderate') {
 			$db->query("UPDATE $table_posts SET fid='$moveto' WHERE tid='$tid' AND fid='$fid'");
 		} else {
 			$db->query("INSERT INTO $table_threads (fid, creditsrequire, iconid, author, authorid, subject, dateline, lastpost, lastposter, views, replies, displayorder, digest, closed, poll, attachment)
-				VALUES ('$thread[fid]', '$thread[creditsrequire]', '$thread[iconid]', '".addslashes($thread['author'])."', '$thread[authorid]', '$thread[subject]', '$thread[dateline]', '$thread[lastpost]', '$thread[lastposter]', '0', '0', '0', '0', '$thread[tid]', '0', '0')");
+				VALUES ('{$thread['fid']}', '{$thread['creditsrequire']}', '{$thread['iconid']}', '".addslashes($thread['author'])."', '{$thread['authorid']}', '{$thread['subject']}', '{$thread['dateline']}', '{$thread['lastpost']}', '{$thread['lastposter']}', '0', '0', '0', '0', '{$thread['tid']}', '0', '0')");
 
 			$db->query("UPDATE $table_threads SET fid='$moveto' $displayorderadd WHERE tid='$tid' AND fid='$fid'");
 			$db->query("UPDATE $table_posts SET fid='$moveto' WHERE tid='$tid' AND fid='$fid'");
@@ -437,9 +437,9 @@ if($action == 'moderate') {
 
 		$query = $db->query("SELECT subject, lastposter, lastpost FROM $table_threads WHERE tid='$tid' LIMIT 1");
 		$thread = $db->fetch_array($query);
-		$thread[lastposter] = addslashes($thread['lastposter']);
+		$thread['lastposter'] = addslashes($thread['lastposter']);
 		$db->query("UPDATE $table_threads SET lastpost='$timestamp' WHERE tid='$tid' AND fid='$fid'");
-		$db->query("UPDATE $table_forums SET lastpost='$thread[subject]\t$timestamp\t$thread[lastposter]' WHERE fid='$fid' $fupadd");
+		$db->query("UPDATE $table_forums SET lastpost='{$thread['subject']}\t$timestamp\t{$thread['lastposter']}' WHERE fid='$fid' $fupadd");
 
 		modlog();
 		showmessage('admin_succeed', "forumdisplay.php?fid=$fid&page=$fpage");
@@ -485,11 +485,11 @@ if($action == 'moderate') {
 
 			$query = $db->query("SELECT author, authorid, dateline FROM $table_posts WHERE tid='$tid' ORDER BY dateline ASC LIMIT 1");
 			$fpost = $db->fetch_array($query);
-			$db->query("UPDATE $table_threads SET author='$fpost[author]', authorid='$fpost[authorid]', dateline='$fpost[dateline]' WHERE tid='$tid'");
+			$db->query("UPDATE $table_threads SET author='{$fpost['author']}', authorid='{$fpost['authorid']}', dateline='{$fpost['dateline']}' WHERE tid='$tid'");
 
 			$query = $db->query("SELECT author, authorid, dateline FROM $table_posts WHERE tid='$newtid' ORDER BY dateline ASC LIMIT 1");
 			$fpost = $db->fetch_array($query);
-			$db->query("UPDATE $table_threads SET author='$fpost[author]', authorid='$fpost[authorid]', dateline='$fpost[dateline]' WHERE tid='$newtid'");
+			$db->query("UPDATE $table_threads SET author='{$fpost['author']}', authorid='{$fpost['authorid']}', dateline='{$fpost['dateline']}' WHERE tid='$newtid'");
 
 			updatethreadcount($tid);
 			updatethreadcount($newtid);
@@ -527,12 +527,12 @@ if($action == 'moderate') {
 
 		$db->query("UPDATE $table_attachments SET tid='$tid' WHERE tid='$othertid'");
 		$db->query("DELETE FROM $table_threads WHERE tid='$othertid'");
-		$db->query("UPDATE $table_threads SET views=views+$other[views], replies=replies+$other[replies] WHERE tid='$tid'");
+		$db->query("UPDATE $table_threads SET views=views+{$other['views']}, replies=replies+{$other['replies']} WHERE tid='$tid'");
 		
 		if($fid == $other['fid']) {
 			$db->query("UPDATE $table_forums SET threads=threads-1 WHERE fid='$fid' $fupadd");
 		} else {
-			$db->query("UPDATE $table_forums SET threads=threads-1, posts=posts-$postsmerged WHERE fid='$other[fid]'");
+			$db->query("UPDATE $table_forums SET threads=threads-1, posts=posts-$postsmerged WHERE fid='{$other['fid']}'");
 			$db->query("UPDATE $table_forums SET posts=$posts+$postsmerged WHERE fid='$fid' $fupadd");
 		}
 
@@ -556,12 +556,12 @@ function modlog($action = '') {
 	if (!$thread['tid']) $thread['tid']=intval($GLOBALS['tid']);
 	if ($action == 'moderate'){
 		$action .='_'.$operation;
-		$thread[subject] = $tids;
-		$thread[tid] = 0;
+		$thread['subject'] = $tids;
+		$thread['tid'] = 0;
 	}
 	@$fp = fopen(DISCUZ_ROOT.'./forumdata/modslog.php', 'a');
 	@flock($fp, 2);
-	@fwrite($fp, "$timestamp\t$discuz_user\t$groupid\t$onlineip\t$forum[fid]\t$forum[name]\t$thread[tid]\t$thread[subject]\t$action\n");
+	@fwrite($fp, "$timestamp\t$discuz_user\t$groupid\t$onlineip\t{$forum['fid']}\t{$forum['name']}\t{$thread['tid']}\t{$thread['subject']}\t$action\n");
 	@fclose($fp);
 }
 

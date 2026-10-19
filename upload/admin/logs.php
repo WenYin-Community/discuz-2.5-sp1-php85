@@ -81,7 +81,7 @@ if(in_array($action, array('karmalog', 'modslog', 'cplog'))) {
 
 if($action == 'illegallog') {
 
-	$logheader= "<tr class=\"header\" align=\"center\"><td>$lang[logs_passwd_username]</td><td>$lang[logs_passwd_password]</td><td>$lang[logs_passwd_security]</td><td>$lang[ip]</td><td>$lang[time]</td></tr>\n";
+	$logheader= "<tr class=\"header\" align=\"center\"><td>{$lang['logs_passwd_username']}</td><td>{$lang['logs_passwd_password']}</td><td>{$lang['logs_passwd_security']}</td><td>{$lang['ip']}</td><td>{$lang['time']}</td></tr>\n";
 
 	foreach($logs as $logrow) {
 		$log = explode("\t", $logrow);
@@ -98,7 +98,7 @@ if($action == 'illegallog') {
 
 } elseif($action == 'karmalog') {
 
-	$logheader= "<tr class=\"header\" align=\"center\"><td width=\"15%\">$lang[username]</td><td width=\"12%\">$lang[usergroup]</td><td width=\"18%\">$lang[time]</td><td width=\"15%\">$lang[logs_karma_username]</td><td width=\"8%\">$lang[logs_karma_rating]</td><td width=\"28%\">$lang[subject]</td></tr>\n";
+	$logheader= "<tr class=\"header\" align=\"center\"><td width=\"15%\">{$lang['username']}</td><td width=\"12%\">{$lang['usergroup']}</td><td width=\"18%\">{$lang['time']}</td><td width=\"15%\">{$lang['logs_karma_username']}</td><td width=\"8%\">{$lang['logs_karma_rating']}</td><td width=\"28%\">{$lang['subject']}</td></tr>\n";
 
 	foreach($logs as $logrow) {
 		$log = explode("\t", $logrow);
@@ -119,7 +119,7 @@ if($action == 'illegallog') {
 
 } elseif($action == 'modslog') {
 
-	$logheader = "<tr class=\"header\" align=\"center\"><td width=\"10%\">$lang[operator]</td><td width=\"15%\">$lang[usergroup]</td><td width=\"10%\">$lang[ip]</td><td width=\"18%\">$lang[time]</td><td width=\"15%\">$lang[forum]</td><td width=\"19%\">$lang[thread]</td><td width=\"13%\">$lang[action]</td></tr>\n";
+	$logheader = "<tr class=\"header\" align=\"center\"><td width=\"10%\">{$lang['operator']}</td><td width=\"15%\">{$lang['usergroup']}</td><td width=\"10%\">{$lang['ip']}</td><td width=\"18%\">{$lang['time']}</td><td width=\"15%\">{$lang['forum']}</td><td width=\"19%\">{$lang['thread']}</td><td width=\"13%\">{$lang['action']}</td></tr>\n";
 
 	foreach($logs as $logrow) {
 		$log = explode("\t", $logrow);
@@ -168,7 +168,7 @@ if($action == 'illegallog') {
 
 } elseif($action == 'cplog') {
 
-	$logheader = "<tr class=\"header\" align=\"center\"><td width=\"10%\">$lang[operator]</td><td width=\"10%\">$lang[usergroup]</td><td width=\"10%\">$lang[ip]</td><td width=\"18%\">$lang[time]</td><td width=\"15%\">$lang[action]</td><td width=\"37%\">$lang[other]</td><td width=\"10%\">actived</td></tr>\n";
+	$logheader = "<tr class=\"header\" align=\"center\"><td width=\"10%\">{$lang['operator']}</td><td width=\"10%\">{$lang['usergroup']}</td><td width=\"10%\">{$lang['ip']}</td><td width=\"18%\">{$lang['time']}</td><td width=\"15%\">{$lang['action']}</td><td width=\"37%\">{$lang['other']}</td><td width=\"10%\">actived</td></tr>\n";
 
 	foreach($logs as $logrow) {
 		$log = explode("\t", $logrow);

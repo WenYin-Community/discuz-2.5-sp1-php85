@@ -22,20 +22,20 @@ if(!defined('IN_ADMINCP')) {
 
 function cpmsg($message, $url_forward = '', $msgtype = 'message') {
 	extract($GLOBALS, EXTR_SKIP);
-	eval("\$message = \"".(isset($msglang[$message]) ? $msglang[$message] : $message)."\";");
+	$message = dinterpolate(isset($msglang[$message]) ? $msglang[$message] : $message);
 
 	if($msgtype == 'form') {
 		$message = "<form method=\"post\" action=\"$url_forward\"><input type=\"hidden\" name=\"formhash\" value=\"".FORMHASH."\">".
 			"<br><br><br>$message<br><br><br><br>\n".
-        		"<input type=\"submit\" name=\"confirmed\" value=\"$lang[ok]\"> &nbsp; \n".
-       			"<input type=\"button\" value=\"$lang[cancel]\" onClick=\"history.go(-1);\"></form><br>";
+        		"<input type=\"submit\" name=\"confirmed\" value=\"{$lang['ok']}\"> &nbsp; \n".
+       			"<input type=\"button\" value=\"{$lang['cancel']}\" onClick=\"history.go(-1);\"></form><br>";
 	} else {
 		if($url_forward) {
-			$message .= "<br><br><br><a href=\"$url_forward\">$lang[message_redirect]</a>";
+			$message .= "<br><br><br><a href=\"$url_forward\">{$lang['message_redirect']}</a>";
 			$url_forward = transsid($url_forward);
 			$message .= "<script>setTimeout(\"redirect('$url_forward');\", 1250);</script>";
 		} elseif(strpos($message, $lang['return'])) {
-			$message .= "<br><br><br><a href=\"javascript:history.go(-1);\" class=\"mediumtxt\">$lang[message_return]</a>";
+			$message .= "<br><br><br><a href=\"javascript:history.go(-1);\" class=\"mediumtxt\">{$lang['message_return']}</a>";
 		}
 		$message = "<br><br><br>$message<br><br>";
 	}
@@ -82,12 +82,12 @@ function dir_writeable($dir) {
 
 function showforum($forum, $id, $type = '') {
 	$dot = array(1 => "<li>", 2 => "<li type=\"circle\">", 3 => "<li type=\"square\">");
-	$url = $type == "group" ? "./index.php?gid=$forum[fid]" : "./forumdisplay.php?fid=$forum[fid]";
-	$editforum = "<a href=\"admincp.php?action=forumdetail&fid=$forum[fid]\">[".$GLOBALS['lang']['edit'].']</a> ';
+	$url = $type == "group" ? "./index.php?gid={$forum['fid']}" : "./forumdisplay.php?fid={$forum['fid']}";
+	$editforum = "<a href=\"admincp.php?action=forumdetail&fid={$forum['fid']}\">[".$GLOBALS['lang']['edit'].']</a> ';
 	$hide = !$forum['status'] ? ' ('.$GLOBALS['lang']['forums_hidden'].')' : NULL;
-	echo $dot[$id]."<a href=\"$url\" target=\"_blank\"><b>$forum[name]</b><span class=\"smalltxt\">$hide</a> - ".$GLOBALS['lang']['display_order'].": <input type=\"text\" name=\"order[{$forum[fid]}]\" value=\"$forum[displayorder]\" size=\"1\">".
-		($forum['type'] != 'group' ? '&nbsp; '.$GLOBALS['lang']['forums_moderator'].": <input type=\"text\" name=\"moderator[{$forum[fid]}]\" value=\"$forum[moderator]\" size=\"15\"> - " : ' - ').
-		"$editforum<a href=\"admincp.php?action=forumdelete&fid=$forum[fid]\">".
+	echo $dot[$id]."<a href=\"$url\" target=\"_blank\"><b>{$forum['name']}</b><span class=\"smalltxt\">$hide</a> - ".$GLOBALS['lang']['display_order'].": <input type=\"text\" name=\"order[{$forum['fid']}]\" value=\"{$forum['displayorder']}\" size=\"1\">".
+		($forum['type'] != 'group' ? '&nbsp; '.$GLOBALS['lang']['forums_moderator'].": <input type=\"text\" name=\"moderator[{$forum['fid']}]\" value=\"{$forum['moderator']}\" size=\"15\"> - " : ' - ').
+		"$editforum<a href=\"admincp.php?action=forumdelete&fid={$forum['fid']}\">".
 		'['.$GLOBALS['lang']['delete'].']</a></span><br></li>';
 }
 
@@ -142,8 +142,8 @@ function showsetting($setname, $varname, $value, $type = 'radio', $width = '60%'
 	if($type == 'radio' || $type == 'radioyes') {
 		if ($type == 'radioyes') $value = 1;
 		$value ? $checktrue = "checked" : $checkfalse = "checked";
-		echo "<input type=\"radio\" name=\"$varname\" value=\"1\" $checktrue> {$GLOBALS[lang][yes]} &nbsp; &nbsp; \n".
-			"<input type=\"radio\" name=\"$varname\" value=\"0\" $checkfalse> {$GLOBALS[lang][no]}\n";
+		echo "<input type=\"radio\" name=\"$varname\" value=\"1\" $checktrue> {$GLOBALS['lang']['yes']} &nbsp; &nbsp; \n".
+			"<input type=\"radio\" name=\"$varname\" value=\"0\" $checkfalse> {$GLOBALS['lang']['no']}\n";
 	} elseif($type == 'color') {
 		$preview_varname = str_replace('[', '_', str_replace(']', '', $varname));
 		echo "<input type=\"text\" size=\"30\" value=\"$value\" name=\"$varname\" onchange=\"this.form.$preview_varname.style.backgroundColor=this.value;\">\n".
@@ -160,22 +160,22 @@ function showsetting($setname, $varname, $value, $type = 'radio', $width = '60%'
 
 function showconf($settings, $width = '50%') {
 	global $group,$plugin;
-	$setname= $settings[conf_title];
-	$type = $settings[conf_type];
-	$varname ='conf_settings['.$settings[conf_key].']';
-	$value = $settings[conf_value];
-	$cid = $settings[conf_id];
-	$extra = $settings[conf_extra];
-	$comment = nl2br($settings[conf_desc]);
+	$setname= $settings['conf_title'];
+	$type = $settings['conf_type'];
+	$varname ='conf_settings['.$settings['conf_key'].']';
+	$value = $settings['conf_value'];
+	$cid = $settings['conf_id'];
+	$extra = $settings['conf_extra'];
+	$comment = nl2br($settings['conf_desc']);
 	$aligntop = $type == "textarea" || $width != "50%" ?  "valign=\"top\"" : NULL;
 	
-	echo "<tr><td width=\"$width\" bgcolor=\"".ALTBG1."\" $aligntop><b>$setname  :</b>&nbsp;<span class=\"smalltxt\"><font color = \"gray\">\$$plugin[plug_key][".$settings[conf_key].']&nbsp;</font>'.($comment ? '<br>'.$comment.'</span>' : NULL).'</td>'.
+	echo "<tr><td width=\"$width\" bgcolor=\"".ALTBG1."\" $aligntop><b>$setname  :</b>&nbsp;<span class=\"smalltxt\"><font color = \"gray\">\${$plugin['plug_key']}[".$settings['conf_key'].']&nbsp;</font>'.($comment ? '<br>'.$comment.'</span>' : NULL).'</td>'.
 		'<td bgcolor="'.ALTBG2.'">';
 
 	if($type == 'radio') {
 		$value ? $checktrue = "checked" : $checkfalse = "checked";
-		echo "<input type=\"radio\" name=\"$varname\" value=\"1\" $checktrue> {$GLOBALS[lang][yes]} &nbsp; &nbsp; \n".
-			"<input type=\"radio\" name=\"$varname\" value=\"0\" $checkfalse> {$GLOBALS[lang][no]}\n";
+		echo "<input type=\"radio\" name=\"$varname\" value=\"1\" $checktrue> {$GLOBALS['lang']['yes']} &nbsp; &nbsp; \n".
+			"<input type=\"radio\" name=\"$varname\" value=\"0\" $checkfalse> {$GLOBALS['lang']['no']}\n";
 	} elseif($type == 'color') {
 		$preview_varname = str_replace('[', '_', str_replace(']', '', $varname));
 		echo "<input type=\"text\" size=\"30\" value=\"$value\" name=\"$varname\" onchange=\"this.form.$preview_varname.style.backgroundColor=this.value;\">\n".
@@ -197,7 +197,7 @@ function showconf($settings, $width = '50%') {
 	} else {
 		echo $type;
 	}
-	echo "</td><td bgcolor=\"#E4EAF2\" width=\"50\"><a href=\"admincp.php?action=plugin&mod=setup&do=editconf&group=$group&cid=$cid\"><img src=\"images/admincp/acp_edit.gif\" border=\"0\" alt=\"edit\"></a><a href=\"javascript:dzconfirm('admincp.php?action=plugin&mod=setup&do=delconf&group=$group&cid=$cid','".$GLOBALS[lang][confirm_delete]."')\"><img src=\"images/admincp/acp_del.gif\" border=\"0\" alt=\"delete\"></a></td></tr>";
+	echo "</td><td bgcolor=\"#E4EAF2\" width=\"50\"><a href=\"admincp.php?action=plugin&mod=setup&do=editconf&group=$group&cid=$cid\"><img src=\"images/admincp/acp_edit.gif\" border=\"0\" alt=\"edit\"></a><a href=\"javascript:dzconfirm('admincp.php?action=plugin&mod=setup&do=delconf&group=$group&cid=$cid','".$GLOBALS['lang']['confirm_delete']."')\"><img src=\"images/admincp/acp_del.gif\" border=\"0\" alt=\"delete\"></a></td></tr>";
 }
 
 function showmenu($title, $menus = array()) {
@@ -218,7 +218,7 @@ function showmenu($title, $menus = array()) {
 		
 		if($expanded) {
 			foreach($menus as $menu) {
-				echo "<tr><td bgcolor=\"".ALTBG2."\" onMouseOver=\"this.style.backgroundColor='".ALTBG1."'\" onMouseOut=\"this.style.backgroundColor='".ALTBG2."'\"><img src=\"images/common/spacer.gif\"><a href=\"$menu[url]\" target=\"main\">$menu[name]</a></td></tr>";
+				echo "<tr><td bgcolor=\"".ALTBG2."\" onMouseOver=\"this.style.backgroundColor='".ALTBG1."'\" onMouseOut=\"this.style.backgroundColor='".ALTBG2."'\"><img src=\"images/common/spacer.gif\"><a href=\"{$menu['url']}\" target=\"main\">{$menu['name']}</a></td></tr>";
 			}
 		}
 	} else {

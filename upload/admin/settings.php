@@ -60,7 +60,7 @@ if(!submitcheck('settingsubmit')) {
 		$query = $db->query("SELECT styleid, name FROM $table_styles");
 		while($style = $db->fetch_array($query)) {
 	        $selected = $style['styleid'] == $settings['styleid'] ? 'selected="selected"' : NULL;
-	        $stylelist .= "<option value=\"$style[styleid]\" $selected>$style[name]</option>\n";
+	        $stylelist .= "<option value=\"{$style['styleid']}\" $selected>{$style['name']}</option>\n";
 		}
 		$stylelist .= '</select>';
 		$checkonline = array($settings['whosonlinestatus'] => 'checked');
@@ -176,7 +176,7 @@ if(!submitcheck('settingsubmit')) {
 		if ($settingsnew['maxonlines'] > 65535 || !is_numeric($settingsnew['maxonlines'])) {
 			cpmsg('settings_maxonlines_invalid');
 		}else{
-			$db->query("ALTER TABLE $table_sessions MAX_ROWS=$settingsnew[maxonlines]");
+			$db->query("ALTER TABLE $table_sessions MAX_ROWS={$settingsnew['maxonlines']}");
 			if($settingsnew['maxonlines'] < $settings['maxonlines']) {
 				$db->query("DELETE FROM $table_sessions");
 			}

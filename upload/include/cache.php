@@ -52,9 +52,9 @@ function updatecache($cachename = '') {
 		while($data = $db->fetch_array($query)) {
 			$data = array_merge($data, $stylevars[$data['styleid']]);
 
-			$data['bgcode'] = strpos($data['bgcolor'], '.') ? "background-image: url(\"$data[imgdir]/$data[bgcolor]\")" : "background-color: $data[bgcolor]";
-			$data['catbgcode'] = strpos($data['catcolor'], '.') ? "background-image: url(\"$data[imgdir]/$data[catcolor]\")" : "background-color: $data[catcolor]";
-			$data['headerbgcode'] = strpos($data['headercolor'], '.') ? "background-image: url(\"$data[imgdir]/$data[headercolor]\")" : "background-color: $data[headercolor]";
+			$data['bgcode'] = strpos($data['bgcolor'], '.') ? "background-image: url(\"{$data['imgdir']}/{$data['bgcolor']}\")" : "background-color: {$data['bgcolor']}";
+			$data['catbgcode'] = strpos($data['catcolor'], '.') ? "background-image: url(\"{$data['imgdir']}/{$data['catcolor']}\")" : "background-color: {$data['catcolor']}";
+			$data['headerbgcode'] = strpos($data['headercolor'], '.') ? "background-image: url(\"{$data['imgdir']}/{$data['headercolor']}\")" : "background-color: {$data['headercolor']}";
 			$data['boardlogo'] = image($data['boardimg'], $data['imgdir'], "alt=\"$bbname\"");
 			$data['bold'] = $data['nobold'] ? 'normal' : 'bold';
 
@@ -203,24 +203,24 @@ function getcachearray($cachename) {
 		case 'settings':
 			$nocache_settings='welcomemsg,bbrulestxt,welcomemsgtxt,bbrules,censoruser,maxonlines';
 			while($settings=$db->fetch_array($query)) {
-				$data["$settings[variable]"]=$settings['value'];
+				$data["{$settings['variable']}"]=$settings['value'];
 			}
 			array_del($data,$nocache_settings);
-			$query = $db->query("SELECT COUNT(*) FROM $GLOBALS[table_members]");
+			$query = $db->query("SELECT COUNT(*) FROM {$GLOBALS['table_members']}");
 			$data['totalmembers'] = $db->result($query, 0);
-			$query = $db->query("SELECT username FROM $GLOBALS[table_members] ORDER BY regdate DESC LIMIT 1");
+			$query = $db->query("SELECT username FROM {$GLOBALS['table_members']} ORDER BY regdate DESC LIMIT 1");
 			$data['lastmember'] = $db->result($query, 0);
 
 			$data["pluglink"] ='';
 			$data["plugins_table"] = array();
 			$data["plugins_script"] = array();
-			$query = $db->query("SELECT plug_title,plug_key,plug_stats,plug_tables  FROM $GLOBALS[table_plugins]");
+			$query = $db->query("SELECT plug_title,plug_key,plug_stats,plug_tables  FROM {$GLOBALS['table_plugins']}");
 			while($plugs = $db->fetch_array($query)) {
-				if ($plugs[plug_stats] == 2){
-					$data["pluglink"] .= '| <a href="plugins.php?p='.$plugs[plug_key].'"><font class="navtd">'.$plugs['plug_title'].'</font></a> ';
+				if ($plugs['plug_stats'] == 2){
+					$data["pluglink"] .= '| <a href="plugins.php?p='.$plugs['plug_key'].'"><font class="navtd">'.$plugs['plug_title'].'</font></a> ';
 					$data["plugins_script"][] = $plugs['plug_key'];
 				}
-				if ($plugs[plug_tables]){
+				if ($plugs['plug_tables']){
 					$tb = array();
 					$tb = explode(",", $plugs['plug_tables']);
 					if (is_array($tb) && count($tb) ){
@@ -260,18 +260,18 @@ function getcachearray($cachename) {
 
 		case 'usergroups':
 			while($usergroups = $db->fetch_array($query)) {
-				if ($usergroups[color]){
+				if ($usergroups['color']){
 					$usergroups['grouptitle'] = '<font color="'.$usergroups['color'].'">'.$usergroups['grouptitle'].'</font>';
 				}
 
-				$data["$usergroups[groupid]"]=array(
-					'grouptitle' =>$usergroups[grouptitle],
-					'groupcolor' =>$usergroups[color],
-					'stars' =>$usergroups[stars],
-					'groupavatar' =>$usergroups[groupavatar],
-					'allowavatar' =>$usergroups[allowavatar],
-					'allowsigbbcode' =>$usergroups[allowsigbbcode],
-					'allowsigimgcode' =>$usergroups[allowsigimgcode],
+				$data["{$usergroups['groupid']}"]=array(
+					'grouptitle' =>$usergroups['grouptitle'],
+					'groupcolor' =>$usergroups['color'],
+					'stars' =>$usergroups['stars'],
+					'groupavatar' =>$usergroups['groupavatar'],
+					'allowavatar' =>$usergroups['allowavatar'],
+					'allowsigbbcode' =>$usergroups['allowsigbbcode'],
+					'allowsigimgcode' =>$usergroups['allowsigimgcode'],
 				);
 			}
 			break;
@@ -287,7 +287,7 @@ function getcachearray($cachename) {
 		case 'icons':
 			$data = array();
 			while($icon = $db->fetch_array($query)) {
-				$data["$icon[id]"] = $icon[url];
+				$data["{$icon['id']}"] = $icon['url'];
 			}
 			break;
 
@@ -306,14 +306,14 @@ function getcachearray($cachename) {
 		case 'plugins':
 			$data = array();
 			while($plugin = $db->fetch_array($query)) {
-				$data["$plugin[plug_key]"] = $plugin;
+				$data["{$plugin['plug_key']}"] = $plugin;
 			}
 			break;
 
 		case 'plugins_settings':
 			$data = array();
 			while($settings = $db->fetch_array($query)) {
-					$data["$settings[conf_group]"]["$settings[conf_key]"] = $settings[conf_value];
+					$data["{$settings['conf_group']}"]["{$settings['conf_key']}"] = $settings['conf_value'];
 			}
 
 		case 'ipbanned':
@@ -333,7 +333,7 @@ function getcachearray($cachename) {
 			$tightlink_text = $tightlink_logo = '';
 			while($flink = $db->fetch_array($query)) {
 				if($flink['note']) {
-					$forumlink['content'] = "<a href=\"$flink[url]\" target=\"_blank\"><span class=\"bold\">$flink[name]</span></a><br>$flink[note]";
+					$forumlink['content'] = "<a href=\"{$flink['url']}\" target=\"_blank\"><span class=\"bold\">{$flink['name']}</span></a><br>{$flink['note']}";
 					if($flink['logo']) {
 						$forumlink['type'] = 1;
 						$forumlink['logo'] = $flink['logo'];
@@ -343,9 +343,9 @@ function getcachearray($cachename) {
 					$data[] = $forumlink;
 				} else {
 					if($flink['logo']) {
-						$tightlink_logo .= " &nbsp; <a href=\"$flink[url]\" target=\"_blank\"><img src=\"$flink[logo]\" border=\"0\" alt=\"$flink[name]\"></a>";
+						$tightlink_logo .= " &nbsp; <a href=\"{$flink['url']}\" target=\"_blank\"><img src=\"{$flink['logo']}\" border=\"0\" alt=\"{$flink['name']}\"></a>";
 					} else {
-						$tightlink_text .= "<a href=\"$flink[url]\" target=\"_blank\">[$flink[name]]</a> ";
+						$tightlink_text .= "<a href=\"{$flink['url']}\" target=\"_blank\">[{$flink['name']}]</a> ";
 					}
 				}
 			}
@@ -358,8 +358,8 @@ function getcachearray($cachename) {
 			case onlinelist:
 			$data['legend']=$mark='';
 			while($onlinelist = $db->fetch_array($query)) {
-				$data['legend'] .=$mark.'<img src="images/common/'.$onlinelist[url].'" border=0>&nbsp;'.$onlinelist[title];
-				$data["$onlinelist[groupid]"] = $onlinelist[url];
+				$data['legend'] .=$mark.'<img src="images/common/'.$onlinelist['url'].'" border=0>&nbsp;'.$onlinelist['title'];
+				$data["{$onlinelist['groupid']}"] = $onlinelist['url'];
 				$mark='&nbsp;&nbsp;&nbsp;&nbsp;';
 			}
 			break;

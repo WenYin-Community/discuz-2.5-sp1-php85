@@ -61,13 +61,13 @@ function procthread($thread) {
 		$posts = $postsnum;
 		$topicpages = ceil($posts / $ppp);
 		for ($i = 1; $i <= $topicpages; $i++) {
-			$pagelinks .= "<a href=\"viewthread.php?tid=$thread[tid]&page=$i&highlight=$index[keywords]\" target=\"_blank\">$i</a> ";
+			$pagelinks .= "<a href=\"viewthread.php?tid={$thread['tid']}&page=$i&highlight={$index['keywords']}\" target=\"_blank\">$i</a> ";
 			if($i == 6) {
 				$i = $topicpages + 1;
 			}
 		}
 		if($topicpages > 6) {
-			$pagelinks .= " .. <a href=\"viewthread.php?tid=$thread[tid]&page=$topicpages&highlight=$index[keywords]\" target=\"_blank\">$topicpages</a> ";
+			$pagelinks .= " .. <a href=\"viewthread.php?tid={$thread['tid']}&page=$topicpages&highlight={$index['keywords']}\" target=\"_blank\">$topicpages</a> ";
 		}
 		$thread['multipage'] = " &nbsp; ( <img src=\"".IMGDIR."/multipage.gif\" align=\"absmiddle\" boader=\"0\"> $pagelinks)";
 		$pagelinks = '';

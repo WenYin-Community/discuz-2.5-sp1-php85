@@ -38,7 +38,7 @@ if($action == 'logout') {
 		$styleselect = '';
 		$query = $db->query("SELECT styleid, name FROM $table_styles WHERE available='1'");
 		while($styleinfo = $db->fetch_array($query)) {
-			$styleselect .= "<option value=\"$styleinfo[styleid]\">$styleinfo[name]</option>\n";
+			$styleselect .= "<option value=\"{$styleinfo['styleid']}\">{$styleinfo['name']}</option>\n";
 		}
 
 		$year_checked = $day_checked = $hour_checked = $task_checked = $month_checked = '';

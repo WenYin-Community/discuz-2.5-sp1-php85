@@ -22,10 +22,10 @@ if($sendmail_silent) {
 }
 
 if(isset($language[$subject])) {
-	eval("\$subject = \"".$language[$subject]."\";");
+	$subject = dinterpolate($language[$subject]);
 }
 if(isset($language[$message])) {
-	eval("\$message = \"".$language['header'].$language[$message].$language['footer']."\";");
+	$message = dinterpolate($language['header'].$language[$message].$language['footer']);
 }
 
 $subject = str_replace("\r", '', str_replace("\n", '', $subject));
@@ -45,7 +45,7 @@ if($mailsend == 1 && function_exists('mail')) {
 
 } elseif($mailsend == 2) {
 
-	$fp = fsockopen($mailcfg['server'], $mailcfg['port'], &$errno, &$errstr, 30);
+	$fp = fsockopen($mailcfg['server'], $mailcfg['port'], $errno, $errstr, 30);
 	if($mailcfg['auth']) {
 		$from = $mailcfg['from'];
 		fputs($fp, "EHLO discuz \r\n");

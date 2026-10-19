@@ -179,12 +179,12 @@ if(!$type) {
 	if (!$$stats_cachekey){
 		$query = $db->query("SELECT views, tid, subject FROM $table_threads ORDER BY views DESC LIMIT 0, 20");
 		while($thread = $db->fetch_array($query)) {
-			$thread[subject] = cutstr($thread[subject], 45);
+			$thread['subject'] = cutstr($thread['subject'], 45);
 			$threadview[] = $thread;
 		}
 		$query = $db->query("SELECT replies, tid, subject FROM $table_threads ORDER BY replies DESC LIMIT 0, 20");
 		while($thread = $db->fetch_array($query)) {
-			$thread[subject] = cutstr($thread[subject], 50);
+			$thread['subject'] = cutstr($thread['subject'], 50);
 			$threadreply[] = $thread;
 		}
 
@@ -238,14 +238,14 @@ if(!$type) {
 	}
 	unset($$stats_cachekey);
 	for($i = 0; $i < 20; $i++) {
-$credits[$i][usernameurl] = $credits[$i] ? "<a href=\"viewpro.php?username=".rawurlencode($credits[$i][username])."\">".$credits[$i][username]."</a>" : '';
-$total[$i][usernameurl] = $total[$i] ? "<a href=\"viewpro.php?username=".rawurlencode($total[$i][username])."\">".$total[$i][username]."</a>" : '';
-$thismonth[$i][usernameurl] = $thismonth[$i] ? ($thismonth[$i][username] ? "<a href=\"viewpro.php?username=".rawurlencode($thismonth[$i][username])."\">".$thismonth[$i][username]."</a>" : "Guest") : '';
-$today[$i][usernameurl] = $today[$i] ? ($today[$i][username] ? "<a href=\"viewpro.php?username=".rawurlencode($today[$i][username])."\">".$today[$i][username]."</a>" : "Guest") : '';
-$members .= "<tr $bgcolor><td><li> ".$credits[$i][usernameurl]."</td><td align=\"right\">".$credits[$i][credit]."</td><td bgcolor=\"".ALTBG1."\"></td>\n".
-        "<td><li type=\"square\"> ".$total[$i][usernameurl]."</td><td align=\"right\">".$total[$i]['postnum']."</td><td bgcolor=\"".ALTBG1."\"></td>\n".
-                        "<td><li> ".$thismonth[$i][usernameurl]."</td><td align=\"right\">".$thismonth[$i]['postnum']."</td><td bgcolor=\"".ALTBG1."\"></td>\n".
-        "<td><li type=\"square\"> ".$today[$i][usernameurl]."</td><td align=\"right\">".$today[$i]['postnum']."</td></tr>\n";
+$credits[$i]['usernameurl'] = $credits[$i] ? "<a href=\"viewpro.php?username=".rawurlencode($credits[$i]['username'])."\">".$credits[$i]['username']."</a>" : '';
+$total[$i]['usernameurl'] = $total[$i] ? "<a href=\"viewpro.php?username=".rawurlencode($total[$i]['username'])."\">".$total[$i]['username']."</a>" : '';
+$thismonth[$i]['usernameurl'] = $thismonth[$i] ? ($thismonth[$i]['username'] ? "<a href=\"viewpro.php?username=".rawurlencode($thismonth[$i]['username'])."\">".$thismonth[$i]['username']."</a>" : "Guest") : '';
+$today[$i]['usernameurl'] = $today[$i] ? ($today[$i]['username'] ? "<a href=\"viewpro.php?username=".rawurlencode($today[$i]['username'])."\">".$today[$i]['username']."</a>" : "Guest") : '';
+$members .= "<tr $bgcolor><td><li> ".$credits[$i]['usernameurl']."</td><td align=\"right\">".$credits[$i]['credit']."</td><td bgcolor=\"".ALTBG1."\"></td>\n".
+        "<td><li type=\"square\"> ".$total[$i]['usernameurl']."</td><td align=\"right\">".$total[$i]['postnum']."</td><td bgcolor=\"".ALTBG1."\"></td>\n".
+                        "<td><li> ".$thismonth[$i]['usernameurl']."</td><td align=\"right\">".$thismonth[$i]['postnum']."</td><td bgcolor=\"".ALTBG1."\"></td>\n".
+        "<td><li type=\"square\"> ".$today[$i]['usernameurl']."</td><td align=\"right\">".$today[$i]['postnum']."</td></tr>\n";
 		$bgcolor = $bgcolor ? '' : 'bgcolor="'.ALTBG2.'"';
 	}
 

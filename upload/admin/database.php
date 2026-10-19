@@ -137,7 +137,7 @@ if($action == 'export') {
 
 		$exportinfo = '';
 		foreach($exportlog as $dateline => $info) {
-			$info[dateline] = is_int($dateline) ? gmdate("$dateformat $timeformat", $dateline + $timeoffset * 3600) : $lang['unknown'];
+			$info['dateline'] = is_int($dateline) ? gmdate("$dateformat $timeformat", $dateline + $timeoffset * 3600) : $lang['unknown'];
 			switch($info['type']) {
 				case full: $info['type'] = $lang['database_export_full']; break;
 				case standard: $info['type'] = $lang['database_export_standard']; break;
@@ -146,16 +146,16 @@ if($action == 'export') {
 			$info['size'] = sizecount($info['size']);
 			$info['volume'] = $info['method'] == 'multivol' ? $info['volume'] : '';
 			$info['method'] = $info['method'] == 'multivol' ? $lang['database_multivol'] : $lang['database_shell'];
-			$exportinfo .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$info[filename]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><a href=\"$info[filename]\">".substr(strrchr($info['filename'], "/"), 1)."</a></td>\n".
-				"<td bgcolor=\"".ALTBG1."\">$info[version]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$info[dateline]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\">$info[type]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$info[size]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\">$info[method]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$info[volume]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=import&from=server&datafile_server=$info[filename]&importsubmit=yes\"".
-				($info['version'] != $version ? " onclick=\"return confirm('$lang[database_import_confirm]');\"" : '').">[$lang[import]]</a></td>\n";
+			$exportinfo .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$info['filename']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><a href=\"{$info['filename']}\">".substr(strrchr($info['filename'], "/"), 1)."</a></td>\n".
+				"<td bgcolor=\"".ALTBG1."\">{$info['version']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\">{$info['dateline']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\">{$info['type']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\">{$info['size']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\">{$info['method']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\">{$info['volume']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=import&from=server&datafile_server={$info['filename']}&importsubmit=yes\"".
+				($info['version'] != $version ? " onclick=\"return confirm('{$lang['database_import_confirm']}');\"" : '').">[{$lang['import']}]</a></td>\n";
 		}
 		include CP_TPL.'database_import.php';
 
@@ -192,7 +192,7 @@ if($action == 'export') {
 				}
 			}
 
-			$datafile_next = str_replace("-$dumpinfo[volume].sql", '-'.($dumpinfo['volume'] + 1).'.sql', $datafile_server);
+			$datafile_next = str_replace("-{$dumpinfo['volume']}.sql", '-'.($dumpinfo['volume'] + 1).'.sql', $datafile_server);
 
 			if($dumpinfo['volume'] == 1) {
 				cpmsg('database_import_multivol_prompt',
@@ -270,16 +270,16 @@ if($action == 'export') {
 		$query = $db->query("SHOW TABLE STATUS LIKE '$tablepre%'");
 		while($table = $db->fetch_array($query)) {
 			$checked = $table[$tableTypeName] == 'MyISAM' ? 'checked' : 'disabled';
-			echo "<tr><td bgcolor=\"".ALTBG1."\" align=\"center\"><input type=\"checkbox\" name=\"optimizetables[]\" value=\"$table[Name]\" $checked></td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\">$table[Name]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\" align=\"center\">$table[Type]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\">$table[Rows]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\" align=\"center\">$table[Data_length]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\">$table[Index_length]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\" align=\"center\">$table[Data_free]</td></tr>\n";
+			echo "<tr><td bgcolor=\"".ALTBG1."\" align=\"center\"><input type=\"checkbox\" name=\"optimizetables[]\" value=\"{$table['Name']}\" $checked></td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\">{$table['Name']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\" align=\"center\">{$table['Type']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\">{$table['Rows']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\" align=\"center\">{$table['Data_length']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\">{$table['Index_length']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\" align=\"center\">{$table['Data_free']}</td></tr>\n";
 			$totalsize += $table['Data_length'] + $table['Index_length'];
 		}
-		echo "<tr class=\"header\"><td colspan=\"7\" align=\"right\">$lang[database_optimize_used] ".sizecount($totalsize)."</td></tr></table><tr><td align=\"center\"><br><input type=\"submit\" name=\"optimizesubmit\" value=\"$lang[submit]\"></td></tr>\n";
+		echo "<tr class=\"header\"><td colspan=\"7\" align=\"right\">{$lang['database_optimize_used']} ".sizecount($totalsize)."</td></tr></table><tr><td align=\"center\"><br><input type=\"submit\" name=\"optimizesubmit\" value=\"{$lang['submit']}\"></td></tr>\n";
 	} else {
 		$db->query("DELETE FROM $table_subscriptions", 'UNBUFFERED');
 		$db->query("UPDATE $table_members SET identifying=''", 'UNBUFFERED');
@@ -288,18 +288,18 @@ if($action == 'export') {
 		while($table = $db->fetch_array($query)) {
 			if(is_array($optimizetables) && in_array($table['Name'], $optimizetables)) {
 				$optimized = $lang['yes'];
-				$db->query("OPTIMIZE TABLE $table[Name]");
+				$db->query("OPTIMIZE TABLE {$table['Name']}");
 			} else {
 				$optimized = '<b>'.$lang['no'].'</b>';
 			}
 
 			echo "<tr>\n".
 				"<td bgcolor=\"".ALTBG1."\" align=\"center\">$optimized</td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\">$table[Name]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\" align=\"center\">$table[Type]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\">$table[Rows]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\" align=\"center\">$table[Data_length]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\">$table[Index_length]</td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\">{$table['Name']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\" align=\"center\">{$table['Type']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\">{$table['Rows']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\" align=\"center\">{$table['Data_length']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\">{$table['Index_length']}</td>\n".
 				"<td bgcolor=\"".ALTBG1."\" align=\"center\">0</td>\n".
 				"</tr>\n";
 			$totalsize += $table['Data_length'] + $table['Index_length'];

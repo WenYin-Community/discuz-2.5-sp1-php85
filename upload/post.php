@@ -29,16 +29,16 @@ if($tid && $fid) {
 	//$thread = $db->fetch_array($query);
 	$thread = $forum;
 	$fid = $thread['fid'];
-	$navigation = "&raquo; <a href=\"viewthread.php?tid=$tid\">$thread[subject]</a>";
-	$navtitle = " - $thread[subject]";
+	$navigation = "&raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a>";
+	$navtitle = " - {$thread['subject']}";
 }
 
-$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid\">$forum[name]</a> $navigation";
+$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid\">{$forum['name']}</a> $navigation";
 $navtitle = ' - '.strip_tags($forum['name']).$navtitle;
 if($forum['type'] == 'sub') {
-	$query = $db->query("SELECT name, fid FROM $table_forums WHERE fid='$forum[fup]'");
+	$query = $db->query("SELECT name, fid FROM $table_forums WHERE fid='{$forum['fup']}'");
 	$fup = $db->fetch_array($query);
-	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fup[fid]\">$fup[name]</a> $navigation";
+	$navigation = "&raquo; <a href=\"forumdisplay.php?fid={$fup['fid']}\">{$fup['name']}</a> $navigation";
 	$navtitle = ' - '.strip_tags($fup['name']).$navtitle;
 }
 
@@ -70,7 +70,7 @@ if(!$adminid && !$lastpost && $newbiespan) {
 }
 
 if ( $action == 'reply' && $delayreply && !$ismoderator){
-	if (($timestamp - $thread[dateline] ) > $delayreply * 86400) {
+	if (($timestamp - $thread['dateline'] ) > $delayreply * 86400) {
 		showmessage('post_delayreply_error');
 	}
 } 

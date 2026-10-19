@@ -77,14 +77,14 @@ if($action == 'styles' && !$export) {
 		$styleselect = '';
 		$query = $db->query("SELECT s.styleid, s.available, s.name, t.name AS tplname, t.charset, t.copyright FROM $table_styles s LEFT JOIN $table_templates t ON t.templateid=s.templateid");
 		while($styleinfo = $db->fetch_array($query)) {
-			$styleselect .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$styleinfo[styleid]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" name=\"namenew[$styleinfo[styleid]]\" value=\"$styleinfo[name]\" size=\"18\"></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"availablenew[$styleinfo[styleid]]\" value=\"1\" ".($styleinfo['available'] ? 'checked' : NULL)."></td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$styleinfo[styleid]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\">$styleinfo[tplname]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$styleinfo[charset]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=styles&export=$styleinfo[styleid]\">[$lang[download]]</a></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><a href=\"admincp.php?action=styles&edit=$styleinfo[styleid]\">[$lang[detail]]</a></td></tr>\n";
+			$styleselect .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$styleinfo['styleid']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" name=\"namenew[{$styleinfo['styleid']}]\" value=\"{$styleinfo['name']}\" size=\"18\"></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"availablenew[{$styleinfo['styleid']}]\" value=\"1\" ".($styleinfo['available'] ? 'checked' : NULL)."></td>\n".
+				"<td bgcolor=\"".ALTBG2."\">{$styleinfo['styleid']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\">{$styleinfo['tplname']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\">{$styleinfo['charset']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=styles&export={$styleinfo['styleid']}\">[{$lang['download']}]</a></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><a href=\"admincp.php?action=styles&edit={$styleinfo['styleid']}\">[{$lang['detail']}]</a></td></tr>\n";
 		}
 		include CP_TPL.'styles_home.php';
 
@@ -106,7 +106,7 @@ if($action == 'styles' && !$export) {
 			$db->query("DELETE FROM $table_stylevars WHERE styleid IN ($ids)");
 			$db->query("UPDATE $table_members SET styleid='0' WHERE styleid IN ($ids)");
 			$db->query("UPDATE $table_forums SET styleid='0' WHERE styleid IN ($ids)");
-			$db->query("UPDATE $table_sessions SET styleid='$_DCACHE[settings][styleid]' WHERE styleid IN ($ids)");
+			$db->query("UPDATE $table_sessions SET styleid='{$_DCACHE['settings']}[styleid]' WHERE styleid IN ($ids)");
 			
 			foreach ($delete as $styleTmp) {
 				@unlink(DISCUZ_ROOT.'./forumdata/cache/style_'.$styleTmp.'.php');
@@ -161,25 +161,25 @@ if($action == 'styles' && !$export) {
 			}
 
 			$renameinfo = '';
-			$query = $db->query("SELECT COUNT(*) FROM $table_templates WHERE name='$stylearray[tplname]'");
+			$query = $db->query("SELECT COUNT(*) FROM $table_templates WHERE name='{$stylearray['tplname']}'");
 			if($db->result($query, 0)) {
 				$stylearray['tplname'] .= '_'.random(4);
 				$renamed = 1;
 			}
 			$db->query("INSERT INTO $table_templates (name, charset, directory, copyright)
-				VALUES ('$stylearray[tplname]', '$stylearray[charset]', '$stylearray[directory]', '$stylearray[copyright]')");
+				VALUES ('{$stylearray['tplname']}', '{$stylearray['charset']}', '{$stylearray['directory']}', '{$stylearray['copyright']}')");
 			$templateid = $db->insert_id();
 		} else {
 			$templateid = 1;
 		}
 
-		$query = $db->query("SELECT COUNT(*) FROM $table_styles WHERE name='$stylearray[name]'");
+		$query = $db->query("SELECT COUNT(*) FROM $table_styles WHERE name='{$stylearray['name']}'");
 		if($db->result($query, 0)) {
 			$stylearray['name'] .= '_'.random(4);
 			$renamed = 1;
 		}
 		$db->query("INSERT INTO $table_styles (name, templateid)
-			VALUES ('$stylearray[name]', '$templateid')");
+			VALUES ('{$stylearray['name']}', '$templateid')");
 		$styleid = $db->insert_id();
 
 		foreach($stylearray['style'] as $variable => $substitute) {
@@ -206,9 +206,9 @@ if($action == 'styles' && !$export) {
 				if(in_array($stylevar['variable'], $predefinedvars)) {
 					$stylestuff[$stylevar['variable']] = array('id' => $stylevar['stylevarid'], 'subst' => $stylevar['substitute']);
 				} else {
-					$stylecustom .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$stylevar[stylevarid]\"></td>\n".
-						"<td bgcolor=\"".ALTBG2."\"><b>{".strtoupper($stylevar[variable])."}</b></td>\n".
-						"<td bgcolor=\"".ALTBG1."\"><textarea name=\"stylevar[$stylevar[stylevarid]]\" cols=\"50\" rows=\"2\">$stylevar[substitute]</textarea></td>\n".
+					$stylecustom .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$stylevar['stylevarid']}\"></td>\n".
+						"<td bgcolor=\"".ALTBG2."\"><b>{".strtoupper($stylevar['variable'])."}</b></td>\n".
+						"<td bgcolor=\"".ALTBG1."\"><textarea name=\"stylevar[{$stylevar['stylevarid']}]\" cols=\"50\" rows=\"2\">{$stylevar['substitute']}</textarea></td>\n".
 						"</tr>";
 				}
 			}
@@ -216,9 +216,9 @@ if($action == 'styles' && !$export) {
 			$tplselect = "<select name=\"templateidnew\">\n";
 			$query = $db->query("SELECT templateid, name FROM $table_templates");
 			while($template = $db->fetch_array($query)) {
-				$tplselect .= "<option value=\"$template[templateid]\"".
+				$tplselect .= "<option value=\"{$template['templateid']}\"".
 					($style['templateid'] == $template['templateid'] ? 'selected="selected"' : NULL).
-					">$template[name]</option>\n";
+					">{$template['name']}</option>\n";
 			}
 			$tplselect .= '</select>';
 
@@ -227,35 +227,35 @@ if($action == 'styles' && !$export) {
 			showtype($lang['styles_edit'].' - '.$style['name'], 'top');
 			showsetting('styles_edit_name', 'namenew', $style['name'], 'text', '55%');
 			showsetting('styles_edit_tpl', '', '', $tplselect, '55%');
-			showsetting('styles_edit_logo', "stylevar[{$stylestuff[boardimg][id]}]", $stylestuff['boardimg']['subst'], 'text', '55%');
-			showsetting('styles_edit_imgdir', "stylevar[{$stylestuff[imgdir][id]}]", $stylestuff['imgdir']['subst'], 'text', '55%');
-			showsetting('styles_edit_smdir', "stylevar[{$stylestuff[smdir][id]}]", $stylestuff['smdir']['subst'], 'text', '55%');
+			showsetting('styles_edit_logo', "stylevar[{$stylestuff['boardimg']['id']}]", $stylestuff['boardimg']['subst'], 'text', '55%');
+			showsetting('styles_edit_imgdir', "stylevar[{$stylestuff['imgdir']['id']}]", $stylestuff['imgdir']['subst'], 'text', '55%');
+			showsetting('styles_edit_smdir', "stylevar[{$stylestuff['smdir']['id']}]", $stylestuff['smdir']['subst'], 'text', '55%');
 
 			showtype('styles_edit_font_color');
-			showsetting('styles_edit_nobold', "stylevar[{$stylestuff[nobold][id]}]", $stylestuff['nobold']['subst'], 'radio', '55%');
-			showsetting('styles_edit_font', "stylevar[{$stylestuff[font][id]}]", $stylestuff['font']['subst'], 'text', '55%');
-			showsetting('styles_edit_fontsize', "stylevar[{$stylestuff[fontsize][id]}]", $stylestuff['fontsize']['subst'], 'text', '55%');
-			showsetting('styles_edit_smfont', "stylevar[{$stylestuff[smfont][id]}]", $stylestuff['smfont']['subst'], 'text', '55%');
-			showsetting('styles_edit_smfontsize', "stylevar[{$stylestuff[smfontsize][id]}]", $stylestuff['smfontsize']['subst'], 'text', '55%');
-			showsetting('styles_edit_link', "stylevar[{$stylestuff[link][id]}]", $stylestuff['link']['subst'], 'color', '55%');
-			showsetting('styles_edit_headertext', "stylevar[{$stylestuff[headertext][id]}]", $stylestuff['headertext']['subst'], 'color', '55%');
-			showsetting('styles_edit_cattext', "stylevar[{$stylestuff[cattext][id]}]", $stylestuff['cattext']['subst'], 'color', '55%');
-			showsetting('styles_edit_tabletext', "stylevar[{$stylestuff[tabletext][id]}]", $stylestuff['tabletext']['subst'], 'color', '55%');
-			showsetting('styles_edit_text', "stylevar[{$stylestuff[text][id]}]", $stylestuff['text']['subst'], 'color', '55%');
+			showsetting('styles_edit_nobold', "stylevar[{$stylestuff['nobold']['id']}]", $stylestuff['nobold']['subst'], 'radio', '55%');
+			showsetting('styles_edit_font', "stylevar[{$stylestuff['font']['id']}]", $stylestuff['font']['subst'], 'text', '55%');
+			showsetting('styles_edit_fontsize', "stylevar[{$stylestuff['fontsize']['id']}]", $stylestuff['fontsize']['subst'], 'text', '55%');
+			showsetting('styles_edit_smfont', "stylevar[{$stylestuff['smfont']['id']}]", $stylestuff['smfont']['subst'], 'text', '55%');
+			showsetting('styles_edit_smfontsize', "stylevar[{$stylestuff['smfontsize']['id']}]", $stylestuff['smfontsize']['subst'], 'text', '55%');
+			showsetting('styles_edit_link', "stylevar[{$stylestuff['link']['id']}]", $stylestuff['link']['subst'], 'color', '55%');
+			showsetting('styles_edit_headertext', "stylevar[{$stylestuff['headertext']['id']}]", $stylestuff['headertext']['subst'], 'color', '55%');
+			showsetting('styles_edit_cattext', "stylevar[{$stylestuff['cattext']['id']}]", $stylestuff['cattext']['subst'], 'color', '55%');
+			showsetting('styles_edit_tabletext', "stylevar[{$stylestuff['tabletext']['id']}]", $stylestuff['tabletext']['subst'], 'color', '55%');
+			showsetting('styles_edit_text', "stylevar[{$stylestuff['text']['id']}]", $stylestuff['text']['subst'], 'color', '55%');
 
 			showtype('styles_edit_table');
-			showsetting('styles_edit_maintablewidth', "stylevar[{$stylestuff[maintablewidth][id]}]", $stylestuff['maintablewidth']['subst'], 'text', '55%');
-			showsetting('styles_edit_maintablespace', "stylevar[{$stylestuff[maintablespace][id]}]", $stylestuff['maintablespace']['subst'], 'text', '55%');
-			showsetting('styles_edit_maintablecolor', "stylevar[{$stylestuff[maintablecolor][id]}]", $stylestuff['maintablecolor']['subst'], 'color', '55%');
-			showsetting('styles_edit_tablewidth', "stylevar[{$stylestuff[tablewidth][id]}]", $stylestuff['tablewidth']['subst'], 'text', '55%');
-			showsetting('styles_edit_borderwidth', "stylevar[{$stylestuff[borderwidth][id]}]", $stylestuff['borderwidth']['subst'], 'text', '55%');
-			showsetting('styles_edit_tablespace', "stylevar[{$stylestuff[tablespace][id]}]", $stylestuff['tablespace']['subst'],   'text', '55%');
-			showsetting('styles_edit_bordercolor', "stylevar[{$stylestuff[bordercolor][id]}]", $stylestuff['bordercolor']['subst'], 'color', '55%');
-			showsetting('styles_edit_bgcolor', "stylevar[{$stylestuff[bgcolor][id]}]", $stylestuff['bgcolor']['subst'], 'color', '55%');
-			showsetting('styles_edit_headercolor', "stylevar[{$stylestuff[headercolor][id]}]", $stylestuff['headercolor']['subst'], 'color', '55%');
-			showsetting('styles_edit_catcolor', "stylevar[{$stylestuff[catcolor][id]}]", $stylestuff['catcolor']['subst'], 'color', '55%');
-			showsetting('styles_edit_altbg1', "stylevar[{$stylestuff[altbg1][id]}]", $stylestuff['altbg1']['subst'], 'color', '55%');
-			showsetting('styles_edit_altbg2', "stylevar[{$stylestuff[altbg2][id]}]", $stylestuff['altbg2']['subst'], 'color', '55%');
+			showsetting('styles_edit_maintablewidth', "stylevar[{$stylestuff['maintablewidth']['id']}]", $stylestuff['maintablewidth']['subst'], 'text', '55%');
+			showsetting('styles_edit_maintablespace', "stylevar[{$stylestuff['maintablespace']['id']}]", $stylestuff['maintablespace']['subst'], 'text', '55%');
+			showsetting('styles_edit_maintablecolor', "stylevar[{$stylestuff['maintablecolor']['id']}]", $stylestuff['maintablecolor']['subst'], 'color', '55%');
+			showsetting('styles_edit_tablewidth', "stylevar[{$stylestuff['tablewidth']['id']}]", $stylestuff['tablewidth']['subst'], 'text', '55%');
+			showsetting('styles_edit_borderwidth', "stylevar[{$stylestuff['borderwidth']['id']}]", $stylestuff['borderwidth']['subst'], 'text', '55%');
+			showsetting('styles_edit_tablespace', "stylevar[{$stylestuff['tablespace']['id']}]", $stylestuff['tablespace']['subst'],   'text', '55%');
+			showsetting('styles_edit_bordercolor', "stylevar[{$stylestuff['bordercolor']['id']}]", $stylestuff['bordercolor']['subst'], 'color', '55%');
+			showsetting('styles_edit_bgcolor', "stylevar[{$stylestuff['bgcolor']['id']}]", $stylestuff['bgcolor']['subst'], 'color', '55%');
+			showsetting('styles_edit_headercolor', "stylevar[{$stylestuff['headercolor']['id']}]", $stylestuff['headercolor']['subst'], 'color', '55%');
+			showsetting('styles_edit_catcolor', "stylevar[{$stylestuff['catcolor']['id']}]", $stylestuff['catcolor']['subst'], 'color', '55%');
+			showsetting('styles_edit_altbg1', "stylevar[{$stylestuff['altbg1']['id']}]", $stylestuff['altbg1']['subst'], 'color', '55%');
+			showsetting('styles_edit_altbg2', "stylevar[{$stylestuff['altbg2']['id']}]", $stylestuff['altbg2']['subst'], 'color', '55%');
 			showtype('', 'bottom');
 
 ?>
@@ -274,7 +274,7 @@ if($action == 'styles' && !$export) {
 </tr></table></td></tr></table><br>
 <?
 
-			echo "<br><center><input type=\"submit\" name=\"editsubmit\" value=\"$lang[submit]\"></center></form>";
+			echo "<br><center><input type=\"submit\" name=\"editsubmit\" value=\"{$lang['submit']}\"></center></form>";
 
 		} else {
 

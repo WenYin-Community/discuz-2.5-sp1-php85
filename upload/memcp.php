@@ -37,7 +37,7 @@ if(!isset($action)) {
 		}
 	}
 
-	$avatar = $avatar[avatar] ? "<img src=\"$avatar[avatar]\" width=\"$avatar[avatarwidth]\" height=\"$avatar[avatarheight]\" border=\"0\">" : '&nbsp;';
+	$avatar = $avatar['avatar'] ? "<img src=\"{$avatar['avatar']}\" width=\"{$avatar['avatarwidth']}\" height=\"{$avatar['avatarheight']}\" border=\"0\">" : '&nbsp;';
 
 	$msgexists = 0;
 	$msglist = array();
@@ -45,7 +45,7 @@ if(!isset($action)) {
 	while($message = $db->fetch_array($query)) {
 		$msgexists = 1;
 		$message['dateline'] = gmdate("$dateformat $timeformat", $message['dateline'] + $timeoffset * 3600);
-		$message['subject'] = $message['new'] ? "<b>$message[subject]</b>" : $message['subject'];
+		$message['subject'] = $message['new'] ? "<b>{$message['subject']}</b>" : $message['subject'];
 
 		$msglist[] = $message;
 	}
@@ -70,7 +70,7 @@ if(!isset($action)) {
 		$query = $db->query("SELECT a.aid, a.filename, a.filesize, a.downloads, a.dateline, t.tid,  t.subject FROM $table_attachments a, $table_threads t WHERE t.tid=a.tid AND  a.uid='$discuz_uid' ORDER BY a.dateline DESC LIMIT 0, 5");
 		while($download = $db->fetch_array($query)) {
 			$attachexists = 1;
-			$download[checkid] = substr(md5($download['filesize']),0,5);
+			$download['checkid'] = substr(md5($download['filesize']),0,5);
 			$download['filesize'] = sizecount($download['filesize']);
 			$download['dateline'] = gmdate("$dateformat $timeformat", $download['dateline'] + $timeoffset * 3600);
 			$attlist[] = $download;
@@ -104,9 +104,9 @@ if(!isset($action)) {
 		$styleselect = '';
 		$query = $db->query("SELECT styleid, name FROM $table_styles WHERE available='1'");
 		while($style = $db->fetch_array($query)) {
-			$styleselect .= "<option value=\"$style[styleid]\" ".
+			$styleselect .= "<option value=\"{$style['styleid']}\" ".
 				($style['styleid'] == $member['styleid'] ? 'selected="selected"' : NULL).
-				">$style[name]</option>\n";
+				">{$style['name']}</option>\n";
 		}
 
 		$bday = explode('-', $member['bday']);

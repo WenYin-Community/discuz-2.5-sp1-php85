@@ -39,6 +39,46 @@ function clearcookies() {
 	$discuz_user = $discuz_pw = $discuz_secques = '';
 }
 
+// 语言包文本插值: 取代原来的 eval() 方式。
+// 支持 $var、{$var}、$arr[key]、$arr['key']、$arr[key][key2] 五种写法,
+// 未定义的变量按 PHP 插值语义展开为空串, 数组展开为 Array。
+function dinterpolate($string) {
+	if(strpos($string, '$') === false) {
+		return $string;
+	}
+	return preg_replace_callback(
+		'/(?<!\\\\)\{\$([a-zA-Z_][a-zA-Z0-9_]*)((?:\[[^\[\]]*\])*)\}|(?<!\\\\)\$([a-zA-Z_][a-zA-Z0-9_]*)((?:\[[^\[\]]*\])*)/',
+		'dinterpolate_callback', $string);
+}
+
+function dinterpolate_callback($matches) {
+	$name = !empty($matches[1]) ? $matches[1] : $matches[3];
+	$index = !empty($matches[1]) ? $matches[2] : $matches[4];
+	$value = isset($GLOBALS[$name]) ? $GLOBALS[$name] : NULL;
+	if($index != '') {
+		preg_match_all('/\[([^\[\]]*)\]/', $index, $keys);
+		foreach($keys[1] as $key) {
+			$key = trim($key);
+			if(strlen($key) > 1 && ($key[0] == "'" || $key[0] == '"') && substr($key, -1) == $key[0]) {
+				$key = substr($key, 1, -1);
+			}
+			if(is_array($value) && array_key_exists($key, $value)) {
+				$value = $value[$key];
+			} else {
+				return '';
+			}
+		}
+	}
+	if(is_array($value)) {
+		return 'Array';
+	} elseif(is_object($value)) {
+		return method_exists($value, '__toString') ? (string)$value : '';
+	} elseif($value === NULL) {
+		return '';
+	}
+	return (string)$value;
+}
+
 function dexit($message = '') {
 	echo $message;
 	output();
@@ -232,7 +272,7 @@ function showmessage($show_message, $url_forward = '', $extra = '') {
 	unset($plugins_languagepack);
 
 	if(isset($language[$show_message])) {
-		eval("\$show_message = \"".$language[$show_message]."\";");
+		$show_message = dinterpolate($language[$show_message]);
 	}
 	$url_redirect = $url_forward ? '<meta http-equiv="refresh" content="2;url='.transsid($url_forward).'">' : NULL;
 

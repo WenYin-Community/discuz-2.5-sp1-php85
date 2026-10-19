@@ -37,7 +37,7 @@ if ($tid && $forum){
 	if(!$thread = $db->fetch_array($query)) {
 		showmessage('thread_nonexistence');
 	}
-	header("Location: {$boardurl}viewthread.php?tid=$thread[tid]&sid=$sid");
+	header("Location: {$boardurl}viewthread.php?tid={$thread['tid']}&sid=$sid");
 	exit();
 } else {
 	showmessage('thread_nonexistence');
@@ -56,12 +56,12 @@ if(!strstr($oldtopics, "\t$tid\t")) {
 }
 
 if($forum['type'] == 'forum') {
-	$navigation .= "&raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\"> $forum[name]</a> &raquo; $thread[subject]";
+	$navigation .= "&raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\"> {$forum['name']}</a> &raquo; {$thread['subject']}";
 	$navtitle .= ' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 } else {
-	$query = $db->query("SELECT fid, name, moderator FROM $table_forums WHERE fid='$forum[fup]'");
+	$query = $db->query("SELECT fid, name, moderator FROM $table_forums WHERE fid='{$forum['fup']}'");
 	$fup = $db->fetch_array($query);
-	$navigation .= "&raquo; <a href=\"forumdisplay.php?fid=$fup[fid]\">$fup[name]</a> &raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\"> $forum[name]</a> &raquo; $thread[subject]";
+	$navigation .= "&raquo; <a href=\"forumdisplay.php?fid={$fup['fid']}\">{$fup['name']}</a> &raquo; <a href=\"forumdisplay.php?fid=$fid&page=$fpage\"> {$forum['name']}</a> &raquo; {$thread['subject']}";
 	$navtitle .= ' - '.strip_tags($fup['name']).' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 }
 
@@ -111,7 +111,7 @@ if(!$action && $tid) {
 	$fpage = intval($fpage);
 	$multipage = multi($thread['replies'] + 1, $ppp, $page, "viewthread.php?tid=$tid&fpage=$fpage&highlight=".rawurlencode($highlight));
 
-	$thread[subject] = cutstr($thread[subject],77);
+	$thread['subject'] = cutstr($thread['subject'],77);
 	$polloptions = array();
 	if($thread['poll']) {
 		$query = $db->query("SELECT pollopts FROM $table_polls WHERE tid='$tid'");
@@ -217,7 +217,7 @@ if(!$action && $tid) {
 		require_once DISCUZ_ROOT.'./include/attachment.php';
 		$query = $db->query("select * from $table_attachments where tid='$tid' ORDER BY aid");
 		while($attach = $db->fetch_array($query)) {
-			$attach[checkid] = substr(md5($attach['filesize']),0,5);
+			$attach['checkid'] = substr(md5($attach['filesize']),0,5);
 			$extension = strtolower(fileext($attach['filename']));
 			$attach['attachicon'] = attachtype($extension."\t".$attach['filetype']);
 			if($attachimgpost && in_array($extension, array('jpg', 'jpeg', 'jpe', 'gif', 'png', 'bmp'))) {
@@ -227,7 +227,7 @@ if(!$action && $tid) {
 			}
 			$attach['attachsize'] = sizecount($attach['filesize']);
 			$attach['dateline'] = $attach['dateline']?gmdate("$dateformat $timeformat", $attach['dateline'] + $timeoffset * 3600): '';
-			$attachelist["$attach[pid]"][] = $attach;
+			$attachelist["{$attach['pid']}"][] = $attach;
 		}
 	}
 
@@ -235,7 +235,7 @@ if(!$action && $tid) {
 
 	$usesigcheck = $signature ? 'checked' : NULL;
 	$allowpost = (!$forum['postperm'] && $allowpost) || ($forum['postperm'] && strstr($forum['postperm'], "\t$groupid\t")) || $forum['allowpost'];
-	$allowpostreply = (!$thread['closed'] || $ismoderator) && (!$delayreply || ($delayreply && (($timestamp - $thread[dateline] ) < $delayreply * 86400)) || $ismoderator) && ((!$forum['replyperm'] && $allowpost) || ($forum['replyperm'] && strstr($forum['replyperm'], "\t$groupid\t")) || $forum['allowreply']);
+	$allowpostreply = (!$thread['closed'] || $ismoderator) && (!$delayreply || ($delayreply && (($timestamp - $thread['dateline'] ) < $delayreply * 86400)) || $ismoderator) && ((!$forum['replyperm'] && $allowpost) || ($forum['replyperm'] && strstr($forum['replyperm'], "\t$groupid\t")) || $forum['allowreply']);
 
 
 	if($delayviewcount) {

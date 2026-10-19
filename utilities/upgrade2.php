@@ -24,9 +24,9 @@ require "./include/discuzcode.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 @set_magic_quotes_runtime(0);
 
-$action = ($HTTP_POST_VARS[action]) ? $HTTP_POST_VARS[action] : $HTTP_GET_VARS[action];
-$step = $HTTP_GET_VARS[step];
-$start = $HTTP_GET_VARS[start];
+$action = ($HTTP_POST_VARS['action']) ? $HTTP_POST_VARS['action'] : $HTTP_GET_VARS['action'];
+$step = $HTTP_GET_VARS['step'];
+$start = $HTTP_GET_VARS['start'];
 
 $upgrade1 = <<<EOT
 
@@ -207,7 +207,7 @@ if(!$action) {
 		while($style = $db->fetch_array($query)) {
 			foreach($style as $key => $val) {
 				if($key != 'styleid' && $key != 'name' && $key != 'templateid') {
-					$db->query("INSERT INTO $table_stylevars VALUES ('', $style[styleid], '".addslashes($key)."', '".addslashes($val)."')");
+					$db->query("INSERT INTO $table_stylevars VALUES ('', {$style['styleid']}, '".addslashes($key)."', '".addslashes($val)."')");
 				}
 			}
 		}
@@ -249,10 +249,10 @@ if(!$action) {
 
 		$query = $db->query("SELECT pid, message FROM $table_posts WHERE parseurloff='0' LIMIT $start, $many");
 		while($post = $db->fetch_array($query)) {
-			$post[message] = trim(addslashes($post[message]));
-			$post[message1] = trim(parseurl($post[message]));
-			if($post[message] != $post[message1]) {
-				$db->query("UPDATE $table_posts SET message='$post[message1]' WHERE pid='$post[pid]'");
+			$post['message'] = trim(addslashes($post['message']));
+			$post['message1'] = trim(parseurl($post['message']));
+			if($post['message'] != $post['message1']) {
+				$db->query("UPDATE $table_posts SET message='{$post['message1']}' WHERE pid='{$post['pid']}'");
 			}
 			$converted = 1;
 		}
@@ -288,7 +288,7 @@ if(!$action) {
 					}
 				}
 				$pollopts = serialize($pollarray);
-				$db->query("UPDATE $table_threads SET pollopts='$pollopts' WHERE tid='$thread[tid]'");
+				$db->query("UPDATE $table_threads SET pollopts='$pollopts' WHERE tid='{$thread['tid']}'");
 			}
 		}
 

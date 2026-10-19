@@ -29,15 +29,15 @@ if($action == 'announcements') {
 			if ($announce['posturl']){
 					$announce_editurl = '<a href="'.$announce['posturl'].'" target="_blank"><b>'.$lang['announce_click_url'].'</b></a>';
 			}else{
-					$announce_editurl = "<a href=\"admincp.php?action=announcements&edit=$announce[id]\">".cutstr(strip_tags($announce['message']), 20)."</a>";
+					$announce_editurl = "<a href=\"admincp.php?action=announcements&edit={$announce['id']}\">".cutstr(strip_tags($announce['message']), 20)."</a>";
 			}
-			$announcements .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$announce[id]\" $disabled></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><a href=\"./viewpro.php?username=".rawurlencode($announce['author'])."\" target=\"_blank\">$announce[author]</a></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=announcements&edit=$announce[id]\" $disabled>$announce[subject]</a></td>\n".
+			$announcements .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$announce['id']}\" $disabled></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><a href=\"./viewpro.php?username=".rawurlencode($announce['author'])."\" target=\"_blank\">{$announce['author']}</a></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><a href=\"admincp.php?action=announcements&edit={$announce['id']}\" $disabled>{$announce['subject']}</a></td>\n".
 				"<td bgcolor=\"".ALTBG2."\">$announce_editurl</td>\n".
-				"<td bgcolor=\"".ALTBG1."\">$announce[starttime]</td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$announce[endtime]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"2\" name=\"displayordernew[$announce[id]]\" value=\"$announce[displayorder]\" $disabled></td></tr>\n";
+				"<td bgcolor=\"".ALTBG1."\">{$announce['starttime']}</td>\n".
+				"<td bgcolor=\"".ALTBG2."\">{$announce['endtime']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"2\" name=\"displayordernew[{$announce['id']}]\" value=\"{$announce['displayorder']}\" $disabled></td></tr>\n";
 		}
 		$newstarttime = gmdate('Y-n-j', $timestamp + $timeoffset * 3600);
 		include CP_TPL.'announcements_main.php';

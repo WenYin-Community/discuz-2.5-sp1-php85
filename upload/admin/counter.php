@@ -35,20 +35,20 @@ if(!submitcheck('forumsubmit', 1) && !submitcheck('membersubmit', 1) && !submitc
 	while($forum = $db->fetch_array($queryf)) {
 		$processed = 1;
 
-		$query = $db->query("SELECT COUNT(*) FROM $table_threads WHERE fid='$forum[fid]'");
+		$query = $db->query("SELECT COUNT(*) FROM $table_threads WHERE fid='{$forum['fid']}'");
 		$threadnum = $db->result($query, 0);
-		$query = $db->query("SELECT COUNT(*) FROM $table_posts WHERE fid='$forum[fid]'");
+		$query = $db->query("SELECT COUNT(*) FROM $table_posts WHERE fid='{$forum['fid']}'");
 		$postnum = $db->result($query, 0);
 
-		$query = $db->query("SELECT subject, lastpost, lastposter FROM $table_threads WHERE fid='$forum[fid]' ORDER BY lastpost DESC LIMIT 1");
+		$query = $db->query("SELECT subject, lastpost, lastposter FROM $table_threads WHERE fid='{$forum['fid']}' ORDER BY lastpost DESC LIMIT 1");
 		$thread = $db->fetch_array($query);
-		$lastpost = addslashes("$thread[subject]\t$thread[lastpost]\t$thread[lastposter]");
+		$lastpost = addslashes("{$thread['subject']}\t{$thread['lastpost']}\t{$thread['lastposter']}");
 
-		$db->query("UPDATE $table_forums SET threads='$threadnum', posts='$postnum', lastpost='$lastpost' WHERE fid='$forum[fid]'");
+		$db->query("UPDATE $table_forums SET threads='$threadnum', posts='$postnum', lastpost='$lastpost' WHERE fid='{$forum['fid']}'");
 	}
 
 	if($processed) {
-		cpmsg("$lang[counter_forum]: $lang[counter_processing]", $nextlink);
+		cpmsg("{$lang['counter_forum']}: {$lang['counter_processing']}", $nextlink);
 	} else {
 		$db->query("UPDATE $table_forums SET threads='0', posts='0' WHERE type='group'");
 		cpmsg('counter_forum_succeed');
@@ -68,14 +68,14 @@ if(!submitcheck('forumsubmit', 1) && !submitcheck('membersubmit', 1) && !submitc
 	$queryt = $db->query("SELECT tid FROM $table_threads LIMIT $current, $pertask");
 	while($threads = $db->fetch_array($queryt)) {
 		$processed = 1;
-		$query = $db->query("SELECT COUNT(*) FROM $table_posts WHERE tid='$threads[tid]'");
+		$query = $db->query("SELECT COUNT(*) FROM $table_posts WHERE tid='{$threads['tid']}'");
 		$replynum = $db->result($query, 0);
 		$replynum--;
-		$db->query("UPDATE $table_threads SET replies='$replynum' WHERE tid='$threads[tid]'");
+		$db->query("UPDATE $table_threads SET replies='$replynum' WHERE tid='{$threads['tid']}'");
 	}
 
 	if($processed) {
-		cpmsg("$lang[counter_thread]: $lang[counter_processing]", $nextlink);
+		cpmsg("{$lang['counter_thread']}: {$lang['counter_processing']}", $nextlink);
 	} else {
 		cpmsg('counter_thread_succeed');
 	}
@@ -94,12 +94,12 @@ if(!submitcheck('forumsubmit', 1) && !submitcheck('membersubmit', 1) && !submitc
 	$queryt = $db->query("SELECT uid FROM $table_members LIMIT $current, $pertask");
 	while($mem = $db->fetch_array($queryt)) {
 		$processed = 1;
-		$query = $db->query("SELECT COUNT(*) FROM $table_posts WHERE authorid='$mem[uid]'");
-		$db->query("UPDATE $table_members SET postnum='".$db->result($query, 0)."' WHERE uid='$mem[uid]'");
+		$query = $db->query("SELECT COUNT(*) FROM $table_posts WHERE authorid='{$mem['uid']}'");
+		$db->query("UPDATE $table_members SET postnum='".$db->result($query, 0)."' WHERE uid='{$mem['uid']}'");
 	}
 
 	if($processed) {
-		cpmsg("$lang[counter_member]: $lang[counter_processing]", $nextlink);
+		cpmsg("{$lang['counter_member']}: {$lang['counter_processing']}", $nextlink);
 	} else {
 		cpmsg('counter_member_succeed');
 	}

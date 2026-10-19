@@ -12,7 +12,8 @@
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-set_magic_quotes_runtime(0);
+// PHP 8 起 set_magic_quotes_runtime() / get_magic_quotes_gpc() 均已移除,
+// 魔术引号恒为关闭, 因此 daddslashes() 始终转义, register_globals 模拟始终生效
 
 define('IN_DISCUZ', TRUE);
 define('DISCUZ_ROOT', substr(dirname(__FILE__), 0, -7));
@@ -20,32 +21,42 @@ define('DISCUZ_ROOT', substr(dirname(__FILE__), 0, -7));
 $mtime = explode(' ', microtime());
 $discuz_starttime = $mtime[1] + $mtime[0];
 
-$magic_quotes_gpc = get_magic_quotes_gpc();
-$register_globals = @ini_get('register_globals');
-
-if ( @phpversion() < '4.1.0'){
-        $_COOKIE =& $HTTP_COOKIE_VARS;
-        $_SERVER =& $HTTP_SERVER_VARS;
-        $_FILES =& $HTTP_POST_FILES;
-        $_GET =& $HTTP_GET_VARS;
-        $_POST =& $HTTP_POST_VARS;
-}
+$magic_quotes_gpc = 0;
+$register_globals = 0;
 
 if(!$register_globals || !$magic_quotes_gpc) {
-        @extract(daddslashes($_POST), EXTR_OVERWRITE);
-        @extract(daddslashes($_GET ), EXTR_OVERWRITE);
-        if(!$magic_quotes_gpc) {
-                $_SERVER = daddslashes($_SERVER);
-                $_COOKIE = daddslashes($_COOKIE);
+
+        // 身份与会话变量只能来自会话存储, 不允许由 URL / 表单注入覆盖
+        $injectvars = array_flip(array('adminid', 'groupid', 'discuz_uid', 'discuz_user', 'discuz_userss',
+                'discuz_pw', 'discuz_secques', 'accessmasks', 'isadmin', 'adminglobal', 'sessionexists',
+                'sessionupdated', 'magic_quotes_gpc', 'register_globals'));
+
+        $_POST = daddslashes($_POST);
+        $_GET = daddslashes($_GET);
+        $_SERVER = daddslashes($_SERVER);
+        $_COOKIE = daddslashes($_COOKIE);
+
+        // daddslashes() 对空数组返回 false, 而 PHP 8 的 extract() 只接受数组
+        if(is_array($_POST)) {
+                @extract(array_diff_key($_POST, $injectvars), EXTR_SKIP);
         }
-        if(!$register_globals && is_array($_FILES) && count($_FILES)) {
-                foreach(daddslashes($_FILES) as $key => $val) {
+        if(is_array($_GET)) {
+                @extract(array_diff_key($_GET, $injectvars), EXTR_SKIP);
+        }
+        if(is_array($_FILES) && count($_FILES)) {
+                $_FILES = daddslashes($_FILES);
+                foreach($_FILES as $key => $val) {
                         $$key = $val['tmp_name'];
                         ${$key.'_name'} = $val['name'];
                         ${$key.'_size'} = $val['size'];
                         ${$key.'_type'} = $val['type'];
                 }
         }
+        unset($injectvars);
+
+        // 提取完成后再固定一次, 防止被输入覆盖
+        $magic_quotes_gpc = 0;
+        $register_globals = 0;
 }
 
 require DISCUZ_ROOT.'./config.php';
@@ -113,7 +124,7 @@ if($sid) {
 	if($_DSESSION = $db->fetch_array($query)) {
 		$sessionexists = 1;
 		if(!empty($_DSESSION['sessionuid'])) {
-			$query = $db->query("SELECT $userinfo FROM $table_members m WHERE uid='$_DSESSION[sessionuid]'");
+			$query = $db->query("SELECT $userinfo FROM $table_members m WHERE uid='{$_DSESSION['sessionuid']}'");
 			$_DSESSION = array_merge($_DSESSION, $db->fetch_array($query));
 			$is_sessionuser = 1;
 		}
@@ -242,7 +253,7 @@ function daddslashes(&$string, $force = 0) {
 			}
 		}elseif($string) {
 			$string = addslashes($string);
-		}else{
+		}elseif(!is_array($string)){
 			$string = False;
 		}
 	}

@@ -57,16 +57,16 @@ if(!submitcheck('deletesubmit') && !submitcheck('searchsubmit')) {
 	$attachments = '';
 	$query = $db->query("SELECT a.*, p.fid, p.author, t.tid, t.tid, t.subject, f.name AS fname FROM $table_attachments a, $table_posts p, $table_threads t, $table_forums f WHERE t.tid=a.tid AND f.fid=p.fid AND $sql");
 	while($attachment = $db->fetch_array($query)) {
-		$matched = file_exists(DISCUZ_ROOT."./$attachdir/$attachment[attachment]") ? NULL : "<b>$lang[attachments_lost]</b><br>";
+		$matched = file_exists(DISCUZ_ROOT."./$attachdir/{$attachment['attachment']}") ? NULL : "<b>{$lang['attachments_lost']}</b><br>";
 		$attachsize = sizecount($attachment['filesize']);
 		if(!$nomatched || ($nomatched && $matched)) {
-			$attachments .= "<tr><td bgcolor=\"".ALTBG1."\" width=\"45\" align=\"center\" valign=\"middle\"><input type=\"checkbox\" name=\"delete[]\" value=\"$attachment[aid]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\" width=\"20%\"><b>$attachment[filename]</b><br><a href=\"attachment.php?aid=$attachment[aid]\" target=\"_blank\">[$lang[attachments_download]]</a></td>\n".
-				"<td bgcolor=\"".ALTBG1."\" align=\"center\" width=\"20%\">$matched<a href=\"$attachurl/$attachment[attachment]\" class=\"smalltxt\" target=\"_blank\">$attachment[attachment]</a></td>\n".
-				"<td bgcolor=\"".ALTBG2."\" align=\"center\" width=\"8%\">$attachment[author]</td>\n".
-				"<td bgcolor=\"".ALTBG1."\" valign=\"middle\" width=\"25%\"><a href=\"viewthread.php?tid=$attachment[tid]\" target=\"_blank\"><b>".cutstr($attachment['subject'], 18)."</b></a><br>$lang[forum]:<a href=\"forumdisplay.php?fid=$attachment[fid]\" target=\"_blank\">$attachment[fname]</a></td>\n".
+			$attachments .= "<tr><td bgcolor=\"".ALTBG1."\" width=\"45\" align=\"center\" valign=\"middle\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$attachment['aid']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\" width=\"20%\"><b>{$attachment['filename']}</b><br><a href=\"attachment.php?aid={$attachment['aid']}\" target=\"_blank\">[{$lang['attachments_download']}]</a></td>\n".
+				"<td bgcolor=\"".ALTBG1."\" align=\"center\" width=\"20%\">$matched<a href=\"$attachurl/{$attachment['attachment']}\" class=\"smalltxt\" target=\"_blank\">{$attachment['attachment']}</a></td>\n".
+				"<td bgcolor=\"".ALTBG2."\" align=\"center\" width=\"8%\">{$attachment['author']}</td>\n".
+				"<td bgcolor=\"".ALTBG1."\" valign=\"middle\" width=\"25%\"><a href=\"viewthread.php?tid={$attachment['tid']}\" target=\"_blank\"><b>".cutstr($attachment['subject'], 18)."</b></a><br>{$lang['forum']}:<a href=\"forumdisplay.php?fid={$attachment['fid']}\" target=\"_blank\">{$attachment['fname']}</a></td>\n".
 				"<td bgcolor=\"".ALTBG2."\" valign=\"middle\" width=\"18%\" align=\"center\">$attachsize</td>\n".
-				"<td bgcolor=\"".ALTBG1."\" valign=\"middle\" width=\"7%\" align=\"center\">$attachment[downloads]</td></tr>\n";
+				"<td bgcolor=\"".ALTBG1."\" valign=\"middle\" width=\"7%\" align=\"center\">{$attachment['downloads']}</td></tr>\n";
 		}
 	}
 
@@ -82,12 +82,12 @@ if(!submitcheck('deletesubmit') && !submitcheck('searchsubmit')) {
 		$query = $db->query("SELECT tid, pid, attachment FROM $table_attachments WHERE aid IN ($ids)");
 
 		while($attach = $db->fetch_array($query)) {
-			@unlink("$attachdir/$attach[attachment]");
-			if (!in_array($attach[pid],$pids_array)){
-				$tids .= "$comma1'$attach[tid]'";
+			@unlink("$attachdir/{$attach['attachment']}");
+			if (!in_array($attach['pid'],$pids_array)){
+				$tids .= "$comma1'{$attach['tid']}'";
 				$comma1 = ',';
-				$pids .= "$comma2'$attach[pid]'";
-				$pids_array[] = $attach[pid];
+				$pids .= "$comma2'{$attach['pid']}'";
+				$pids_array[] = $attach['pid'];
 				$comma2 = ',';
 			}
 		}
@@ -95,7 +95,7 @@ if(!submitcheck('deletesubmit') && !submitcheck('searchsubmit')) {
 
 		$query = $db->query("SELECT filename, filetype, filesize, attachment, creditsrequire, dateline FROM $table_attachments WHERE pid IN ($pids)");
 		while($attach = $db->fetch_array($query)) {
-			$chang_post["$attach[pid]"][]=$attach;
+			$chang_post["{$attach['pid']}"][]=$attach;
 		}
 	
 		$z_pid ='0';
@@ -115,8 +115,8 @@ if(!submitcheck('deletesubmit') && !submitcheck('searchsubmit')) {
 		$attachtids = '0';
 		$query = $db->query("SELECT tid, filetype FROM $table_attachments WHERE tid IN ($tids) GROUP BY tid ORDER BY pid DESC");
 		while($attach = $db->fetch_array($query)) {
-			$db->query("UPDATE $table_threads SET attachment='$attach[filetype]' WHERE tid='$attach[tid]'", 'UNBUFFERED');
-			$attachtids .= ", '$attach[tid]'";
+			$db->query("UPDATE $table_threads SET attachment='{$attach['filetype']}' WHERE tid='{$attach['tid']}'", 'UNBUFFERED');
+			$attachtids .= ", '{$attach['tid']}'";
 		}
 		$db->query("UPDATE $table_threads SET attachment='' WHERE tid IN ($tids)".($attachtids ? " AND tid NOT IN ($attachtids)" : NULL), 'UNBUFFERED');
 

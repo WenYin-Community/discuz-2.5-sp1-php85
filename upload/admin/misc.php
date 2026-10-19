@@ -31,9 +31,9 @@ if($action == 'onlinelist') {
 		$group = array('groupid' => 0, 'grouptitle' => 'Member');
 		do {
 			$onlinelist .= "<tr align=\"center\">\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"3\" name=\"displayordernew[$group[groupid]]\" value=\"{$listarray[$group[groupid]][displayorder]}\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"titlenew[$group[groupid]]\" value=\"".($listarray[$group['groupid']]['title'] ? $listarray[$group['groupid']]['title'] : $group['grouptitle'])."\"></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"20\" name=\"urlnew[$group[groupid]]\" value=\"{$listarray[$group[groupid]][url]}\"></td></tr>\n";
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"3\" name=\"displayordernew[{$group['groupid']}]\" value=\"{$listarray[$group['groupid']]['displayorder']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"titlenew[{$group['groupid']}]\" value=\"".($listarray[$group['groupid']]['title'] ? $listarray[$group['groupid']]['title'] : $group['grouptitle'])."\"></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"20\" name=\"urlnew[{$group['groupid']}]\" value=\"{$listarray[$group['groupid']]['url']}\"></td></tr>\n";
 		} while($group = $db->fetch_array($query));
 		include CP_TPL.'misc_online.php';
 	} else {
@@ -62,12 +62,12 @@ if($action == 'onlinelist') {
 		$query = $db->query("SELECT * FROM $table_forumlinks ORDER BY displayorder");
 		while($forumlink = $db->fetch_array($query)) {
 			$forumlinks .= "<tr bgcolor=\"".ALTBG2."\" align=\"center\">\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$forumlink[id]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"3\" name=\"displayorder[$forumlink[id]]\" value=\"$forumlink[displayorder]\"></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"15\" name=\"name[$forumlink[id]]\" value=\"$forumlink[name]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"url[$forumlink[id]]\" value=\"$forumlink[url]\"></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"15\" name=\"note[$forumlink[id]]\" value=\"$forumlink[note]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"logo[$forumlink[id]]\" value=\"$forumlink[logo]\"></td></tr>\n";
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$forumlink['id']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"3\" name=\"displayorder[{$forumlink['id']}]\" value=\"{$forumlink['displayorder']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"15\" name=\"name[{$forumlink['id']}]\" value=\"{$forumlink['name']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"url[{$forumlink['id']}]\" value=\"{$forumlink['url']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"15\" name=\"note[{$forumlink['id']}]\" value=\"{$forumlink['note']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"logo[{$forumlink['id']}]\" value=\"{$forumlink['logo']}\"></td></tr>\n";
 		}
 		include CP_TPL.'misc_forumlink.php';
 
@@ -100,10 +100,10 @@ if($action == 'onlinelist') {
 		$query = $db->query("SELECT * FROM $table_bbcodes");
 		while($bbcode = $db->fetch_array($query)) {
 			$discuzcodes .= "<tr bgcolor=\"".ALTBG2."\" align=\"center\">\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$bbcode[id]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"tagnew[$bbcode[id]]\" value=\"$bbcode[tag]\"></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"availablenew[$bbcode[id]]\" value=\"1\" ".($bbcode['available'] ? 'checked' : NULL)."></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><a href=\"admincp.php?action=discuzcodes&edit=$bbcode[id]\">[$lang[detail]]</a></td></tr>\n";
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$bbcode['id']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"15\" name=\"tagnew[{$bbcode['id']}]\" value=\"{$bbcode['tag']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"availablenew[{$bbcode['id']}]\" value=\"1\" ".($bbcode['available'] ? 'checked' : NULL)."></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><a href=\"admincp.php?action=discuzcodes&edit={$bbcode['id']}\">[{$lang['detail']}]</a></td></tr>\n";
 		}
 		include CP_TPL.'misc_bbcode.php';
 
@@ -151,7 +151,7 @@ if($action == 'onlinelist') {
 			showsetting('discuzcodes_edit_nest', 'nestnew', $bbcode['nest'], 'text');
 			showtype('', 'bottom');
 
-			echo "<br><center><input type=\"submit\" name=\"editsubmit\" value=\"$lang[submit]\"></center></form>";
+			echo "<br><center><input type=\"submit\" name=\"editsubmit\" value=\"{$lang['submit']}\"></center></form>";
 
 		} else {
 
@@ -178,10 +178,10 @@ if($action == 'onlinelist') {
 		$query = $db->query("SELECT * FROM $table_words");
 		while($censor =	$db->fetch_array($query)) {
 			$disabled = $adminid != 1 && $censor['admin'] != $discuz_userss ? 'disabled' : NULL;
-			$censorwords .=	'<tr align="center"><td bgcolor="'.ALTBG1.'"><input type="checkbox" name="delete[]" value="'.$censor[id].'" '.$disabled."></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"30\" name=\"find[$censor[id]]\" value=\"".dhtmlspecialchars($censor[find])."\" $disabled></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"30\" name=\"replace[$censor[id]]\" value=\"$censor[replacement]\" $disabled></td>\n".
-				"<td bgcolor=\"".ALTBG2."\">$censor[admin]</td></tr>\n";
+			$censorwords .=	'<tr align="center"><td bgcolor="'.ALTBG1.'"><input type="checkbox" name="delete[]" value="'.$censor['id'].'" '.$disabled."></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"30\" name=\"find[{$censor['id']}]\" value=\"".dhtmlspecialchars($censor['find'])."\" $disabled></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"30\" name=\"replace[{$censor['id']}]\" value=\"{$censor['replacement']}\" $disabled></td>\n".
+				"<td bgcolor=\"".ALTBG2."\">{$censor['admin']}</td></tr>\n";
 		}
 		include CP_TPL.'misc_censor.php';
 
@@ -215,14 +215,14 @@ if($action == 'onlinelist') {
 		$query = $db->query("SELECT * FROM $table_smilies where $sqlaction");
 		while($smiley =	$db->fetch_array($query)) {
 			if($smiley['type'] == 'smiley') {
-				$smilies .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$smiley[id]\"></td>\n".
-					"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"25\" name=\"code[$smiley[id]]\" value=\"$smiley[code]\"></td>\n".
-					"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"25\" name=\"url[$smiley[id]]\" value=\"$smiley[url]\"></td>\n".
-					"<td bgcolor=\"".ALTBG2."\"><img src=\"./".SMDIR."/$smiley[url]\"></td></tr>\n";
+				$smilies .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$smiley['id']}\"></td>\n".
+					"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"25\" name=\"code[{$smiley['id']}]\" value=\"{$smiley['code']}\"></td>\n".
+					"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"25\" name=\"url[{$smiley['id']}]\" value=\"{$smiley['url']}\"></td>\n".
+					"<td bgcolor=\"".ALTBG2."\"><img src=\"./".SMDIR."/{$smiley['url']}\"></td></tr>\n";
 			} elseif($smiley['type'] == 'icon') {
-				$icons	.= "<tr	align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$smiley[id]\"></td>\n".
-					"<td colspan=\"2\" bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"35\" name=\"url[$smiley[id]]\" value=\"$smiley[url]\"></td>\n".
-					"<td bgcolor=\"".ALTBG1."\"><img src=\"".SMDIR."/$smiley[url]\"></td></tr>\n";
+				$icons	.= "<tr	align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$smiley['id']}\"></td>\n".
+					"<td colspan=\"2\" bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"35\" name=\"url[{$smiley['id']}]\" value=\"{$smiley['url']}\"></td>\n".
+					"<td bgcolor=\"".ALTBG1."\"><img src=\"".SMDIR."/{$smiley['url']}\"></td></tr>\n";
 			}
 		}
 		if ($action == 'smilies'){
@@ -287,9 +287,9 @@ if($action == 'onlinelist') {
 		$attachtypes = '';
 		$query = $db->query("SELECT * FROM $table_attachtypes");
 		while($type = $db->fetch_array($query)) {
-			$attachtypes .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"$type[id]\"></td>\n".
-				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"10\" name=\"extension[$type[id]]\" value=\"$type[extension]\"></td>\n".
-				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"15\" name=\"maxsize[$type[id]]\" value=\"$type[maxsize]\"></td></tr>\n";
+			$attachtypes .= "<tr align=\"center\"><td bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"delete[]\" value=\"{$type['id']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG2."\"><input type=\"text\" size=\"10\" name=\"extension[{$type['id']}]\" value=\"{$type['extension']}\"></td>\n".
+				"<td bgcolor=\"".ALTBG1."\"><input type=\"text\" size=\"15\" name=\"maxsize[{$type['id']}]\" value=\"{$type['maxsize']}\"></td></tr>\n";
 		}
 
 		include CP_TPL.'misc_attachtypes.php';

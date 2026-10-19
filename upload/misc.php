@@ -18,12 +18,12 @@ if($tid) {
 }
 
 if($forum['type'] == 'forum') {
-	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid\">$forum[name]</a> &raquo; <a href=\"viewthread.php?tid=$tid\">$thread[subject]</a> ";
+	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fid\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 } elseif($forum['type'] == 'sub') {
-	$query = $db->query("SELECT name, fid FROM $table_forums WHERE fid='$forum[fup]'");
+	$query = $db->query("SELECT name, fid FROM $table_forums WHERE fid='{$forum['fup']}'");
 	$fup = $db->fetch_array($query);
-	$navigation = "&raquo; <a href=\"forumdisplay.php?fid=$fup[fid]\">$fup[name]</a> &raquo; <a href=\"forumdisplay.php?fid=$fid\">$forum[name]</a> &raquo; <a href=\"viewthread.php?tid=$tid\">$thread[subject]</a> ";
+	$navigation = "&raquo; <a href=\"forumdisplay.php?fid={$fup['fid']}\">{$fup['name']}</a> &raquo; <a href=\"forumdisplay.php?fid=$fid\">{$forum['name']}</a> &raquo; <a href=\"viewthread.php?tid=$tid\">{$thread['subject']}</a> ";
 	$navtitle = ' - '.strip_tags($fup['name']).' - '.strip_tags($forum['name']).' - '.$thread['subject'];
 }
 
@@ -151,11 +151,11 @@ if($action == 'votepoll') {
 
 		$query = $db->query("SELECT m.adminid, u.groupid FROM $table_members m
 					LEFT JOIN $table_usergroups u ON type='member' AND m.credit$score>=u.creditshigher AND m.credit$score<u.creditslower
-					WHERE uid='$post[authorid]'");
+					WHERE uid='{$post['authorid']}'");
 		$member = $db->fetch_array($query);
-		$groupidadd = $member['adminid'] == 0 ? ", groupid='$member[groupid]'" : NULL;
+		$groupidadd = $member['adminid'] == 0 ? ", groupid='{$member['groupid']}'" : NULL;
 
-		$db->query("UPDATE $table_members SET credit=credit$score $groupidadd WHERE uid='$post[authorid]'", 'UNBUFFERED');
+		$db->query("UPDATE $table_members SET credit=credit$score $groupidadd WHERE uid='{$post['authorid']}'", 'UNBUFFERED');
 		$db->query("INSERT INTO $table_karmalog (uid, pid, dateline, score)
 			VALUES ('$discuz_uid', '$pid', '$timestamp', '".abs($score)."')", 'UNBUFFERED');
 
@@ -164,7 +164,7 @@ if($action == 'votepoll') {
 
 		@$fp = fopen(DISCUZ_ROOT.'./forumdata/karmalog.php', 'a');
 		@flock($fp, 2);
-		@fwrite($fp, "$timestamp\t$discuz_user\t$groupid\t$post[author]\t$score\t$tid\t$thread[subject]\n");
+		@fwrite($fp, "$timestamp\t$discuz_user\t$groupid\t{$post['author']}\t$score\t$tid\t{$thread['subject']}\n");
 		@fclose($fp);
 
 		showmessage('thread_karma_succeed', "viewthread.php?tid=$tid");

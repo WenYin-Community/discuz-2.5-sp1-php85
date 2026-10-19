@@ -70,7 +70,7 @@ if(empty($action)) {
 	$pmlist = array();
 	while($pm = $db->fetch_array($query)) {
 		$pm['dateline'] = gmdate("$dateformat $timeformat", $pm['dateline'] + $timeoffset * 3600);
-		$pm['subject'] = $pm['new'] ? "<b>$pm[subject]</b>" : $pm['subject'];
+		$pm['subject'] = $pm['new'] ? "<b>{$pm['subject']}</b>" : $pm['subject'];
 		$pmlist[] = $pm;
 	}
 
@@ -125,12 +125,12 @@ if(empty($action)) {
 
 			if($do == 'reply') {
 				$discuz_action = 104;
-				$subject = "Re: $pm[subject]";
+				$subject = "Re: {$pm['subject']}";
 				$message = '[quote]'.dhtmlspecialchars(trim(preg_replace("/(\[quote])(.*)(\[\/quote])/siU", '', $pm['message']))).'[/quote]'."\n";
 				$touser = $pm['msgfrom'];
 			} elseif($do == 'forward') {
 				$discuz_action = 105;
-				$subject = "Fw: $pm[subject]";
+				$subject = "Fw: {$pm['subject']}";
 				$message = '[quote]'.dhtmlspecialchars($pm['message']).'[/quote]'."\n";
 				$touser = $pm['msgfrom'];
 			}
@@ -245,14 +245,14 @@ if(empty($action)) {
 		showmessage('pm_nonexistence');
 	}
 	$pm['dateline'] = gmdate("$dateformat $timeformat", $pm['dateline'] + $timeoffset * 3600);
-	$query = $db->query("SELECT username FROM $table_members WHERE uid='$pm[msgtoid]'");
-	$pm[msgto] = dhtmlspecialchars($db->result($query, 0));
+	$query = $db->query("SELECT username FROM $table_members WHERE uid='{$pm['msgtoid']}'");
+	$pm['msgto'] = dhtmlspecialchars($db->result($query, 0));
 	$export = "Discuz! Private Message Export".PHP_NEXTLINE.
-		"Date:\t\t$pm[dateline]".PHP_NEXTLINE.
-		"From:\t\t$pm[msgfrom]".PHP_NEXTLINE.
-		"To:\t\t$pm[msgto]".PHP_NEXTLINE.
-		"Subject:\t$pm[subject]".PHP_NEXTLINE.PHP_NEXTLINE.
-		"$pm[message]".PHP_NEXTLINE.PHP_NEXTLINE.PHP_NEXTLINE.
+		"Date:\t\t{$pm['dateline']}".PHP_NEXTLINE.
+		"From:\t\t{$pm['msgfrom']}".PHP_NEXTLINE.
+		"To:\t\t{$pm['msgto']}".PHP_NEXTLINE.
+		"Subject:\t{$pm['subject']}".PHP_NEXTLINE.PHP_NEXTLINE.
+		"{$pm['message']}".PHP_NEXTLINE.PHP_NEXTLINE.PHP_NEXTLINE.
 		"Welcome to $bbname ($boardurl)";
 
 	ob_end_clean();

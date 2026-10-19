@@ -98,7 +98,7 @@ if(!submitcheck('topicsubmit')) {
 		if(is_array($post_attaches) && count($post_attaches)) {
 			foreach( $post_attaches as $v) {
 				$db->query("INSERT INTO $table_attachments (uid, creditsrequire, filename, filetype, filesize, attachment, dateline, downloads)
-					VALUES ('$discuz_uid', '$v[creditsrequire]', '$v[filename]', '$v[filetype]', '$v[filesize]', '$v[attachment]', '$timestamp','0')");
+					VALUES ('$discuz_uid', '{$v['creditsrequire']}', '{$v['filename']}', '{$v['filetype']}', '{$v['filesize']}', '{$v['attachment']}', '$timestamp','0')");
 				$v['aid'] = $db->insert_id();
 				$aid .= $tmark.''.$v['aid'];
 				$tmark = ' ,';
@@ -133,7 +133,7 @@ if(!submitcheck('topicsubmit')) {
 
 	$db->query("UPDATE $table_forums SET lastpost='$subject\t$timestamp\t$discuz_user', threads=threads+1, posts=posts+1 WHERE fid='$fid'", 'UNBUFFERED');
 	if ($forum['fup'] && $forum['type'] == 'sub' && !$forum['viewperm']) {
-		$db->query("UPDATE $table_forums SET lastpost='$subject\t$timestamp\t$discuz_user'  WHERE fid='$forum[fup]'", 'UNBUFFERED');
+		$db->query("UPDATE $table_forums SET lastpost='$subject\t$timestamp\t$discuz_user'  WHERE fid='{$forum['fup']}'", 'UNBUFFERED');
 	}
 
 	if($emailnotify && $discuz_uid) {

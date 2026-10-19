@@ -39,7 +39,7 @@ if($allowgetattach && $attach['creditsrequire'] && $attach['creditsrequire'] > $
 
 $query = $db->query("SELECT f.getattachperm, a.allowgetattach FROM $table_forums f
 			LEFT JOIN $table_access a ON a.uid='$discuz_uid' AND a.fid=f.fid
-			WHERE f.fid='$attach[fid]'");
+			WHERE f.fid='{$attach['fid']}'");
 $forum = $db->fetch_array($query);
 
 if(!$forum['allowgetattach']) {

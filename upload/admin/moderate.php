@@ -178,13 +178,13 @@ if(submitcheck('searchsubmit')) {
 				$fids[] = $thread['fid'];
 				$tids .= ','.$thread['tid'];
 				$thread['lastpost'] = gmdate("$dateformat $timeformat", $thread['lastpost'] + $timeoffset * 3600);
-				$threads .= "<tr><td align=\"center\" bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"tidarray[]\" value=\"$thread[tid]\" checked>\n".
-					"<td bgcolor=\"".ALTBG2."\"><a href=\"viewthread.php?tid=$thread[tid]\" target=\"_blank\">$thread[subject]</a></td>\n".
-					"<td align=\"center\" bgcolor=\"".ALTBG1."\"><a href=\"forumdisplay.php?fid=$thread[fid]\" target=\"_blank\">{$_DCACHE[forums][$thread[fid]][name]}</a></td>\n".
-					"<td align=\"center\" bgcolor=\"".ALTBG2."\"><a href=\"viewpro.php?uid=$thread[authorid]\" target=\"_blank\">$thread[author]</a></td>\n".
-					"<td align=\"center\" bgcolor=\"".ALTBG1."\">$thread[replies]</td>\n".
-					"<td align=\"center\" bgcolor=\"".ALTBG2."\">$thread[views]</td>\n".
-					"<td align=\"center\" bgcolor=\"".ALTBG1."\">$thread[lastpost]</td></tr>\n";
+				$threads .= "<tr><td align=\"center\" bgcolor=\"".ALTBG1."\"><input type=\"checkbox\" name=\"tidarray[]\" value=\"{$thread['tid']}\" checked>\n".
+					"<td bgcolor=\"".ALTBG2."\"><a href=\"viewthread.php?tid={$thread['tid']}\" target=\"_blank\">{$thread['subject']}</a></td>\n".
+					"<td align=\"center\" bgcolor=\"".ALTBG1."\"><a href=\"forumdisplay.php?fid={$thread['fid']}\" target=\"_blank\">{$_DCACHE['forums'][$thread['fid']]['name']}</a></td>\n".
+					"<td align=\"center\" bgcolor=\"".ALTBG2."\"><a href=\"viewpro.php?uid={$thread['authorid']}\" target=\"_blank\">{$thread['author']}</a></td>\n".
+					"<td align=\"center\" bgcolor=\"".ALTBG1."\">{$thread['replies']}</td>\n".
+					"<td align=\"center\" bgcolor=\"".ALTBG2."\">{$thread['views']}</td>\n".
+					"<td align=\"center\" bgcolor=\"".ALTBG1."\">{$thread['lastpost']}</td></tr>\n";
 			}
 		} else {
 			$query = $db->query("SELECT fid, tid FROM $table_threads WHERE 1 $sql");

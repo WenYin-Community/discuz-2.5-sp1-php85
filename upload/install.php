@@ -626,10 +626,10 @@ if(!$action) {
 
 	$curr_php_version = PHP_VERSION;
 	if($curr_php_version < '4.0.0') {
-		$msg .= "<font color=\"#FF0000\">$lang[php_version_400]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['php_version_400']}</font>\t";
 		$quit = TRUE;
 	} elseif($curr_php_version < '4.0.6') {
-		$msg .= "<font color=\"#FF0000\">$lang[php_version_406]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['php_version_406']}</font>\t";
 	}
 
 	if(@ini_get(file_uploads)) {
@@ -638,13 +638,13 @@ if(!$action) {
 		$msg .= $lang['attach_enabled_info'].$max_size."\t";
 	} else {
 		$curr_upload_status = $lang['attach_disabled'];
-		$msg .= "<font color=\"#FF0000\">$lang[attach_disabled_info]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['attach_disabled_info']}</font>\t";
 	}
 
 	$query = $db->query("SELECT VERSION()");
 	$curr_mysql_version = $db->result($query, 0);
 	if($curr_mysql_version < '3.23') {
-		$msg .= "<font color=\"#FF0000\">$lang[mysql_version_323]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['mysql_version_323']}</font>\t";
 		$quit = TRUE;
 	}
 
@@ -654,35 +654,35 @@ if(!$action) {
 		$curr_tpl_writeable = $lang['writeable'];
 	} else {
 		$curr_tpl_writeable = $lang['unwriteable'];
-		$msg .= "<font color=\"#FF0000\">$lang[unwriteable_template]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['unwriteable_template']}</font>\t";
 	}
 
 	if(dir_writeable('./customavatars')) {
 		$curr_avatar_writeable = $lang['writeable'];
 	} else {
 		$curr_avatar_writeable = $lang['unwriteable'];
-		$msg .= "<font color=\"#FF0000\">$lang[unwriteable_avatar]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['unwriteable_avatar']}</font>\t";
 	}
 
 	if(dir_writeable($attachdir)) {
 		$curr_attach_writeable = $lang['writeable'];
 	} else {
 		$curr_attach_writeable = $lang['unwriteable'];
-		$msg .= "<font color=\"#FF0000\">$lang[unwriteable_attach]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['unwriteable_attach']}</font>\t";
 	}
 
 	if(dir_writeable('./forumdata')) {
 		$curr_data_writeable = $lang['writeable'];
 	} else {
 		$curr_data_writeable = $lang['unwriteable'];
-		$msg .= "<font color=\"#FF0000\">$lang[unwriteable_forumdata]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['unwriteable_forumdata']}</font>\t";
 	}
 
 	if(dir_writeable('./forumdata/templates')) {
 		$curr_template_writeable = $lang['writeable'];
 	} else {
 		$curr_template_writeable = $lang['unwriteable'];
-		$msg .= "<font color=\"#FF0000\">$lang[unwriteable_forumdata_template]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['unwriteable_forumdata_template']}</font>\t";
 		$quit = TRUE;
 	}
 
@@ -690,7 +690,7 @@ if(!$action) {
 		$curr_cache_writeable = $lang['writeable'];
 	} else {
 		$curr_cache_writeable = $lang['unwriteable'];
-		$msg .= "<font color=\"#FF0000\">$lang[unwriteable_forumdata_cache]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['unwriteable_forumdata_cache']}</font>\t";
 		$quit = TRUE;
 	}
 
@@ -698,11 +698,11 @@ if(!$action) {
 		$curr_accesslog_writeable = $lang['writeable'];
 	} else {
 		$curr_accesslog_writeable = $lang['unwriteable'];
-		$msg .= "<font color=\"#FF0000\">$lang[unwriteable_forumdata_accesslog]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['unwriteable_forumdata_accesslog']}</font>\t";
 	}
 
 	if(strstr($tablepre, '.')) {
-		$msg .= "<font color=\"#FF0000\">$lang[tablepre_invalid]</font>\t";
+		$msg .= "<font color=\"#FF0000\">{$lang['tablepre_invalid']}</font>\t";
 		$quit = TRUE;
 	}
 
@@ -710,24 +710,24 @@ if(!$action) {
 	if($db->error()) {
 		$db->query("CREATE DATABASE $dbname");
 		if($db->error()) {
-			$msg .= "<font color=\"#FF0000\">$lang[db_invalid]</font>\t";
+			$msg .= "<font color=\"#FF0000\">{$lang['db_invalid']}</font>\t";
 			$quit = TRUE;
 		} else {
 			$db->select_db($dbname);
-			$msg .= "$lang[db_auto_created]\t";
+			$msg .= "{$lang['db_auto_created']}\t";
 		}
 	}
 
 	$query - $db->query("SELECT COUNT(*) FROM $tablepre"."settings", 'SILENT');
 	if(!$db->error()) {
-		$msg .= "<font color=\"#FF0000\">$lang[db_not_null]</font>\t";
-		$alert = " onSubmit=\"return confirm('$lang[db_drop_table_confirm]');\"";
+		$msg .= "<font color=\"#FF0000\">{$lang['db_not_null']}</font>\t";
+		$alert = " onSubmit=\"return confirm('{$lang['db_drop_table_confirm']}');\"";
 	} else {
 		$alert = '';
 	}
 
 	if($quit) {
-		$msg .= "<font color=\"#FF0000\">$lang[install_abort]</font>";
+		$msg .= "<font color=\"#FF0000\">{$lang['install_abort']}</font>";
 	} else {
 		$msg .= $lang['install_process'];
 	}
@@ -1006,7 +1006,7 @@ if(!$action) {
 	$db->select_db($dbname);
 
 echo"        <tr>\n";
-echo"          <td>$lang[select_db] $dbname ".result(1, 0)."</td>\n";
+echo"          <td>{$lang['select_db']} $dbname ".result(1, 0)."</td>\n";
 echo"        </tr>\n";
 echo"        <tr>\n";
 echo"          <td>\n";
@@ -1014,7 +1014,7 @@ echo"            <hr noshade align=\"center\" width=\"100%\" size=\"1\">\n";
 echo"          </td>\n";
 echo"        </tr>\n";
 echo"        <tr>\n";
-echo"          <td><b><font color=\"#FF0000\">&gt;</font><font color=\"#000000\"> $lang[create_table]</font></b></td>\n";
+echo"          <td><b><font color=\"#FF0000\">&gt;</font><font color=\"#000000\"> {$lang['create_table']}</font></b></td>\n";
 echo"        </tr>\n";
 echo"        <tr>\n";
 echo"          <td>\n";
@@ -1627,7 +1627,7 @@ CREATE TABLE cdb_templates (
   PRIMARY KEY  (templateid)
 );
 
-INSERT INTO cdb_templates VALUES (1, 'Default', '$lang[charset]', './templates/default', 'Designed by ARTERY');
+INSERT INTO cdb_templates VALUES (1, 'Default', '{$lang['charset']}', './templates/default', 'Designed by ARTERY');
 
 DROP TABLE IF EXISTS cdb_threads;
 CREATE TABLE cdb_threads (
@@ -1764,7 +1764,7 @@ echo"            <hr noshade align=\"center\" width=\"100%\" size=\"1\">\n";
 echo"          </td>\n";
 echo"        </tr>\n";
 echo"        <tr>\n";
-echo"          <td><b><font color=\"#FF0000\">&gt;</font><font color=\"#000000\"> $lang[init_file]</font></b></td>\n";
+echo"          <td><b><font color=\"#FF0000\">&gt;</font><font color=\"#000000\"> {$lang['init_file']}</font></b></td>\n";
 echo"        </tr>\n";
 echo"        <tr>\n";
 echo"          <td>\n";

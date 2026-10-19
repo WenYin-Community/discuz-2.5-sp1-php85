@@ -90,7 +90,7 @@ if(@!include($cachefile)) {
 			$thread['tid'] = $thread['closed'];
 		}
 		$threads['subject'] = cutstr($threads['subject'], $length);
-		$row = "document.write(\"<a href=$boardurl/viewthread.php?tid=$threads[tid] target=_blank>$pre$threads[subject]</a><br>\");\n";
+		$row = "document.write(\"<a href=$boardurl/viewthread.php?tid={$threads['tid']} target=_blank>$pre{$threads['subject']}</a><br>\");\n";
 		fwrite($fp, $row);
 		echo $row;
 	}

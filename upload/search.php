@@ -52,7 +52,7 @@ if(!submitcheck('searchsubmit', 1) && !$page) {
 		$index['keywords'] = rawurlencode($index['keywords']);
 
 		$threadlist = array();
-		$query = $db->query("SELECT * FROM $table_threads WHERE tid IN ($index[tids]) ORDER BY $orderby $ascdesc LIMIT $start_limit, $tpp");
+		$query = $db->query("SELECT * FROM $table_threads WHERE tid IN ({$index['tids']}) ORDER BY $orderby $ascdesc LIMIT $start_limit, $tpp");
 		while($thread = $db->fetch_array($query)) {
 			$threadlist[] = procthread($thread);
 		}
@@ -128,7 +128,7 @@ if(!submitcheck('searchsubmit', 1) && !$page) {
 					$srchuname = str_replace('*', '%', $srchuname);
 					$query = $db->query("SELECT uid FROM $table_members WHERE username LIKE '$srchuname'");
 					while($member = $db->fetch_array($query)) {
-						$srchuid .= "$comma'$member[uid]'";
+						$srchuid .= "$comma'{$member['uid']}'";
 						$comma = ', ';
 					}
 					if(!$srchuid) {

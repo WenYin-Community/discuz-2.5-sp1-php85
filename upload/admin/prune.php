@@ -62,7 +62,7 @@ if($action == 'prune') {
 			$forums = '0';
 			$query = $db->query("SELECT fid, moderator FROM $table_forums");
 			while($forum = $db->fetch_array($query)) {
-				$forums .= modcheck($discuz_user) ? ",$forum[fid]" : NULL;
+				$forums .= modcheck($discuz_user) ? ",{$forum['fid']}" : NULL;
 			}
 			$sql .= " AND p.fid IN ($forums)";
 		}
@@ -71,7 +71,7 @@ if($action == 'prune') {
 			$uids = '0';
 			$query = $db->query("SELECT uid FROM $table_members WHERE BINARY username IN ('".str_replace(',', '\',\'', str_replace(' ', '', $users))."')");
 			while($member = $db->fetch_array($query)) {
-				$uids .= ",$member[uid]";
+				$uids .= ",{$member['uid']}";
 			}
 			$sql .= " AND p.authorid IN ($uids)";
 		}
@@ -112,8 +112,8 @@ if($action == 'prune') {
 			$prune['forums'][] = $post['fid'];
 			$prune['thread'][$post['tid']]++;
 
-			$pids .= ",$post[pid]";
-			$tidsdelete .= $post['isfirstpost'] ? ",$post[tid]" : NULL;
+			$pids .= ",{$post['pid']}";
+			$tidsdelete .= $post['isfirstpost'] ? ",{$post['tid']}" : NULL;
 		}
 
 		if($pids) {
@@ -132,7 +132,7 @@ if($action == 'prune') {
 				$uids = $comma = '';
 				$query = $db->query("SELECT authorid FROM $table_posts WHERE pid IN ($pids) OR tid IN ($tidsdelete)");
 				while($post = $db->fetch_array($query)) {
-					$uids .= "$comma$post[authorid]";
+					$uids .= "$comma{$post['authorid']}";
 					$comma = ',';
 				}
 				updatemember('-', $uids, $deletedcredits);

@@ -80,21 +80,21 @@ if($mod == 'add') {
 	}
 	if(!submitcheck('editsubmit')) {
 
-		$plugin[plug_open] = $plugin['plug_stats'] ? 1 : 0;
-		$plugin[plug_showinmenu] = $plugin['plug_stats'] > 1 ? 1 : 0;
+		$plugin['plug_open'] = $plugin['plug_stats'] ? 1 : 0;
+		$plugin['plug_showinmenu'] = $plugin['plug_stats'] > 1 ? 1 : 0;
 
 		showsetting('form', 'pluginform', 'admincp.php?action=plugin&mod=edit', 'form');
 		showsetting('plugid', 'id', $id, 'hidden');
 		showtype('plug_edit', 'top');
-		showsetting('plug_title', 'plug_title', $plugin[plug_title], 'text');
-		showsetting('plug_version', 'plug_version', $plugin[plug_version], 'text');
-		showsetting('plug_opennow', 'plug_open', $plugin[plug_open], 'radio');
-		showsetting('plug_showinmenu', 'plug_show', $plugin[plug_showinmenu], 'radio');
-		showsetting('plug_key', 'plug_key', $plugin[plug_key], 'text');
-		showsetting('plug_cp', 'plug_cp', $plugin[plug_cp], 'text');
-		showsetting('plug_tables', 'plug_tables', $plugin[plug_tables], 'text');
-		showsetting('plug_desc', 'plug_desc', $plugin[plug_desc], 'textarea');
-		showsetting('plug_license', 'plug_license', $plugin[plug_license], 'textarea');
+		showsetting('plug_title', 'plug_title', $plugin['plug_title'], 'text');
+		showsetting('plug_version', 'plug_version', $plugin['plug_version'], 'text');
+		showsetting('plug_opennow', 'plug_open', $plugin['plug_open'], 'radio');
+		showsetting('plug_showinmenu', 'plug_show', $plugin['plug_showinmenu'], 'radio');
+		showsetting('plug_key', 'plug_key', $plugin['plug_key'], 'text');
+		showsetting('plug_cp', 'plug_cp', $plugin['plug_cp'], 'text');
+		showsetting('plug_tables', 'plug_tables', $plugin['plug_tables'], 'text');
+		showsetting('plug_desc', 'plug_desc', $plugin['plug_desc'], 'textarea');
+		showsetting('plug_license', 'plug_license', $plugin['plug_license'], 'textarea');
 		showtype('', 'bottom');
 		showsetting('', 'editsubmit', $lang['submit'], 'submit');
 		
@@ -138,7 +138,7 @@ if($mod == 'add') {
 	}
 	if(!submitcheck('deletesubmit')) {
 		$tip = $lang['plugin_delete_tip'];
-		$message = $lang['plugin_delete_message']. " <b>$plugin[plug_title] </b>";
+		$message = $lang['plugin_delete_message']. " <b>{$plugin['plug_title']} </b>";
 		$submitaction = 'admincp.php?action=plugin&mod=delete';
 		$addvalue = "<input type='hidden' name='id' value='$id'>\n";
 		$addvalue .= "<input type='hidden' name='deletesubmit' value='1'>";
@@ -147,7 +147,7 @@ if($mod == 'add') {
 	}else{
 		if($yes){
 			$db->query("DELETE FROM $table_plugins where plug_id='$id' ");
-			$db->query("DELETE FROM $table_plugins_settings where conf_group='$plugin[plug_key]' ");
+			$db->query("DELETE FROM $table_plugins_settings where conf_group='{$plugin['plug_key']}' ");
 			plugin_updatecache();
 			cpmsg('plugin_deleteok', 'admincp.php?action=plugin&mod=list');
 		}else{
@@ -182,15 +182,15 @@ if($mod == 'add') {
 	$settings = $confarray['settings'];
 
 	showtype($lang['plugin_import'], 'top');
-	showsetting('plug_title', 'plug_title','',$plugin[plug_title]);
+	showsetting('plug_title', 'plug_title','',$plugin['plug_title']);
 	showsetting('plug_board_version', 'plug_version','',$confarray['boardversion']);
 	showsetting('plug_version', 'plug_version','',$confarray['groupversion']);
 	showsetting('plug_author', 'plug_version','',$confarray['groupauthor']);
-	showsetting('plug_key', 'plug_key','', $plugin[plug_key]);
-	showsetting('plug_cp', 'plug_cp','' , $plugin[plug_cp]);
-	showsetting('plug_tables', 'plug_tables','' , $plugin[plug_tables]);
-	showsetting('plug_desc', 'plug_desc', '', nl2br($plugin[plug_desc]));
-	showsetting('plug_license', 'plug_desc', '', nl2br($plugin[plug_license]));
+	showsetting('plug_key', 'plug_key','', $plugin['plug_key']);
+	showsetting('plug_cp', 'plug_cp','' , $plugin['plug_cp']);
+	showsetting('plug_tables', 'plug_tables','' , $plugin['plug_tables']);
+	showsetting('plug_desc', 'plug_desc', '', nl2br($plugin['plug_desc']));
+	showsetting('plug_license', 'plug_desc', '', nl2br($plugin['plug_license']));
 	showtype('', 'bottom');
 
 	if(strip_tags($confarray['boardversion']) != strip_tags($version)) {
@@ -199,18 +199,18 @@ if($mod == 'add') {
 	}
 	if (!$plugin['plug_title']) cpmsg('plugin_title_error');
 	if (!$plugin['plug_key'] || !is_key($plugin['plug_key'])) cpmsg('plugin_keyword_error');
-	$query = $db->query("SELECT plug_id FROM $table_plugins where plug_key='$plugin[plug_key]' limit 1");
+	$query = $db->query("SELECT plug_id FROM $table_plugins where plug_key='{$plugin['plug_key']}' limit 1");
 	if($db->result($query, 0)) {
 		if (!$importallways) cpmsg('plugin_already_installed');
-		$db->query("DELETE FROM $table_plugins where plug_key='$plugin[plug_key]'");
-		$db->query("DELETE FROM $table_plugins_settings where conf_group='$plugin[plug_key]'");
+		$db->query("DELETE FROM $table_plugins where plug_key='{$plugin['plug_key']}'");
+		$db->query("DELETE FROM $table_plugins_settings where conf_group='{$plugin['plug_key']}'");
 	}
-	$db->query("INSERT INTO $table_plugins (plug_title, plug_version, plug_author, plug_key, plug_cp, plug_tables, plug_license, plug_desc)	VALUES ('$plugin[plug_title]', '$plugin[plug_version]', '$plugin[plug_author]', '$plugin[plug_key]', '$plugin[plug_cp]', '$plugin[plug_tables]', '$plugin[plug_license]', '$plugin[plug_desc]')");
+	$db->query("INSERT INTO $table_plugins (plug_title, plug_version, plug_author, plug_key, plug_cp, plug_tables, plug_license, plug_desc)	VALUES ('{$plugin['plug_title']}', '{$plugin['plug_version']}', '{$plugin['plug_author']}', '{$plugin['plug_key']}', '{$plugin['plug_cp']}', '{$plugin['plug_tables']}', '{$plugin['plug_license']}', '{$plugin['plug_desc']}')");
 	plugin_updatecache();
 	if (is_array($settings) && count($settings)){
 		foreach($settings as $setting){
 				$db->query("INSERT INTO $table_plugins_settings (conf_title , conf_desc , conf_group , conf_type , conf_key , conf_value , conf_extra , conf_position , conf_cached ) 
-				VALUES ('$setting[conf_title]', '$setting[conf_desc]', '$plugin[plug_key]', '$setting[conf_type]','$setting[conf_key]', '$setting[conf_value]', '$setting[conf_extra]','$setting[conf_position]' , '$setting[conf_cached]')");
+				VALUES ('{$setting['conf_title']}', '{$setting['conf_desc']}', '{$plugin['plug_key']}', '{$setting['conf_type']}','{$setting['conf_key']}', '{$setting['conf_value']}', '{$setting['conf_extra']}','{$setting['conf_position']}' , '{$setting['conf_cached']}')");
 		}
 		plugin_updatecache(0);
 		cpmsg('plug_import_ok', $basecplink);
@@ -396,16 +396,16 @@ if($mod == 'add') {
 		$plugarray['plugin'] = $plugin;
 
 		$plugarray['boardversion'] = strip_tags($version);
-		$plugarray['groupkey'] = $plugin[plug_key];
-		$plugarray['groupauthor'] = $plugin[plug_author];
-		$plugarray['grouptitle'] = $plugin[plug_title];
-		$plugarray['groupversion'] = strip_tags($plugin[plug_version]);
+		$plugarray['groupkey'] = $plugin['plug_key'];
+		$plugarray['groupauthor'] = $plugin['plug_author'];
+		$plugarray['grouptitle'] = $plugin['plug_title'];
+		$plugarray['groupversion'] = strip_tags($plugin['plug_version']);
 
 		$time = gmdate("$dateformat $timeformat", $timestamp + $timeoffset * 3600);
 
 		$query = $db->query("SELECT * from $table_plugins_settings where conf_group='$group'");
 		while($settings = $db->fetch_array($query)) {
-			$plugarray[settings][] = $settings ;
+			$plugarray['settings'][] = $settings ;
 		}
 		
 		$plug_export = "# Discuz! Plugin's settings Dump".PHP_NEXTLINE.
@@ -424,7 +424,7 @@ if($mod == 'add') {
 		ob_end_clean();
 		header('Content-Encoding: none');
 		header('Content-Type: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'application/octetstream' : 'application/octet-stream'));
-		header('Content-Disposition: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'inline; ' : 'attachment; ').'filename="plug_'.$plugarray[groupkey].'.txt"');
+		header('Content-Disposition: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'inline; ' : 'attachment; ').'filename="plug_'.$plugarray['groupkey'].'.txt"');
 		header('Content-Length: '.strlen($plug_export));
 		header('Pragma: no-cache');
 		header('Expires: 0');

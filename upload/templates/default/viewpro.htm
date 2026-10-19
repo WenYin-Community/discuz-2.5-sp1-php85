@@ -1,0 +1,75 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang view_profile}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr><td colspan="2" class="header">{lang somebodys_profile}</td>
+</tr><tr><td bgcolor="{ALTBG2}">
+
+<table border="0" cellspacing="0" cellpadding="6" width="98%">
+<tr><td width="70%">
+
+<table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="98%">
+<tr><td colspan="2" align="center" class="smalltxt"><a href="pm.php?action=send&uid=$member[uid]" target="_blank">[ {lang send_pm} ]</a> 
+&nbsp; &nbsp; <a href="memcp.php?action=buddylist&buddyid=$member[uid]&buddysubmit=yes">[ {lang add_to_buddylist} ]</a> &nbsp; &nbsp; 
+<a href="search.php?srchuid=$member[uid]&srchfid=all&srchfrom=0&searchsubmit=yes">[ {lang search_posts} ]</a> &nbsp; &nbsp; 
+<!--{if $allowedituser}-->
+	<!--{if $adminid == 1}-->
+		<a href="admincp.php?action=memberprofile&extr=$member[uid]&direct=1" target="_blank">[ {lang edit_member} ]</a> &nbsp; &nbsp; 
+	<!--{else}-->
+		<a href="admincp.php?action=mod_members&extr=$member[uid]&direct=1" target="_blank">[ {lang edit_member} ]</a> &nbsp; &nbsp; 
+	<!--{/if}-->
+<!--{/if}-->
+<a href="###" onclick="history.go(-1);">[ {lang go_back} ]</a>
+
+<br><br></td></tr>
+<tr><td width="45%" class="bold">{lang regdate}:</td><td width="55%">$member[regdate]</td></tr>
+
+<!--{if $allowviewip}-->
+	<tr><td width="45%" class="bold">{lang regip}:</td><td width="55%">$member[regip] - $member[regiplocation]</td></tr>
+	<tr><td width="45%" class="bold">{lang lastip}:</td><td width="55%">$member[lastip] - $member[lastiplocation]</td></tr>
+<!--{/if}-->
+<tr><td width="45%" class="bold">{lang lastvisit}:</td><td width="55%">$member[lastactivity]</td></tr>
+<tr><td width="45%" class="bold">{lang lastpost}:</td><td width="55%">$member[lastpost]</td></tr>
+<tr><td colspan="2"><hr noshade size="0" width="95%" color="{BORDERCOLOR}"></td></tr>
+<tr><td width="45%" class="bold">{lang credit_title}:</td><td width="55%">$member[credit] {lang credit_unit}</td></tr>
+<tr><td width="45%" class="bold">{lang usergroup}:</td><td width="55%">$member[grouptitle] {eval showstars($member['groupstars']);}</td></tr>
+<tr><td width="45%" class="bold">{lang rank}:</td><td width="55%">$member[ranktitle] {eval showstars($member['rankstars']);}</td></tr>
+<tr><td width="45%" class="bold">{lang postnum}:</td><td width="55%">$member[postnum] ({lang post_percent} $percent%)</td></tr>
+<tr><td width="45%" class="bold">{lang posts_per_day}:</td><td width="55%">$postperday {lang posts}</td></tr>
+<tr><td colspan="2"><hr noshade size="0" width="95%" color="{BORDERCOLOR}"></td></tr>
+<tr><td width="45%" class="bold">{lang gender}:</td><td width="55%"><!--{if $member['gender'] == 1}-->{lang male}<!--{elseif $member['gender'] == 2}-->{lang female}<!--{else}-->{lang secret}<!--{/if}--></td></tr>
+<tr><td width="45%" class="bold">{lang location}:</td><td width="55%">$member[location]</td></tr>
+<tr><td width="45%" class="bold">{lang birthday}:</td><td width="55%">$member[bday]</td></tr>
+<tr><td width="45%" class="bold" valign="top">{lang bio}:</td><td width="55%" >$member[bio]</td></tr>
+
+</table>
+
+</td><td width="30%" valign="TOP">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header"><td colspan="2">{lang personal_info}</td></tr>
+<tr bgcolor="{ALTBG2}"><td align="center" colspan="2"><br>$member[avatar]<br><br></td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20%">{lang homepage}:</td><td bgcolor="{ALTBG2}">
+<a href="$member[site]" target="_blank">$member[site]</a></td></tr>
+
+<tr><td bgcolor="{ALTBG1}">Email:</td><td bgcolor="{ALTBG2}">
+<!--{if $member['email'] && $member['showemail']}--><a href="mailto:$member[email]">$member[email]</a><!--{else}-->&nbsp;<!--{/if}-->
+</td></tr>
+
+<tr><td bgcolor="{ALTBG1}" width="20%">QQ:</td><td bgcolor="{ALTBG2}">$member[oicq]</td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20%">ICQ:</td><td bgcolor="{ALTBG2}">$member[icq]</td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20%">Yahoo:</td><td bgcolor="{ALTBG2}">$member[yahoo]</td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20%">MSN:</td><td bgcolor="{ALTBG2}">$member[msn]</td></tr>
+</table></td></tr></table>
+
+</td></tr></table>
+
+
+</td></tr></table></td></tr></table>
+{template footer}

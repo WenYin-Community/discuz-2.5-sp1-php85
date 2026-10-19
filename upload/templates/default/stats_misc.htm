@@ -1,0 +1,66 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang stats}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr style="color: {HEADERTEXT}; font-weight: {BOLD}"><td>{lang stats}</td><td align="right">({lang stats_update_time} $stats_update_time )</td>
+</tr></table></td>
+</tr><tr bgcolor="{ALTBG1}"><td colspan ="2">
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}"><table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr bgcolor="{ALTBG2}"><td align="center" class="smalltxt">
+<a href="stats.php">[ {lang stats_main} ]</a> &nbsp; <a href="stats.php?type=week">[ {lang stats_week} ]</a> &nbsp; 
+<a href="stats.php?type=hour">[ {lang stats_hour} ]</a> &nbsp; <a href="stats.php?type=agent">[ {lang stats_agent} ]</a> &nbsp; 
+<a href="stats.php?type=threads">[ {lang stats_threads} ]</a> &nbsp; <a href="stats.php?type=member">[ {lang stats_members} ]</a></td></tr>
+</table></td></tr></table><br>
+<!--{if !$statstatus}-->
+	<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+	<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang function_closed}</span><br>
+	<table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="610" class="smalltxt">
+	</table></td></tr></table></td></tr></table><br>
+<!--{elseif $type == 'week'}-->
+	<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+	<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_week}:</span><br>
+	<table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="610" class="smalltxt">
+		$stats_cache_week[statsbar_week]
+
+	</table></td></tr></table></td></tr></table><br>
+<!--{elseif $type == 'hour'}-->
+	<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+	<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_hour}:</span><br>
+	<table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="610" class="smalltxt">
+	$stats_cache_hour['statsbar_hour']
+	</table></td></tr></table></td></tr></table><br>
+<!--{elseif $type == 'agent'}-->
+	<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+	<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_os}:</span><br>
+	<table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="610" class="smalltxt">
+	$stats_cache_agent['statsbar_os']
+	</table></td></tr></table></td></tr></table>
+
+	<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+	<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_browser}:</span><br>
+	<table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="610" class="smalltxt">
+	$stats_cache_agent['statsbar_browser']
+	</table></td></tr></table></td></tr></table><br>
+<!--{/if}-->
+<br>
+</td></tr></table></td></tr></table>
+{template footer}

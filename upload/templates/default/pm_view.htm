@@ -1,0 +1,62 @@
+<table cellspacing="0" cellpadding="0" border="0" width="99%" align="center">
+<tr>
+<td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr>
+<td  class="header" colspan="2">$pm[subject]</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="15%">{lang from}:</td>
+<td bgcolor="{ALTBG2}" width="75%">
+		<!--{if $pm[msgfromid]}-->
+			<a href="viewpro.php?uid=$pm[msgfromid]">$pm[msgfrom]</a>
+		<!--{else}-->
+			$pm[msgfrom]
+		<!--{/if}-->
+</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang to}:</td>
+<td bgcolor="{ALTBG2}"><a href="viewpro.php?uid=$pm[msgtoid]">$pm[msgto]</a></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang time}:</td>
+<td bgcolor="{ALTBG2}">$pm[dateline]</td>
+</tr>
+
+<tr>
+<td valign="top" bgcolor="{ALTBG1}">{lang message}:</td>
+<td bgcolor="{ALTBG2}">
+<table border="0" cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed; word-wrap: break-word">
+<tr><td>$pm[message]</td></tr></table>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG2}" height="1" colspan="2"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" colspan="2">
+<a href="###" onclick="history.go(-1);">{lang return}</a> - 
+<!--{if $folder == 'inbox' && $pm[msgfromid]}-->
+	<a href="pm.php?action=send&pmid=$pmid&do=reply">{lang reply}</a> - 
+<!--{/if}-->
+<a href="pm.php?action=send&pmid=$pmid&do=forward">{lang forward}</a> - 
+<a href="pm.php?action=download&pmid=$pmid">{lang download}</a>
+<!--{if $folder == 'track' && !$pm[new]}-->
+<!--{else}-->
+- 
+<a href="pm.php?action=delete&folder=$folder&pmid=$pmid">{lang delete}</a>
+<!--{/if}-->
+</td>
+</tr>
+
+</table>
+</center></div></td>
+</tr>
+</table>

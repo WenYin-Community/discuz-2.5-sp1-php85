@@ -1,0 +1,75 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang digest}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td class="multi">$multipage</td></tr>
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" style="table-layout: fixed; word-wrap: break-word">
+<tr class="header">
+<td align="center" width="42%">{lang subject}</td>
+<td align="center" width="13%">{lang forum}</td>
+<td align="center" width="12%">{lang author}</td>
+<td align="center" width="7%" nowrap>{lang replies}</td>
+<td align="center" width="7%" nowrap>{lang views}</td>
+<td align="center" width="19%">{lang lastpost}</td>
+</tr>
+<!--{loop $threadlist $thread}-->
+	<tr>
+	<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'">
+	[ <b>{echo substr('III', - $thread['digest'])}</b> ] 
+	<!--{if $thread['displayorder']}--><img src="{IMGDIR}/pin.gif" align="absmiddle"> {lang thread_sticky}<b>{echo substr('III', - $thread['displayorder'])}</b>:&nbsp;
+	<!--{elseif $thread['poll']}--><img src="{IMGDIR}/pollsmall.gif" align="absmiddle"> {lang thread_poll}:&nbsp;
+	<!--{/if}-->$thread['attachment']<a href="viewthread.php?tid=$thread[tid]&fpage=1&highlight=$index[keywords]" target="_blank" $thread[highlight]>$thread[subject]</a>$thread[multipage]</td>
+	<td bgcolor="{ALTBG1}" align="center"><a href="forumdisplay.php?fid=$thread[fid]">$thread[forumname]</a></td>
+	<td bgcolor="{ALTBG2}" align="center">			
+	<!--{if $thread['authorid']}--><a href="viewpro.php?uid=$thread[authorid]">$thread[author]</a><!--{else}-->{lang guest}<!--{/if}-->
+	<br><span class="smalltxt">$thread[dateline]</span></td>
+	<td bgcolor="{ALTBG1}" align="center">$thread[replies]</td>
+	<td bgcolor="{ALTBG2}" align="center">$thread[views]</td>
+	<td bgcolor="{ALTBG1}" align="center">
+	<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr align="right">
+	<td nowrap><font class="smalltxt">$thread[lastpost]<br>
+	by <!--{if $thread['lastposter']}--><a href="viewpro.php?username=$thread[lastposterenc]">$thread[lastposter]</a><!--{else}-->{lang guest}<!--{/if}-->
+	</font></td><td nowrap>&nbsp;<a href="redirect.php?tid=$thread[tid]&goto=lastpost&highlight=$index[keywords]"><img src="{IMGDIR}/lastpost.gif" border="0"></a>
+	</td></tr></table>
+	</td>
+	</tr>
+<!--{/loop}-->
+<form method="post" action="digest.php">
+<input type="hidden" name="formhash" value="{=formhash();}">
+
+<tr>
+<td bgcolor="{ALTBG2}" colspan="6">{lang keyword}: <input type="text" size="15" name="keyword" value="$keyword">
+&nbsp; &nbsp; {lang orderby}: <select name="order">
+<option value="digest" $ordercheck[digest]>{lang level}</option>
+<option value="replies" $ordercheck[replies]>{lang replies}</option>
+<option value="views" $ordercheck[views]>{lang views}</option>
+<option value="dateline" $ordercheck[dateline]>{lang dateline}</option>
+<option value="lastpost" $ordercheck[lastpost]>{lang lastpost}</option>
+</select>
+&nbsp; &nbsp; <input type="submit" value="{lang submit}"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG2}" colspan="6">{lang digest_forum}:<br>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+<!--{loop $forumlist $key $forum}-->
+	<!--{if $key % 4 == 0}--></td></tr><tr><td width="25%" nowrap><!--{else}--></td><td width="25%" nowrap><!--{/if}-->
+	<input type="checkbox" name="forums[]" value="$forum[fid]" $forumcheck[$forum[fid]]> $forum[name]
+<!--{/loop}-->
+</tr>
+</table></td>
+</tr>
+
+</form>
+
+
+</table></td></tr>
+<tr><td height="3"></td></tr>
+<tr><td class="multi">$multipage</td></tr>
+</table>
+{template footer}

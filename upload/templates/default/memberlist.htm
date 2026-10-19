@@ -1,0 +1,55 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang member_list}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td class="multi">$multipage</td></tr>
+<tr><td height="3"></td></tr></table>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td width="15%" align="center">{lang username}</td>
+<td width="6%" align="center">{lang gender}</td>
+<td width="8%" align="center">{lang email}</td>
+<td width="8%" align="center">{lang homepage}</td>
+<td width="13%" align="center">{lang location}</td>
+<td width="10%" align="center">{lang regdate}</td>
+<td width="18%" align="center">{lang lastvisit}</td>
+<td width="8%" align="center">{lang postnum}</td>
+<td width="9%" align="center">{lang credit_title}</td>
+</tr>
+<!--{loop $memberlist $member}-->
+	<tr>
+	<td bgcolor="{ALTBG1}" align="center" nowrap><a href="viewpro.php?uid=$member[uid]">$member[username]</a></td>
+	<td bgcolor="{ALTBG2}" align="center"><!--{if $member['gender'] == '1'}-->{lang male}<!--{elseif $member['gender'] == 2}-->{lang female}<!--{else}-->&nbsp;<!--{/if}--></td>
+	<td bgcolor="{ALTBG1}" align="center"><!--{if $member['email'] && $member['showemail']}--><a href="mailto:$member[email]"><img src="{IMGDIR}/email.gif" border="0" alt="{lang send_mail}"></a><!--{else}-->&nbsp;<!--{/if}--></td>
+	<td bgcolor="{ALTBG2}" align="center"><!--{if $member['site']}--><a href="http://$member[site]" target="_blank"><img src="{IMGDIR}/site.gif" border="0" alt="{lang visit_home}"></a><!--{else}-->&nbsp;<!--{/if}--></td>
+	<td bgcolor="{ALTBG1}" align="center"><!--{if $member['location']}-->$member[location]<!--{else}-->&nbsp;<!--{/if}--></td>
+	<td bgcolor="{ALTBG2}" align="center">$member[regdate]</td>
+	<td bgcolor="{ALTBG1}" align="center">$member[lastvisit]</td>
+	<td bgcolor="{ALTBG2}" align="center">$member[postnum]</td>
+	<td bgcolor="{ALTBG1}" align="center">$member[credit] {lang credit_unit}</td>
+	</tr>
+<!--{/loop}-->
+<form method="post" action="member.php?action=list">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<tr>
+<td bgcolor="{ALTBG2}" colspan="9" class="smalltxt">
+{lang search} <input type="text" size="15" name="srchmem"> <input type="submit" value="{lang submit}">
+&nbsp; &nbsp;<span class="bold">{lang or}</span> &nbsp; 
+{lang orderby}: 
+<a href="member.php?action=list&order=credit&desc=desc">{lang credit_title}</a> -
+<a href="member.php?action=list&order=username">{lang username}</a> -
+<a href="member.php?action=list&order=gender&desc=desc">{lang gender}</a> -
+<a href="member.php?action=list">{lang regdate}</a> -
+<a href="member.php?action=list&admins=yes">{lang status}</a>
+</td></tr></form>
+</table></td></tr></table>
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td height="3"></td></tr>
+<tr><td class="multi">$multipage</td></tr></table>
+{template footer}

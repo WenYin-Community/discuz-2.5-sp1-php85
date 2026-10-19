@@ -1,0 +1,84 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang member_login}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="logging.php?action=login">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<input type="hidden" name="referer" value="$referer">
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang member_login}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang login_invisible}:</td>
+<td bgcolor="{ALTBG2}" class="smalltxt">
+<select name="loginmode">
+<option value=""> {lang use_default}</option>
+<option value="normal"> {lang login_normal_mode}</option>
+<option value="invisible"> {lang login_invisible_mode}</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang style}:</td>
+<td bgcolor="{ALTBG2}"><select name="styleid"><option value="">{lang use_default}</option>
+$styleselect
+</select>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang login_cookie_time}:</td>
+<td bgcolor="{ALTBG2}" class="smalltxt">
+<input type="radio" $year_checked name="cookietime" value="31536000"> {lang one_year} &nbsp;
+<input type="radio" $month_checked name="cookietime" value="2592000"> {lang one_month} &nbsp;
+<input type="radio" $day_checked name="cookietime" value="86400"> {lang one_day} &nbsp;
+<input type="radio" $hour_checked name="cookietime" value="3600"> {lang one_hour} &nbsp;
+<input type="radio" $task_checked name="cookietime" value="0"> {lang this_task} &nbsp; &nbsp;
+<a href="faq.php?page=usermaint#2" target="_blank">[{lang related_faq}]</a></td>
+</tr>
+
+<tr><td bgcolor="{ALTBG2}" colspan="2" height="1"></td></tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang username}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="username" size="25" maxlength="40" tabindex="1"> &nbsp;<span class="smalltxt"><a href="register.php">{lang register_now}</a></span></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang password}:</td>
+<td bgcolor="{ALTBG2}"><input type="password" name="password" size="25" tabindex="2"> &nbsp;<span class="smalltxt"><a href="member.php?action=lostpasswd">{lang lostpassword}</a></span></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang security_question}:</td>
+<td bgcolor="{ALTBG2}"><select name="questionid" tabindex="3">
+<option value="0">&nbsp;</option>
+<option value="1">{lang security_question_1}</option>
+<option value="2">{lang security_question_2}</option>
+<option value="3">{lang security_question_3}</option>
+<option value="4">{lang security_question_4}</option>
+<option value="5">{lang security_question_5}</option>
+<option value="6">{lang security_question_6}</option>
+<option value="7">{lang security_question_7}</option>
+</select></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang security_answer}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="answer" size="25" tabindex="4" AUTOCOMPLETE="off"></td>
+</tr>
+
+</table>
+</td></tr></table><br>
+<center><input type="submit" name="loginsubmit" value="{lang member_login}"></center>
+</form>
+{template footer}

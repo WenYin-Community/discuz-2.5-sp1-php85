@@ -1,0 +1,53 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang announcements}</td>
+<td align="right" width="10%"><a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr>
+</table><br>
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" > 
+<tr><td class="nav" width="100%" nowrap>&nbsp;&nbsp;$multipage </td>
+</tr></table>
+<!--{loop $announcelist $announce}-->
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header" ><td>{lang announcements} #$announce[id] </td><td><a name="$announce[id]">$announce[subject]</td></tr>
+<tr><td bgcolor="{ALTBG1}" valign="top"  width="21%">
+<span class="bold">$announce[author]</span><br>
+<span class="smalltxt">$announce['authortitle']	</span><br>
+{eval showstars($announce['stars']);}<br>$announce[customstatus]<br><br>
+	<!--{if $announce['avatar']}-->
+		<table width="95%" border="0" cellspacing="0" cellpadding="0" style="table-layout: fixed">
+		<tr><td align="center">$announce[avatar]</td></tr></table><br>
+	<!--{else}-->
+		<br><br>
+	<!--{/if}-->
+	{lang credit_title} $announce[credit]<br>
+	{lang postnum} $announce[postnum]<br>
+	{lang regtime} $announce[regdate]
+	<!--{if $announce['location']}--><br>{lang location} $announce[location]<!--{/if}--><br>
+</td>
+<td bgcolor="{ALTBG2}" valign=top  width="79%">
+<br>$announce['message'] <BR><BR></td>
+</tr>
+<tr><td bgcolor="{ALTBG1}"><img src="{IMGDIR}/lastpost.gif" align="absmiddle">&nbsp;{lang starttime}:&nbsp;$announce['starttime']</td>
+  <td valign="middle" bgcolor="{ALTBG2}">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr class="smalltxt"><td align="left">
+		<a href="viewpro.php?uid=$announce['uid']"><img src="{IMGDIR}/profile.gif" border="0" alt="{lang view_profile}"></a>&nbsp;
+		<!--{if $announce['showemail']}--><a href="mailto:$announce[email]"><img src="{IMGDIR}/email.gif" border="0" alt="{lang send_mail}"></a>&nbsp;<!--{/if}-->
+		<!--{if $announce['site']}--><a href="$announce[site]" target="_blank"><img src="{IMGDIR}/site.gif" border="0" alt="{lang visit_home}"></a>&nbsp;<!--{/if}-->
+		<a href="pm.php?action=send&uid=$announce[uid]" target="_blank"><img src="{IMGDIR}/pm.gif" border="0" ></a>&nbsp;
+	</td><td align="right">
+	&nbsp;<!--{if $isadmin || $discuz_uid == $announce[uid]}--><a href="admincp.php?action=announcements&edit=$announce[id]&extr=$announce[id]&direct=1" target="_blank"><img src="{IMGDIR}/edit.gif" border="0" ></a><!--{/if}-->
+
+	</td></tr></table>
+	</td></tr>
+
+</table></td></tr>
+</table><br>
+<!--{/loop}-->
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" > 
+<tr><td class="nav" width="100%" nowrap>&nbsp;&nbsp;$multipage </td>
+</tr></table>
+{template footer}

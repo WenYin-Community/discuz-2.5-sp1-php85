@@ -1,0 +1,36 @@
+<form method="post" action="misc.php?action=votepoll&fid=$fid&tid=$tid">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr><td class="header" colspan="2">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr class="smalltxt" style="color: {HEADERTEXT}"><td class="bold">{lang poll_subject}: $thread[subject]&nbsp;
+<!--{if $pollopts['multiple']}-->({lang poll_multiple})<!--{else}-->({lang poll_single})<!--{/if}-->
+</td><td align="right"><a href="viewthread.php?tid=$tid&page=$page&sid=$sid&showvoters=yes" style="color: {HEADERTEXT}">{lang poll_view_voters}</a></td></tr></table>
+</td></tr>
+
+<!--{if $showvoters == 'yes'}-->
+	<tr>
+	<td bgcolor="{ALTBG2}" colspan="2"><span class="bold">{lang poll_voters}:</span><br><br>
+	<!--{loop $pollopts['voters'] $voter}-->
+		<a href="viewpro.php?username={echo rawurlencode($voter)}">$voter</a> &nbsp;
+	<!--{/loop}-->
+	<br>
+<!--{/if}-->
+
+<!--{loop $polloptions $key $option}-->
+	<tr>
+	<td bgcolor="{ALTBG1}" width="35%">
+	<!--{if $allowvote}-->
+		<input type="$optiontype" name="pollanswers[]" value="$key">
+	<!--{/if}-->
+	$option[option]</td>
+	<td bgcolor="{ALTBG2}" width="75%"><img src="images/common/bar{echo $key % 10}.gif" width="$option[width]" height="11"> &nbsp; <b>$option[votes]</b> ($option[percent]%)</td>
+	</tr>
+<!--{/loop}-->
+
+</table></td></tr></table>
+<!--{if $allowvote}--><br><center><input type="submit" name="pollsubmit" value="{lang submit}"></center><!--{/if}-->
+<br><br></form>

@@ -1,0 +1,49 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> $navigation &raquo; {lang emailfriend}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="misc.php?action=emailfriend">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang emailfriend}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang your_name}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="fromname" size="25" maxlength="40" value="$discuz_userss"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang your_email}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="fromemail" size="25" value="$email"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang receiver_name}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="sendtoname" size="25"></td>
+</tr>
+<tr>
+<td bgcolor="{ALTBG1}">{lang receiver_email}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="sendtoemail" size="25"></td>
+</tr>
+<tr>
+<td bgcolor="{ALTBG1}">{lang subject}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="subject" size="65" value="{lang recommend_toyou}: $thread[subject]"></td>
+</tr>
+<tr>
+<td bgcolor="{ALTBG1}" valign="top">{lang message}:</td>
+<td bgcolor="{ALTBG2}"><textarea rows="9" cols="65" name="message">
+{lang recommend_message}</textarea></td>
+</tr>
+</table>
+</td></tr></table><br>
+<center><input type="submit" name="sendsubmit" value="{lang submit}"></center>
+<input type="hidden" name="tid" value="$tid">
+</form>
+{template footer}

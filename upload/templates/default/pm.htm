@@ -1,0 +1,64 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang pm}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td width="200" valign="top">
+
+<table cellspacing="0" cellpadding="0" border="0" width="98%">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header"><td colspan="3" align="center">{lang pm_shortcut}</td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20" align="center"><img src="{IMGDIR}/pm_folder.gif"></td><td bgcolor="{ALTBG2}">
+<!--{if $action == 'send'}--><b>{lang pm_send}</b><!--{else}--><a href="pm.php?action=send">{lang pm_send}</a><!--{/if}--></td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20" align="center"><img src="{IMGDIR}/pm_folder.gif"></td><td bgcolor="{ALTBG2}">
+<!--{if $action == 'ignore'}--><b>{lang pm_ignore}</b><!--{else}--><a href="pm.php?action=ignore">{lang pm_ignore}</a><!--{/if}--></td></tr>
+</table></td></tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="98%">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header"><td colspan="2" align="center">{lang pm_folders}</td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20" align="center"><img src="{IMGDIR}/pm_folder.gif"></td><td bgcolor="{ALTBG2}">
+<a href="pm.php?folder=inbox"><!--{if $folder == 'inbox'}--><b>{lang pm_inbox}</b><!--{else}-->{lang pm_inbox}<!--{/if}-->($pm_inbox)</a></td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20" align="center"><img src="{IMGDIR}/pm_folder.gif"></td><td bgcolor="{ALTBG2}">
+<a href="pm.php?folder=outbox"><!--{if $folder == 'outbox'}--><b>{lang pm_outbox}</b><!--{else}-->{lang pm_outbox}<!--{/if}-->($pm_outbox)</a></td></tr>
+<tr><td bgcolor="{ALTBG1}" width="20" align="center"><img src="{IMGDIR}/pm_folder.gif"></td><td bgcolor="{ALTBG2}">
+<a href="pm.php?folder=track"><!--{if $folder == 'track'}--><b>{lang pm_track}</b><!--{else}-->{lang pm_track}<!--{/if}--></a></td></tr>
+</table></td></tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="98%">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header"><td colspan="3" align="center">{lang pm_data_usage}</td></tr>
+<tr bgcolor="{ALTBG2}"><td colspan="3" class="smalltxt">
+<b>&raquo;</b> {lang pm_total}: $pm_total<br>
+<b>&raquo;</b> {lang pm_storage}: $maxpmnum
+</td></tr><tr bgcolor="{ALTBG1}"><td colspan="3">
+<table cellspacing="2" cellpadding="0" border="0" width="100%" height="15" align="center">
+<tr><td width="$storage_percent" class="header" style="font-size: 1px">&nbsp;</td><td style="font-size: 1px">&nbsp;</td></tr></table>
+</td></tr>
+
+<tr bgcolor="{ALTBG2}" class="smalltxt">
+<td width="33%" align="left">0%</td>
+<td width="34%" align="center">50%</td>
+<td width="33%" align="right">100%</td>
+</tr>
+</table></td></tr></table><br><br>
+
+</td><td align="right" valign="top">
+
+<!--{if empty($action)}-->
+	{template pm_folder}
+<!--{elseif $action == 'view'}-->
+	{template pm_view}
+<!--{elseif $action == 'send'}-->
+	{template pm_send}
+<!--{elseif $action == 'ignore'}-->
+	{template pm_ignore}
+<!--{/if}-->
+
+</td></tr></table>
+{template footer}

@@ -1,0 +1,22 @@
+<bgsound src="images/newpm.wav" border="0">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center"> 
+<tr><td bgcolor="{BORDERCOLOR}"> 
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%"> 
+<tr><td class="header">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" align="center">
+<tr class="smalltxt"><td style="color: {HEADERTEXT}" class="bold">{lang pm_new}</td>
+<td align="right"><a href="pm.php" target="_blank" style="color: {HEADERTEXT}">{lang pm_new_detail}</a> 
+<a href="$ignorelink" style="color: {HEADERTEXT}">{lang pm_new_ignore}</a></td></tr></table>
+</tr><tr>
+<td bgcolor="{ALTBG2}" colspan="8" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'">
+<table cellspacing="0" cellpadding="0" border="0" width="98%" align="center">
+<tr><td>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" align="center">
+
+<!--{loop $pmlist $pm}-->
+	<tr><td><li></li></td><td width="20%" nowrap><span class="bold">{lang from}:</span> <a href="viewpro.php?uid=$pm[msgfromid]" target="_blank">$pm[msgfrom]</a></td>
+	<td width="25%"><span class="bold" nowrap>{lang subject}:</span> <a href="pm.php?action=view&pmid=$pm[pmid]" target="_blank">$pm[subject]</a></td>
+	<td width="55%"><span class="bold">{lang content}:</span> $pm[message]</td></tr>
+<!--{/loop}-->
+
+</table></td></tr></table></td></tr></table></td></tr></table>

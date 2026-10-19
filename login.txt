@@ -1,0 +1,81 @@
+/********************************************************************************/
+/* Crossday Discuz! Board							*/
+/* ========================      						*/
+/* 欢迎使用 Discuz! 论坛,在您开始使用之前,请务必完整阅读本软件附带的全部说明档	*/
+/********************************************************************************/
+/* Welcome to http://www.crossday.com & http://www.Discuz.net			*/
+/********************************************************************************/
+
+
+    很多朋友会在主页上放一个论坛入口,这样访问者就可以从首页直接登录论坛,而不必再
+先进入论坛再登录.下面提供的html代码可以示范如何从首页登录 Discuz! 论坛.这段代码只是示范
+一下原理,具体的要你自己去改.
+
+    例如当段代码不是放在论坛目录里,则需要把与程序相关的文件名加上论坛的路径.如
+logging.php?action=login 改为 http://your.com/discuz/logging.php?action=login.
+
+    注意: 以下代码并未提供安全登录的回答空间,因此对使用了安全登录的用户是无效的.
+
+
+<html>
+<head>
+<title>login</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<hr>按钮提交表单<hr>
+<form method="post" action="logging.php?action=login" target="_blank">
+  <input type="hidden" name="referer" value="index.php">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td>用户名</td>
+      <td>
+        <input type="text" name="username">
+      </td>
+    </tr>
+    <tr> 
+      <td>密码</td>
+      <td>
+        <input type="password" name="password">
+      </td>
+    </tr>
+    <tr> 
+      <td colspan="2">
+        <input type="submit" name="loginsubmit" value="登录">
+        <input type="reset" name="reset" value="重置">
+        <input type="button" value="注册" onclick="javascript: this.form.action='register.php';this.form.submit();">
+        <input type="button" value="游客" onclick="javascript: this.form.action='index.php';this.form.submit();">
+      </td>
+    </tr>
+  </table>
+</form>
+<hr>图片提交表单<hr>
+<form name="discuz_login" method="post" action="logging.php?action=login" target="_blank">
+  <input type="hidden" name="referer" value="index.php">
+  <input type="hidden" name="loginsubmit" value="登录">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td>用户名</td>
+      <td>
+        <input type="text" name="username">
+      </td>
+    </tr>
+    <tr> 
+      <td>密码</td>
+      <td>
+        <input type="password" name="password">
+      </td>
+    </tr>
+    <tr> 
+      <td colspan="2">
+        <a href="###" onclick="javascript: document.discuz_login.submit()"><img src="images/login.gif" alt="登录"></a>
+        <a href="###" onclick="javascript: document.discuz_login.reset()"><img src="images/reset.gif" alt="重置"></a>
+        <a href="###" onclick="javascript: window.location='register.php'"><img src="images/register.gif" alt="注册"></a>
+        <a href="###" onclick="javascript: window.location='index.php'"><img src="images/guest.gif" alt="游客参观"></a>
+    </tr>
+  </table>
+</form>
+<hr>
+</body>
+</html>

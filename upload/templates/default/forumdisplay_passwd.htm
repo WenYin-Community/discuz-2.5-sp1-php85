@@ -1,0 +1,26 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> $navigation</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="forumdisplay.php?fid=$fid&action=pwverify">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="50%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang forum_password_require}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" align="center">{lang password}:</td>
+<td bgcolor="{ALTBG2}" align="center"><input type="password" name="pw" size="25"> <br></td>
+</tr>
+
+</table>
+</td></tr></table><br>
+<center><input type="submit" name="loginsubmit" value="{lang submit}"></center>
+</form>
+{template footer}

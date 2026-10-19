@@ -1,0 +1,53 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> $navigation &raquo; {lang admin_highlight}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="topicadmin.php?action=highlight">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang admin_highlight}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang username}:</td>
+<td bgcolor="{ALTBG2}">$discuz_userss  <span class="smalltxt">[<a href="logging.php?action=logout">{lang member_logout}</a>]</span></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang admin_highlight_style}:</td>
+<td bgcolor="{ALTBG2}">
+<input type="checkbox" name="highlight_style[1]" value="1" $stylecheck[1]> <b>{lang admin_highlight_bold}</b>&nbsp;
+<input type="checkbox" name="highlight_style[2]" value="1" $stylecheck[2]> <i>{lang admin_highlight_italic}</i>&nbsp;
+<input type="checkbox" name="highlight_style[3]" value="1" $stylecheck[3]> <u>{lang admin_highlight_underline}</u>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang admin_highlight_color}:</td>
+<td bgcolor="{ALTBG2}">
+
+<table border="0" cellspacing="0" cellpadding="0"><tr>
+<td><input type="radio" name="highlight_color" value="0" $colorcheck[0]></td><td>{lang default}</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="1" $colorcheck[1]></td><td width="20" bgcolor="red">&nbsp;</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="2" $colorcheck[2]></td><td width="20" bgcolor="orange">&nbsp;</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="3" $colorcheck[3]></td><td width="20" bgcolor="yellow">&nbsp;</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="4" $colorcheck[4]></td><td width="20" bgcolor="green">&nbsp;</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="5" $colorcheck[5]></td><td width="20" bgcolor="cyan">&nbsp;</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="6" $colorcheck[6]></td><td width="20" bgcolor="blue">&nbsp;</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="7" $colorcheck[7]></td><td width="20" bgcolor="purple">&nbsp;</td>
+<td> &nbsp; <input type="radio" name="highlight_color" value="8" $colorcheck[8]></td><td width="20" bgcolor="gray">&nbsp;</td>
+</tr></table>
+
+</td></tr></table>
+</td></tr></table><br>
+<input type="hidden" name="fid" value="$fid">
+<input type="hidden" name="tid" value="$tid">
+<center><input type="submit" name="highlightsubmit" value="{lang admin_highlight}"></center>
+</form>
+{template footer}

@@ -1,0 +1,37 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang getpassword}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="member.php?action=getpasswd&uid=$uid&id=$id">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang getpassword}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang username}:</td>
+<td bgcolor="{ALTBG2}">$member[username]</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang new_password}:</td>
+<td bgcolor="{ALTBG2}"><input type="password" name="newpasswd1" size="25"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang new_password_confirm}:</td>
+<td bgcolor="{ALTBG2}"><input type="password" name="newpasswd2" size="25"><br>
+</tr>
+
+</table>
+</td></tr></table><br>
+<center><input type="submit" name="getpwsubmit" value="{lang submit}"></center>
+</form>
+</table></td></tr></table>
+{template footer}

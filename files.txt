@@ -1,0 +1,54 @@
+/********************************************************************************/
+/* Crossday Discuz! Board							*/
+/* ========================      						*/
+/* 欢迎使用 Discuz! 论坛,在您开始使用之前,请务必完整阅读本软件附带的全部说明档	*/
+/********************************************************************************/
+/* Welcome to http://www.crossday.com & http://www.Discuz.net			*/
+/********************************************************************************/
+
+    === 压缩包文件说明 ===
+
+   Discuz!以 ZIP 格式压缩,请使用 WINZIP 或 WINRAR 等工具解压.上传 ./Discuz! 目录即可.
+
+    ./Discuz!/
+        |- *.php, 等		程序及相关文件
+        |- config.php		论坛基本配置,安装前请修改本文件
+        |- ./forumdata		空目录,请设置属性 777,用于存放备份及记录数据
+        |- ./forumdata/templates空目录,请设置属性 777,用于存放动态模板文件
+        |- ./forumdata/cache	空目录,请设置属性 777,用于存放系统缓存
+        |- ./forumdata/accesslogs 空目录,请设置属性 777,用于存放被访记录
+        |- ./attachments	空目录,请设置属性 777,用于存放附件
+        |- ./customavatars	空目录,请设置属性 777,用于存放上传头像
+        |- ./templates		模板文件
+        |- ./images		论坛图像文件
+        |- ./include		程序所需库文件
+        |- ./admin		后台程序
+        +- ./plugins		插件存放目录
+
+    ./tools/
+        |- upgrade(x).php	论坛升级程序
+        |- *.php		论坛附带工具
+        +- *.txt		附带工具说明文档
+
+    ./
+        |- license.txt		Discuz! 最终用户授权协议(必读)
+        |- readme.txt		程序安装使用简要说明(必读)
+        |- faq.txt		论坛使用常见问题(必读)
+        |- tech.txt		Discuz! 新技术介绍
+        |- changelog.txt	版本改进记录
+        |- upgrade.txt		版本升级说明
+        |- template.txt		界面定制说明
+        |- language.txt		多语言开发与应用指南
+        |- customfaq.txt	自定义帮助说明
+        |- plugin.txt		插件开发指南
+        |- credits.txt		开发者及致谢
+        |- aboutme.txt		作者简介
+        +- files.txt		压缩包文件说明(本文件)
+
+
+
+
+
+					Crossday Studio, 2004-12-25 14:40
+					http://www.Discuz.net
+					http://www.crossday.com

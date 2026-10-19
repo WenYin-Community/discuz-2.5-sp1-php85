@@ -1,0 +1,157 @@
+{template header}
+{template memcp_navbar}
+<table border="0" cellspacing="0" cellpadding="0" width="{TABLEWIDTH}" align="center">
+<tr><td valign="top" align="left" width="20%">
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header"><td >$discuz_userss:</td></tr>
+<tr><td bgcolor="{ALTBG2}" valign="top">{lang avatar}:<br>$avatar</td></tr>
+<tr><td bgcolor="{ALTBG2}" >{lang credit_title}:  $credit {lang credit_unit}</td></tr>
+<tr><td bgcolor="{ALTBG2}" valign="top">{lang status}: $grouptitle<!--{if $groupid == 8}-->&nbsp; [ <a href="member.php?action=emailverify">{lang memcp_email_reverify}</a> ]<!--{/if}--></td></tr>
+<tr><td bgcolor="{ALTBG1}" >{lang attachment}: $total_attach</td></tr>
+
+</table></td></tr></table>
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<form method="post" action="memcp.php?action=buddylist">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr>
+<td class="header">{lang memcp_buddylist}</td>
+</tr>
+<tr><td bgcolor="{ALTBG1}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="98%">
+<tr>
+<td bgcolor="{ALTBG2}" align="center" colspan="3" class="smalltxt"><span class="bold">{lang online}</span></td>
+</tr>
+
+<!--{loop $buddyonline $buddy}-->
+	<tr bgcolor="{ALTBG1}" onMouseOver="this.style.backgroundColor='{ALTBG2}'" onMouseOut="this.style.backgroundColor='{ALTBG1}'">
+	<td width="15" align="center"><a href="pm.php?action=send&uid=$buddy[uid]" target="_blank"><img src="{IMGDIR}/buddy_sendpm.gif" border="0" alt="{lang pm_send}"></a></td>
+	<td align="center"><a href="viewpro.php?uid=$buddy[uid]" target="_blank">$buddy[username]</a></td>
+	<td width="15" align="center"><a href="memcp.php?action=buddylist&delete=$buddy[uid]"><img src="{IMGDIR}/buddy_delete.gif" border="0" alt="{lang memcp_buddylist_remove}"></a></td></tr>
+<!--{/loop}-->
+
+<tr>
+<td bgcolor="{ALTBG2}" align="center" colspan="3" class="smalltxt"><span class="bold">{lang offline}</span></td>
+</tr>
+
+<!--{loop $buddyoffline $buddy}-->
+	<tr bgcolor="{ALTBG1}" onMouseOver="this.style.backgroundColor='{ALTBG2}'" onMouseOut="this.style.backgroundColor='{ALTBG1}'">
+	<td width="15" align="center"><a href="pm.php?action=send&uid=$buddy[uid]" target="_blank"><img src="{IMGDIR}/buddy_sendpm.gif" border="0" alt="{lang pm_send}"></a></td>
+	<td align="center"><a href="viewpro.php?uid=$buddy[uid]" target="_blank">$buddy[username]</a></td>
+	<td width="15" align="center"><a href="memcp.php?action=buddylist&delete=$buddy[uid]"><img src="{IMGDIR}/buddy_delete.gif" border="0" alt="{lang memcp_buddylist_remove}"></a></td></tr>
+<!--{/loop}-->
+
+</table>
+<tr>
+<td bgcolor="{ALTBG2}" align="center">
+<input type="text" name="buddy" size="10"> <input type="submit" name="buddysubmit" value="{lang memcp_buddylist_add}">
+</td>
+</tr>
+
+</table></table></form>
+
+</td><td width="20">&nbsp;&nbsp;</td>
+<td valign="top" align="left" width="80%">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="3">{lang memcp_last_5_pm}</td>
+</tr>
+<tr class="category">
+<td width="55%" align="center">{lang subject}</td>
+<td width="20%" align="center">{lang from}</td>
+<td width="25%" align="center">{lang time}</td>
+</tr>
+
+<!--{if $msgexists}-->
+	<!--{loop $msglist $message}-->
+		<tr>
+		<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'">
+		<a href="pm.php?action=view&pmid=$message[pmid]" target="_blank">$message[subject]</a></td>
+		<td bgcolor="{ALTBG1}" align="center">$message[msgfrom]</td>
+		<td bgcolor="{ALTBG2}" align="center" class="smalltxt">$message[dateline]</td>
+		</tr>
+	<!--{/loop}-->
+<!--{else}-->
+	<tr><td bgcolor="{ALTBG1}" colspan="4">{lang memcp_nopm}
+	</td></tr>
+<!--{/if}-->
+
+</table>
+</td></tr></table>
+<br>
+<table cellspacing="0" cellpadding="0" border="0" width="100%"
+align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="5">{lang memcp_last_5_subs}</td>
+</tr>
+<tr class="category">
+<td width="52%" align="center">{lang subject}</td>
+<td width="18%" align="center">{lang forum}</td>
+<td width="8%" align="center">{lang replies}</td>
+<td width="22%" align="center">{lang lastpost}</td>
+</tr>
+
+<!--{if $subsexists}-->
+	<!--{loop $subslist $subs}-->
+		<tr>
+		<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'"><a href="viewthread.php?tid=$subs[tid]">$subs[subject]</a></td>
+		<td bgcolor="{ALTBG1}" align="center"><a href="forumdisplay.php?fid=$subs[fid]">$subs[name]</a></td>
+		<td bgcolor="{ALTBG2}" align="center">$subs[replies]</td>
+		<td bgcolor="{ALTBG1}" align="center">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr align="right">
+		<td class="smalltxt" nowrap>$subs[lastpost]<br>
+		by <!--{if $subs['lastposter']}--><a href="viewpro.php?username=$subs[lastposterenc]">$subs[lastposter]</a><!--{else}-->{lang guest}<!--{/if}-->
+		</td><td nowrap>&nbsp;<a href="redirect.php?tid=$subs[tid]&goto=lastpost$highlight"><img src="{IMGDIR}/lastpost.gif" border="0"></a>
+		</td></tr></table></td>
+		</tr>
+	<!--{/loop}-->
+<!--{else}-->
+	<tr><td bgcolor="{ALTBG1}" colspan="6">{lang memcp_nosubs}</td></tr>
+<!--{/if}-->
+</table>
+</td></tr></table><br>
+<table cellspacing="0" cellpadding="0" border="0" width="100%"
+align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="5">{lang attach_last_5}</td>
+</tr>
+<tr class="category">
+<td width="30%" align="center">{lang subject}</td>
+<td  align="center">{lang filesize}</td>
+<td  align="center">{lang download}</td>
+<td  align="center">{lang threads}</td>
+<td  align="center">{lang dateline}</td>
+</tr>
+<!--{if $attachexists}-->
+	<!--{loop $attlist $attach}-->
+		<tr>   
+		<td bgcolor="{ALTBG2}" ><a href="attachment.php?aid=$attach[aid]&checkid=$attach[checkid]" target="_blank">$attach[filename]</a></td>
+		<td bgcolor="{ALTBG1}" >$attach[filesize]</td>
+		<td bgcolor="{ALTBG2}" align="center">$attach[downloads]</td>
+		<td bgcolor="{ALTBG1}" ><a href="viewthread.php?tid=$attach[tid]">$attach[subject]</a>
+		</td>
+		<td bgcolor="{ALTBG1}" align="center">$attach[dateline]
+		</td>
+
+		</tr>
+	<!--{/loop}-->
+<!--{else}-->
+	<tr><td bgcolor="{ALTBG1}" colspan="5">{lang memcp_noattach}</td></tr>
+<!--{/if}-->
+
+</table>
+</td></tr></table><br><br>
+</td></tr>
+</table>
+{template footer}

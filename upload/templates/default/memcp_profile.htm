@@ -1,0 +1,259 @@
+{template header}
+{template memcp_navbar}
+<form name="reg" method="post" action="memcp.php?action=profile" $enctype>
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr>
+<td colspan="2" class="header">{lang memcp_profile} - {lang required_info}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang old_password}:</td>
+<td bgcolor="{ALTBG2}"><input type="password" name="oldpassword" size="25">&nbsp;{lang memcp_profile_old_passwd_comment}</td>
+</tr>
+<tr>
+<td bgcolor="{ALTBG1}"></td>
+<td bgcolor="{ALTBG2}"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang new_password}:</td>
+<td bgcolor="{ALTBG2}"><input type="password" name="newpassword" size="25"> {lang memcp_profile_passwd_comment}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang security_question}:</td>
+<td bgcolor="{ALTBG2}"><select name="questionidnew">
+<!--{if $discuz_secques}--><option value="-1">{lang memcp_profile_security_keep}</option><!--{/if}-->
+<option value="0">{lang security_question_0}</option>
+<option value="1">{lang security_question_1}</option>
+<option value="2">{lang security_question_2}</option>
+<option value="3">{lang security_question_3}</option>
+<option value="4">{lang security_question_4}</option>
+<option value="5">{lang security_question_5}</option>
+<option value="6">{lang security_question_6}</option>
+<option value="7">{lang security_question_7}</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang security_answer}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="answernew" size="25"> {lang memcp_profile_security_comment}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang email}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="emailnew" size="25" value="$member[email]">  
+<!--{if $regverify == 1 && $adminid == 0 && $groupid > 7}--><br> <b>{lang memcp_profile_email_comment}</b><!--{/if}-->
+</td></tr>
+
+<tr>
+<td colspan="2" class="header">{lang memcp_profile} - {lang optional_info}</td>
+</tr>
+
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang gender}:</td>
+<td bgcolor="{ALTBG2}">
+<input type="radio" name="gendernew" value="1" $checkmale> {lang male} &nbsp; 
+<input type="radio" name="gendernew" value="2" $checkfemale> {lang female} &nbsp; 
+<input type="radio" name="gendernew" value="0" $checkunknown> {lang secret}
+</td></tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang birthday}:</td>
+<td bgcolor="{ALTBG2}">
+<input type="text" name="year" size="4" value="$bday[0]"> {lang year} 
+<select name="month">
+<option value="" $month[0]>&nbsp;</option>
+<option value="1" $month[1]>1</option>
+<option value="2" $month[2]>2</option>
+<option value="3" $month[3]>3</option>
+<option value="4" $month[4]>4</option>
+<option value="5" $month[5]>5</option>
+<option value="6" $month[6]>6</option>
+<option value="7" $month[7]>7</option>
+<option value="8" $month[8]>8</option>
+<option value="9" $month[9]>9</option>
+<option value="10" $month[10]>10</option>
+<option value="11" $month[11]>11</option>
+<option value="12" $month[12]>12</option>
+</select> {lang month} 
+<select name="day">
+<option value="">&nbsp;</option>
+$dayselect
+</select> {lang day}
+</td></tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang location}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="locationnew" size="25" value="$member[location]"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang homepage}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="sitenew" size="25" value="$member[site]"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">QQ:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="oicqnew" size="25" value="$member[oicq]"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">ICQ:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="icqnew" size="25" value="$member[icq]"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">Yahoo:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="yahoonew" size="25" value="$member[yahoo]"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">MSN:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="msnnew" size="25" value="$member[msn]"/></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" valign="top" width="21%">{lang bio}:</td>
+<td bgcolor="{ALTBG2}"><textarea rows="5" cols="30" name="bionew">$member[bio]</textarea></td>
+</tr>
+
+<tr>
+<td colspan="2" class="header">{lang memcp_profile} - {lang board_options}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang style}:</td>
+<td bgcolor="{ALTBG2}"><select name="styleidnew">
+<option value="">{lang use_default}</option>
+$styleselect</select></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang tpp}:</td>
+<td bgcolor="{ALTBG2}"><select name="tppnew">
+<option value="0" $tppchecked[0]>{lang use_default}</option>
+<option value="10" $tppchecked[10]>10</option>
+<option value="20" $tppchecked[20]>20</option>
+<option value="30" $tppchecked[30]>30</option>
+</select></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang ppp}:</td>
+<td bgcolor="{ALTBG2}"><select name="pppnew">
+<option value="0" $pppchecked[0]>{lang use_default}</option>
+<option value="5" $pppchecked[5]>5</option>
+<option value="10" $pppchecked[10]>10</option>
+<option value="15" $pppchecked[15]>15</option>
+</select></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang timeformat}:</td>
+<td bgcolor="{ALTBG2}"><input type="radio" value="24" name="timeformatnew" $check24>24 {lang hour}
+<input type="radio" value="12" name="timeformatnew" $check12>12 {lang hour}</td>
+</tr>
+
+<!--{if $allowcstatus}-->
+	<tr>
+	<td bgcolor="{ALTBG1}" width="21%">{lang custom_status}:</td>
+	<td bgcolor="{ALTBG2}">
+	<input type="text" name="cstatusnew" size="25" value="$member[customstatus]"></td>
+	</tr>
+<!--{/if}-->
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang dateformat}:<br><span class="smalltxt">(yyyy/mm/dd, mm/dd/yy {lang etc})</span></td>
+<td bgcolor="{ALTBG2}"><input type="text" name="dateformatnew" size="25" value="$member[dateformat]"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang timeoffset}:</td>
+<td bgcolor="{ALTBG2}">
+<select name="timeoffsetnew">
+<option value="-12" $toselect[-12]>(GMT -12:00) Eniwetok, Kwajalein</option>
+<option value="-11" $toselect[-11]>(GMT -11:00) Midway Island, Samoa</option>
+<option value="-10" $toselect[-10]>(GMT -10:00) Hawaii</option>
+<option value="-9" $toselect[-9]>(GMT -09:00) Alaska</option>
+<option value="-8" $toselect[-8]>(GMT -08:00) Pacific Time (US &amp; Canada), Tijuana</option>
+<option value="-7" $toselect[-7]>(GMT -07:00) Mountain Time (US &amp; Canada), Arizona</option>
+<option value="-6" $toselect[-6]>(GMT -06:00) Central Time (US &amp; Canada), Mexico City</option>
+<option value="-5" $toselect[-5]>(GMT -05:00) Eastern Time (US &amp; Canada), Bogota, Lima, Quito</option>
+<option value="-4" $toselect[-4]>(GMT -04:00) Atlantic Time (Canada), Caracas, La Paz</option>
+<option value="-3.5" $toselect[-3.5]>(GMT -03:30) Newfoundland</option>
+<option value="-3" $toselect[-3]>(GMT -03:00) Brassila, Buenos Aires, Georgetown, Falkland Is</option>
+<option value="-2" $toselect[-2]>(GMT -02:00) Mid-Atlantic, Ascension Is., St. Helena</option>
+<option value="-1" $toselect[-1]>(GMT -01:00) Azores, Cape Verde Islands</option>
+<option value="0"  $toselect[0]>(GMT) Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia</option>
+<option value="1" $toselect[1]>(GMT +01:00) Amsterdam, Berlin, Brussels, Madrid, Paris, Rome</option>
+<option value="2" $toselect[2]>(GMT +02:00) Cairo, Helsinki, Kaliningrad, South Africa</option>
+<option value="3" $toselect[3]>(GMT +03:00) Baghdad, Riyadh, Moscow, Nairobi</option>
+<option value="3.5" $toselect[3.5]>(GMT +03:30) Tehran</option>
+<option value="4" $toselect[4]>(GMT +04:00) Abu Dhabi, Baku, Muscat, Tbilisi</option>
+<option value="4.5" $toselect[4.5]>(GMT +04:30) Kabul</option>
+<option value="5" $toselect[5]>(GMT +05:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+<option value="5.5" $toselect[5.5]>(GMT +05:30) Bombay, Calcutta, Madras, New Delhi</option>
+<option value="5.75" $toselect[5.75]>(GMT +05:45) Katmandu</option>
+<option value="6" $toselect[6]>(GMT +06:00) Almaty, Colombo, Dhaka, Novosibirsk</option>
+<option value="6.5" $toselect[6.5]>(GMT +06:30) Rangoon</option>
+<option value="7" $toselect[7]>(GMT +07:00) Bangkok, Hanoi, Jakarta</option>
+<option value="8" $toselect[8]>(GMT +08:00) Beijing, Hong Kong, Perth, Singapore, Taipei</option>
+<option value="9" $toselect[9]>(GMT +09:00) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</option>
+<option value="9.5" $toselect[9.5]>(GMT +09:30) Adelaide, Darwin</option>
+<option value="10" $toselect[10]>(GMT +10:00) Canberra, Guam, Melbourne, Sydney, Vladivostok</option>
+<option value="11" $toselect[11]>(GMT +11:00) Magadan, New Caledonia, Solomon Islands</option>
+<option value="12" $toselect[12]>(GMT +12:00) Auckland, Wellington, Fiji, Marshall Island</option>
+</select></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" valign="top">{lang other_options}:</td>
+<td bgcolor="{ALTBG2}">
+<!--{if $allowinvisible}-->
+	<input type="checkbox" name="invisiblenew" value="1" $invisiblechecked> {lang online_invisible}<br>
+<!--{/if}-->
+<input type="checkbox" name="showemailnew" value="1" $emailchecked> {lang show_email_addr}<br>
+<input type="checkbox" name="newsletternew" value="1" $newschecked> {lang allow_newsletter}<br>
+</td></tr>
+
+<!--{if $allowavatar == 1}-->
+	<tr>
+	<td bgcolor="{ALTBG1}" valign="top">{lang avatar}:</td>
+	<td bgcolor="{ALTBG2}"><input type="button" value="{lang memcp_avatar_list}" onclick="window.location=('memcp.php?action=viewavatars&sid=$sid')"></td>
+	</tr>
+<!--{elseif $allowavatar == 2}-->
+	<tr>
+	<td bgcolor="{ALTBG1}" valign="top">{lang avatar}:</td>
+	<td bgcolor="{ALTBG2}"><input type="text" name="avatarnew" size="25" value="$member[avatar]"> <input type="button" value="{lang memcp_avatar_list}" onclick="window.location=('memcp.php?action=viewavatars&sid=$sid')">
+	<br>{lang width}: <input type="text" name="avatarwidthnew" size="1" value="*">($member[avatarwidth]) &nbsp; {lang height}: <input type="text" name="avatarheightnew" size="1" value="*">($member[avatarheight])</td>
+	</tr>
+<!--{elseif $allowavatar == 3}-->
+	<tr>
+	<td bgcolor="{ALTBG1}" valign="top">{lang avatar}:</td>
+	<td bgcolor="{ALTBG2}">
+	<input type="text" name="avatarnew" size="25" value="$member[avatar]"> <input type="button" value="{lang memcp_avatar_list}" onclick="window.location=('memcp.php?action=viewavatars&sid=$sid')">
+	<br><input type="file" name="customavatar" size="25">
+	<br>{lang width}: <input type="text" name="avatarwidthnew" size="1" value="*">($member[avatarwidth]) &nbsp; {lang height}: <input type="text" name="avatarheightnew" size="1" value="*">($member[avatarheight])</td>
+	</tr>
+<!--{/if}-->
+
+<tr>
+<td bgcolor="{ALTBG1}" valign="top">{lang signature}<!--{if $maxsigsize}--> ($maxsigsize {lang bytes_limited})<!--{/if}-->:<br><br>
+<span class="smalltxt">
+<a href="faq.php?page=misc#1" target="_blank">{lang post_discuzcode}</a> {lang is} $bbcodeis<br>
+{lang post_imgcode} {lang is} $imgcodeis
+</span></td>
+<td bgcolor="{ALTBG2}"><textarea rows="4" cols="30" name="signew">$member[signature]</textarea></td>
+</tr>
+
+</table>
+</td></tr></table><br>
+<center><input type="submit" name="editsubmit" value="{lang submit}"></center>
+</form>
+{template footer}

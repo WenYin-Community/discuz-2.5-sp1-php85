@@ -1,0 +1,116 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> $navigation 
+<!--{if $operation =='stick'}-->
+{lang moderate_stick}
+<!--{elseif $operation =='close'}-->
+{lang moderate_close}
+<!--{elseif $operation =='delete'}-->
+{lang moderate_delete}
+<!--{elseif $operation =='move'}-->
+{lang moderate_move}
+<!--{elseif $operation =='digest'}-->
+{lang moderate_digest}
+<!--{/if}-->
+</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" name="moderate" action="topicadmin.php?action=moderate&fid=$fid">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<input type="hidden" name="operation" value="$operation">
+<input type="hidden" name="page" value="$page">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang moderate_option}</td>
+</tr>
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang username}:</td>
+<td bgcolor="{ALTBG2}">$discuz_userss  <span class="smalltxt">[<a href="logging.php?action=logout">{lang member_logout}</a>]</span></td>
+</tr>
+<!--{if $operation =='stick'}-->
+<tr>
+	<td bgcolor="{ALTBG1}" width="21%">{lang level}:</td>
+	<td bgcolor="{ALTBG2}">
+	<input type="radio" name="level" value="0" checked> {lang admin_unstick} &nbsp; &nbsp; 
+	<input type="radio" name="level" value="1"> <img src="{IMGDIR}/star.gif"> &nbsp; &nbsp; 
+	<input type="radio" name="level" value="2"> <img src="{IMGDIR}/star.gif"><img src="{IMGDIR}/star.gif"> &nbsp; &nbsp; 
+	<input type="radio" name="level" value="3"> <img src="{IMGDIR}/star.gif"><img src="{IMGDIR}/star.gif"><img src="{IMGDIR}/star.gif"></td>
+</tr>
+
+<!--{elseif $operation =='move'}-->
+<tr>
+	<td bgcolor="{ALTBG1}">{lang admin_move_target}:</td>
+	<td bgcolor="{ALTBG2}"><select name="moveto">
+	$forumselect
+	</select></td>
+<tr>
+<td bgcolor="{ALTBG1}" valign="top">{lang admin_move_type}:</td>
+<td bgcolor="{ALTBG2}"><input type="radio" name="type" value="normal" checked> {lang admin_move}<br>
+</td>
+</tr>
+
+<!--{elseif $operation =='close'}-->
+<tr>
+	<td bgcolor="{ALTBG1}">{lang options}:</td>
+	<td bgcolor="{ALTBG2}">
+	<input type="radio" name="type" value="0" >{lang admin_open} &nbsp;<input type="radio" name="type" value="1" checked>{lang admin_close}</td>
+</tr>
+
+<!--{elseif $operation =='digest'}-->
+<tr>
+	<td bgcolor="{ALTBG1}" width="21%">{lang level}:</td>
+	<td bgcolor="{ALTBG2}">
+
+	<input type="radio" name="level" value="0" checked> {lang admin_digest_remove} &nbsp; &nbsp; 
+	<input type="radio" name="level" value="1" checked> <img src="{IMGDIR}/star.gif"> &nbsp; &nbsp; 
+	<input type="radio" name="level" value="2"> <img src="{IMGDIR}/star.gif"><img src="{IMGDIR}/star.gif"> &nbsp; &nbsp; 
+	<input type="radio" name="level" value="3"> <img src="{IMGDIR}/star.gif"><img src="{IMGDIR}/star.gif"><img src="{IMGDIR}/star.gif"></td>
+</tr>
+
+<!--{/if}-->
+
+
+</table>
+</td></tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" bgcolor="{BORDERCOLOR}"><tr><td>
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td width="4%">&nbsp;</td>
+<td width="47%" align="center">{lang subject}</td>
+<td width="14%" align="center" nowrap>{lang author}</td>
+<td width="6%" align="center" nowrap>{lang replies}</td>
+<td width="6%" align="center" nowrap>{lang views}</td>
+<td width="23%" align="center">{lang lastpost}</td>
+</tr>
+<!--{loop $threadlist $key $thread}-->
+		<tr>
+		<td bgcolor="{ALTBG1}" align="center"><input type="checkbox" name="moderate[]" value="$thread[tid]" checked> </td>
+		<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed; word-wrap: break-word"><tr><td>
+		<!--{if $thread['moved']}-->{lang thread_moved}:
+		<!--{elseif $thread['digest']}--><img src="{IMGDIR}/digest.gif" align="absmiddle"> {lang thread_digest}<b>{echo substr('III', - $thread['digest'])}</b>:&nbsp;
+		<!--{elseif $thread['displayorder']}--><img src="{IMGDIR}/pin.gif" align="absmiddle"> {lang thread_sticky}<b>{echo substr('III', - $thread['displayorder'])}</b>:&nbsp;
+		<!--{elseif $thread['poll']}--><img src="{IMGDIR}/pollsmall.gif" align="absmiddle"> {lang thread_poll}:&nbsp;
+		<!--{/if}-->$thread[attachment]<a href="viewthread.php?tid=$thread[tid]&fpage=$page">$thread[subject]</a>
+		<!--{if $thread['creditsrequire']}--> - [{lang credit_title} <span class="bold">$thread[creditsrequire]</span>{lang credit_unit}]<!--{/if}-->
+		</td></tr></table>
+		</td><td bgcolor="{ALTBG1}" align="center">
+		<!--{if $thread['authorid']}--><a href="viewpro.php?uid=$thread[authorid]">$thread[author]</a><!--{else}-->{lang guest}<!--{/if}-->
+		</td>
+		<td bgcolor="{ALTBG2}" align="center">$thread[replies]</td>
+		<td bgcolor="{ALTBG1}" align="center">$thread[views]</td>
+		<td bgcolor="{ALTBG2}"><span class="smalltxt">$thread[lastpost] &nbsp;by&nbsp;<!--{if $thread['lastposter']}--><a href="viewpro.php?username=$thread[lastposterenc]">$thread[lastposter]</a><!--{else}-->{lang guest}<!--{/if}-->
+		</td></tr>
+	<!--{/loop}-->
+</table></td></tr></table>
+<br><br>
+<center><input type="submit" name="moderatesubmit" value="{lang submit}"></center>
+</form>
+
+
+
+{template footer}

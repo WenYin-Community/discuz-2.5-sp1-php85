@@ -1,0 +1,301 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> $navigation</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<table width="{TABLEWIDTH}" cellspacing="0" cellpadding="{TABLESPACE}" align="center">
+<tr class="mediumtxt"><td class="smalltxt">({lang forum_modedby}: <span class="bold">
+<!--{if $moderatedby}-->$moderatedby<!--{else}-->{lang forum_opening}<!--{/if}-->
+</span>)</td><td align="right" class="smalltxt"><img src="{IMGDIR}/showdigest.gif" border="0" align="absmiddle"> 
+<!--{if $filter == 'digest'}-->
+	<a href="forumdisplay.php?fid=$fid">{lang forum_viewall}</a>
+<!--{else}-->
+	<a href="forumdisplay.php?fid=$fid&filter=digest">{lang forum_viewdigest}</a>
+<!--{/if}-->
+
+<!--{if $ismoderator && $allowdelpost && $threadcount && !$modshortcut}-->
+	&nbsp; &nbsp; <img src="{IMGDIR}/delthread.gif" border="0" align="absmiddle"> <a href="###" onclick="this.document.moderate.submit();">{lang forum_delthreads}</a>
+<!--{/if}-->
+</td></tr>
+<tr><td></td></tr>
+</table>
+
+<!--{if $whosonlinestatus}-->
+	<table border="0" cellspacing="0" cellpadding="0" width="{TABLEWIDTH}" bgcolor="{BORDERCOLOR}" align="center">
+	<tr><td>
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+	<tr class="header"><td width="80%">{lang forum_activeusers}</td>
+	<td align="center" nowrap><a href="javascript:this.location.reload();" style="color: {HEADERTEXT}; font-weight: normal">{lang refresh}</a></td>
+	<td align="center" nowrap><a href="forumdisplay.php?fid=$fid&page=$page&showoldetails=no" style="color: {HEADERTEXT}; font-weight: normal">{lang index_hideonlinedetails}</a></td>
+	</tr>
+
+	<tr><td bgcolor="{ALTBG2}" colspan="3" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'">
+	<table cellspacing="0" cellpadding="0" border="0" width="98%" align="center">
+
+	<tr><td nowrap>
+	<!--{loop $whosonline $key $online}-->
+		<!--{if $key % 7 == 0}--></td></tr><tr><td width="15%" nowrap><!--{else}--></td><td width="15%" nowrap><!--{/if}-->
+		<img src="images/common/$online[icon]" align="absmiddle">
+		<a href="viewpro.php?uid=$online[uid]" title="{lang time}: $online[lastactivity]{LF}
+		{lang action}: $online[action]{LF}
+		{lang forum}: $forumname">$online[username]</a>
+	<!--{/loop}-->
+	</td></tr></table></td></tr>
+	</table></td></tr></table>
+<br>
+<!--{/if}-->
+
+<!--{if !empty($newpmexists)}-->
+	{template pmprompt}
+<!--{/if}-->
+
+<!--{if $subexists}-->
+	{template forumdisplay_subforum}
+<!--{/if}-->
+
+<form method="post" name="moderate" action="topicadmin.php?action=moderate&fid=$fid&page=$page">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table width="{TABLEWIDTH}" cellspacing="0" cellpadding="0" align="center">
+<tr><td class="multi">$multipage</td>
+<td align="right">
+<!--{if $allowpost}--><a href="post.php?action=newthread&fid=$fid"><img src="{IMGDIR}/newtopic.gif" border="0"></a><!--{/if}-->
+<!--{if $allowpostpoll}--><a href="post.php?action=newthread&fid=$fid&poll=yes"><img src="{IMGDIR}/poll.gif" border="0"></a><!--{/if}-->
+</td></tr></table>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" bgcolor="{BORDERCOLOR}"><tr><td>
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+          <tr class="header"> 
+            <td colspan="3" align="center">{lang subject}</td>
+            <td width="14%" align="center" nowrap>{lang author}</td>
+            <td width="6%" align="center" nowrap>{lang replies}</td>
+            <td width="6%" align="center" nowrap>{lang views}</td>
+            <td width="19%" align="center">{lang lastpost}</td>
+          </tr>
+          <!--{if $separatepos}-->
+          <tr class="category"> 
+            <td colspan="7"><span class="bold">{lang forum_important_threads}</span></td>
+          </tr>
+          <!--{/if}-->
+          <!--{if $page == 1 && count($announcement_list)}-->
+			<!--{loop $announcement_list $key $announcement}-->
+
+          <tr> 
+            <!--{if !$announcement[posturl]}-->
+            <td width="4%" align="center" bgcolor="{ALTBG2}"><a href="announcement.php?id=$announcement[id]#$announcement[id]" target="_blank"><img src="{IMGDIR}/announcement.gif" border="0"></a></td>
+            <td bgcolor="{ALTBG2}" colspan="2" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'"><B>{lang 
+              announcement}$announcement[id] :</B> <a href="announcement.php?id=$announcement[id]#$announcement[id]">$announcement[subject]</a></td>
+            <!--{else}-->
+            <td bgcolor="{ALTBG2}" align="center"><a href="$announcement[posturl]" target="_blank"><img src="{IMGDIR}/announcement.gif" border="0"></a></td>
+            <td bgcolor="{ALTBG2}" colspan="2" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'"><B>{lang 
+              announcement}$announcement[id] :</B> <a href="$announcement[posturl]"target="_blank">$announcement[subject]</a></td>
+            <!--{/if}-->
+            <td bgcolor="{ALTBG1}" align="center"><a href="viewpro.php?username=$announcement[authorencode]">$announcement[author]</a></td>
+            <td bgcolor="{ALTBG2}" align="center">-</td>
+            <td bgcolor="{ALTBG1}" align="center">-</td>
+            <td bgcolor="{ALTBG2}" align="center" class="smalltxt">$announcement[starttime]<br>
+              $announcement[message]</td>
+          </tr>
+			<!--{/loop}-->   
+		  <!--{/if}-->
+
+          <!--{if $threadcount}-->
+          <!--{loop $threadlist $key $thread}-->
+          <!--{if $separatepos == $key && $key != 0}-->
+          <tr class="category"> 
+            <td colspan="7"><span class="bold">{lang forum_normal_threads}</span></td>
+          </tr>
+          <!--{/if}-->
+          <tr> 
+            <td bgcolor="{ALTBG2}" align="center"><a href="viewthread.php?tid=$thread[tid]" target="_blank"><img src="{IMGDIR}/$thread[folder]" border="0"></a></td>
+            <td width="4%" align="center" bgcolor="{ALTBG1}">$thread[icon]</td>
+            <td width="47%" bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'"> 
+              <table cellpadding="0" cellspacing="0" border="0" width="100%" style="table-layout: fixed; word-wrap: break-word">
+                <tr> 
+                  <td> 
+                    <!--{if $ismoderator }-->
+                    <input type="checkbox" name="moderate[]" value="$thread[tid]"> 
+                    <!--{/if}-->
+                    <!--{if $thread['new']}-->
+                    <a href="redirect.php?tid=$thread[tid]&goto=newpost$highlight#newpost"><img src="{IMGDIR}/firstnew.gif" border="0" align="absmiddle"></a> 
+                    <!--{/if}-->
+                    <!--{if $thread['moved']}-->
+                    <!--{if $ismoderator}-->
+                    <a href="topicadmin.php?action=delete&tid=$thread[moved]">{lang 
+                    thread_moved}:</a> 
+                    <!--{else}-->
+                    {lang thread_moved}: 
+                    <!--{/if}-->
+                    <!--{elseif $thread['digest']}-->
+                    <img src="{IMGDIR}/digest.gif" align="absmiddle"> {lang thread_digest}<b>{echo 
+                    substr('III', - $thread['digest'])}</b>:&nbsp; 
+                    <!--{elseif $thread['displayorder']}-->
+                    <img src="{IMGDIR}/pin.gif" align="absmiddle"> {lang thread_sticky}<b>{echo 
+                    substr('III', - $thread['displayorder'])}</b>:&nbsp; 
+                    <!--{elseif $thread['poll']}-->
+                    <img src="{IMGDIR}/pollsmall.gif" align="absmiddle"> {lang 
+                    thread_poll}:&nbsp; 
+                    <!--{/if}-->
+                    $thread[attachment]<a href="viewthread.php?tid=$thread[tid]&fpage=$page" $thread[highlight]>$thread[subject]</a> 
+                    <!--{if $thread['creditsrequire']}-->
+                    - [{lang credit_title} <span class="bold">$thread[creditsrequire]</span>{lang 
+                    credit_unit}] 
+                    <!--{/if}-->
+                    $thread[multipage] </td>
+                </tr>
+              </table></td>
+            <td bgcolor="{ALTBG1}" align="center"> 
+              <!--{if $thread['authorid']}-->
+              <a href="viewpro.php?uid=$thread[authorid]">$thread[author]</a> 
+              <!--{else}-->
+              {lang guest} 
+              <!--{/if}-->
+              <br> <span class="smalltxt">$thread[dateline]</span></td>
+            <td bgcolor="{ALTBG2}" align="center">$thread[replies]</td>
+            <td bgcolor="{ALTBG1}" align="center">$thread[views]</td>
+            <td bgcolor="{ALTBG2}"> <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr align="right"> 
+                  <td nowrap><font class="smalltxt">$thread[lastpost]<br>
+                    by 
+                    <!--{if $thread['lastposter']}-->
+                    <a href="viewpro.php?username=$thread[lastposterenc]">$thread[lastposter]</a> 
+                    <!--{else}-->
+                    {lang guest} 
+                    <!--{/if}-->
+                    </font></td>
+                  <td nowrap>&nbsp;<a href="redirect.php?tid=$thread[tid]&goto=lastpost&fpage=$page$highlight#lastpost"><img src="{IMGDIR}/lastpost.gif" border="0"></a> 
+                  </td>
+                </tr>
+              </table></td>
+          </tr>
+          <!--{/loop}-->
+          <!--{if $ismoderator && $modshortcut}-->
+          <tr> 
+            <td colspan="7" bgcolor="{ALTBG1}" align="center"> <span class="bold"> 
+              {lang moderate_option} </span> &nbsp; <input type="checkbox" name="chkall" onclick="checkall(this.form, 'moderate')">
+              {lang checkall} 
+              <!--{if $allowdelpost}-->
+              <input type="radio" name="operation" value="delete">
+              {lang moderate_delete} 
+              <!--{/if}-->
+              <!--{if $allowmove}-->
+              <input type="radio" name="operation" value="move">
+              {lang moderate_move} 
+              <!--{/if}-->
+              <!--{if $allowclose}-->
+              <input type="radio" name="operation" value="close">
+              {lang moderate_close} 
+              <!--{/if}-->
+              <!--{if $allowtop}-->
+              <input type="radio" name="operation" value="stick">
+              {lang moderate_stick} 
+              <!--{/if}-->
+              <!--{if $allowdigest}-->
+              <input type="radio" name="operation" value="digest">
+              {lang moderate_digest} 
+              <!--{/if}-->
+              &nbsp;<a href="###" onclick="document.moderate.submit()" class="bold"> 
+              {lang moderate_submit} </a> </td>
+          </tr>
+          <!--{elseif $ismoderator && !$modshortcut && allowdelpost}-->
+          <input type="hidden" name="operation" value='delete'>
+          <!--{/if}-->
+          <!--{else}-->
+          <tr> 
+            <td colspan="7" bgcolor="{ALTBG1}">{lang forum_nothreads}</td>
+          </tr>
+          <!--{/if}-->
+        </table></td></tr></table>
+
+<table width="{TABLEWIDTH}" cellspacing="0" cellpadding="0" align="center">
+<tr><td class="multi" valign="top">$multipage</td><td align="right"><br>
+<!--{if $allowpost}--><a href="post.php?action=newthread&fid=$fid"><img src="{IMGDIR}/newtopic.gif" border="0"></a><!--{/if}-->
+<!--{if $allowpostpoll}--><a href="post.php?action=newthread&fid=$fid&poll=yes"><img src="{IMGDIR}/poll.gif" border="0"></a><!--{/if}-->
+</td></tr></table></form>
+
+<!--{if $fastpost && $allowpost}-->
+	<script language="JavaScript">
+	var postminchars = $minpostsize;
+	var postmaxchars = $maxpostsize;
+	var disablepostctrl = $disablepostctrl;
+	function validate(theform) {
+	        if (theform.subject.value == "" || theform.message.value == "") {
+                	alert("{lang post_subject_or_message_isnull}");
+                	return false;
+                }
+		if (!disablepostctrl && ((postminchars != 0 && theform.message.value.length < postminchars) || (postmaxchars != 0 && theform.message.value.length > postmaxchars))) {
+			alert("{lang post_message_length_invalid}\n\n{lang post_currlength}: "+theform.message.value.length+" {lang bytes}\n{lang board_allowed}: "+postminchars+" {lang to} "+postmaxchars+" {lang bytes}");
+			return false;
+		}			
+		theform.topicsubmit.disabled = true;
+		return true;
+	}
+	</script>
+	<form method="post" name="input" action="post.php?action=newthread&fid=$fid&topicsubmit=yes" onSubmit="return validate(this)">
+	<input type="hidden" name="formhash" value="{FORMHASH}">
+	<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" bgcolor="{BORDERCOLOR}"><tr><td>
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+	<tr><td colspan="2" class="header">{lang post_fastpost}</td></tr>
+	<tr>
+	<td width="18%" bgcolor="{ALTBG1}">{lang subject}:</td>
+	<td width="82%" bgcolor="{ALTBG2}"><input type="text" name="subject" size="90" value="" tabindex="1"></td>
+	</tr>
+	<tr>
+	<td width="18%" bgcolor="{ALTBG1}" valign="top">{lang options}:<br><span class="smalltxt">
+	<input type="checkbox" name="parseurloff" value="1">&nbsp;{lang disable}&nbsp;{lang post_parseurl}<br>
+	<input type="checkbox" name="smileyoff" value="1" $smileyoffcheck>&nbsp;{lang disable} <a href="faq.php?page=messages#6" target="_blank">{lang post_smilies}</a><br>
+	<input type="checkbox" name="bbcodeoff" value="1" $codeoffcheck>&nbsp;{lang disable} <a href="faq.php?page=misc#1" target="_blank">{lang post_discuzcode}</a><br>
+	<input type="checkbox" name="usesig" value="1" $usesigcheck>&nbsp;{lang post_show_sig}<br>
+	<input type="checkbox" name="emailnotify" value="1">&nbsp;{lang post_email_notify}</span>
+	</td>
+	<td width="82%" bgcolor="{ALTBG2}" valign="middle" class="smalltxt"><textarea rows="7" cols="90" name="message" onKeyDown="javascript: ctlent();" tabindex="2"></textarea><br>
+	<input type="submit" name="topicsubmit" value="{lang post_topicsubmit}" tabindex="3">&nbsp; &nbsp;
+	<input type="submit" name="previewpost" value="{lang post_previewpost}" tabindex="4">&nbsp; &nbsp;
+	<input type="reset" name="topicsreset" value="{lang post_topicreset}" tabindex="5">&nbsp; &nbsp;{lang post_submit_hotkey}</td>
+	</tr></table></td></tr></table></form>
+<!--{/if}-->
+
+<br>
+<form method="post" action="forumdisplay.php?fid=$fid">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table width="{TABLEWIDTH}" cellspacing="0" cellpadding="0" align="center">
+<tr class="mediumtxt"><td align="left" class="smalltxt">
+<!--{if $forumjump}-->
+	<span class="bold">{lang forum_jump}: </span>
+	<select onchange="if(this.options[this.selectedIndex].value != '') {
+	window.location=('forumdisplay.php?fid='+this.options[this.selectedIndex].value+'&sid=$sid') }">
+	$forumselect
+	</select>
+<!--{/if}-->
+
+&nbsp;</td><td align="right" class="smalltxt">
+{lang show} <select name="filter">
+<option value="digest" $check[digest]>{lang threads_digest}</option>
+<option value="0" $check[0]>{lang threads_all}</option>
+<option value="86400" $check[86400]>{lang last_1_days}</option>
+<option value="172800" $check[172800]>{lang last_2_days}</option>
+<option value="604800" $check[604800]>{lang last_7_days}</option>
+<option value="2592000" $check[2592000]>{lang last_30_days}</option>
+<option value="7948800" $check[7948800]>{lang last_90_days}</option>
+<option value="15897600" $check[15897600]>{lang last_180_days}</option>
+<option value="31536000" $check[31536000]>{lang last_356_days}</option>
+</select>&nbsp;&nbsp;<select name="ascdesc">
+<option value="ASC" $check[asc]>{lang order_asc}</option>
+<option value="DESC" $check[desc]>{lang order_desc}</option>
+</select>&nbsp;
+<input type="submit" value="{lang submit}">
+</td></tr></table></form>
+
+<br><table cellspacing="0" cellpadding="0" width="365" align="center">
+<td align="center" bgcolor="{BORDERCOLOR}" width="30%">
+<table border="0" cellspacing="{BORDERWIDTH}" width="100%">
+<tr><td bgcolor="{ALTBG2}" align="center" class="smalltxt" nowrap>
+{lang forum_post_credits} {lang credit_title} $postcredits {lang credit_unit} - {lang forum_reply_credits} {lang credit_title} $replycredits {lang credit_unit}
+</td></tr></table></td></tr></table><br>
+
+<br>
+<table cellspacing="0" cellpadding="0" border="0" width="365" align="center" class="smalltxt">
+<tr><td><img src="{IMGDIR}/red_folder.gif" alt="{lang thread_newposts}" align="absmiddle">&nbsp; {lang thread_newposts}</td><td class="smalltxt">(&nbsp;<img src="{IMGDIR}/hot_red_folder.gif" alt="{lang thread_more_replies}" align="absmiddle">&nbsp; {lang thread_more_replies} )</td><td class="smalltxt"><img src="{IMGDIR}/lock_folder.gif" alt="{lang thread_closed}" align="absmiddle">&nbsp; {lang thread_closed}</td></tr>
+<tr><td><img src="{IMGDIR}/folder.gif" alt="{lang thread_nonewpost}" align="absmiddle">&nbsp; {lang thread_nonewpost}</td><td class="smalltxt">(&nbsp;<img src="{IMGDIR}/hot_folder.gif" alt="{lang thread_more_replies}" align="absmiddle">&nbsp; {lang thread_more_replies} )</td><td class="smalltxt">&nbsp;</td></tr>
+</table><br>
+{template footer}

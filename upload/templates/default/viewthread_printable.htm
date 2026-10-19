@@ -1,0 +1,55 @@
+<html>
+<head>
+<title>$bbname - Powered by Discuz! Board</title>
+<meta http-equiv="Content-Type" content="text/html; charset={CHARSET}">
+<style type="text/css">
+body,table {font-size: {FONTSIZE}; font-family: {FONT} }
+</style>
+</head>
+
+<body leftmargin="80">
+<script language="JavaScript">
+function print(){
+        if (document.layers) {
+                window.print() ;  
+        } else {
+                var WebBrowser = '<OBJECT ID="WebBrowser1" WIDTH=0 HEIGHT=0 CLASSID="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></OBJECT>';
+                document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
+                WebBrowser1.ExecWB(6, 2);
+                WebBrowser1.outerHTML = '';
+        }
+}
+</script>
+<img src="{IMGDIR}/{BOARDIMG}" alt="Board logo" border="0"><br><br>
+<b>{lang subject}: </b>$thread[subject] <a href="###" onclick="print();">[{lang thread_print}]</a></span><br>
+
+<!--{loop $postlist $post}-->
+	<hr noshade size="2" width="100%" color="#808080">
+	<b>{lang author}: </b>$post[author] &nbsp; &nbsp; <b>{lang time}: </b>$post[dateline]
+	<!--{if $post['subject']}--> &nbsp; &nbsp; <b>{lang subject}: </b>$post[subject]<br><!--{/if}-->
+	<br>$post[message]
+<!--{if $attachelist[$post[pid]]}-->
+	<!--{eval $attacount = 0; }-->
+	<blockquote><!--{loop $attachelist[$post[pid]] $vkey $attach}-->
+			{lang attachment} <!--{echo ++$attacount }--> : $attach[attachicon] <a href="attachment.php?aid=$attach[aid]&checkid=$attach[checkid]&download=1" target="_blank">$attach[filename]</a> ($attach['dateline'],&nbsp;$attach[attachsize]
+			<!--{if $attach[creditsrequire]}-->, {lang creditsrequire_attach}{lang credit_title} $attach[creditsrequire] {lang credit_unit}<!--{/if}-->
+			<!--{if $attach[downloads]}-->,{lang downloads}£º $attach[downloads]<!--{/if}--> )
+		<!--{if $attach['attachimg']}-->
+			<br><br><!--{if !$attachimgcheck}-->
+				<img src="$attachurl/$attach[attachment]" border="0" onload="if(this.width>screen.width*0.5) {this.resized=true; this.width=screen.width*0.6; this.alt='{lang click_open_newwindow}';}" onmouseover="if(this.resized) this.style.cursor='hand';" onclick="if(this.resized) window.open(this.src);">
+			<!--{else}-->
+				<a href="attachment.php?aid=$attach[aid]&checkid=$attach[checkid]" target="_blank"><img src="attachment.php?aid=$attach[aid]&checkid=$attach[checkid]" border="0" onload="if(this.width>screen.width*0.7) {this.resized=true; this.width=screen.width*0.6; this.alt='{lang click_open_newwindow}';}" onmouseover="if(this.resized) this.style.cursor='hand';"></a>
+			<!--{/if}-->
+		<!--{/if}-->
+	<br><!--{/loop}--></blockquote>
+<!--{/if}-->
+<!--{/loop}-->
+
+<br><br><br><br><hr noshade size="2" width="100%" color="{BORDERCOLOR}">
+<table cellspacing="0" cellpadding="0" border="0" width="95%" align="center">
+<tr><td>{lang welcometo} $bbname ($boardurl)</td>
+<td align="right">
+Powered by Discuz! $version</td></tr></table>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!--{if $bbinsert}-->
+	<script language="JavaScript">
+	var text_input = "Sample Text";
+	var help_mode = "{lang post_discuzcode} - {lang post_discuzcode_help_mode}\n\n{lang post_discuzcode_help_mode_comment}";
+	var adv_mode = "{lang post_discuzcode} - {lang post_discuzcode_adv_mode}\n\n{lang post_discuzcode_adv_mode_comment}";
+	var normal_mode = "{lang post_discuzcode} - {lang post_discuzcode_normal_mode}\n\n{lang post_discuzcode_normal_mode_comment}";
+	var email_help = "{lang post_discuzcode_email}\n\n{lang post_discuzcode_email_comment}";
+	var email_normal = "{lang post_discuzcode_email_normal}";
+	var email_normal_input = "{lang post_discuzcode_email_normal_input}";
+	var fontsize_help = "{lang post_discuzcode_fontsize}\n\n{lang post_discuzcode_fontsize_comment}";
+	var fontsize_normal = "{lang post_discuzcode_fontsize_normal}";
+	var font_help = "{lang post_discuzcode_font}\n\n{lang post_discuzcode_font_comment}";
+	var font_normal = "{lang post_discuzcode_font_normal}";
+	var bold_help = "{lang post_discuzcode_bold}\n\n{lang post_discuzcode_bold_comment}";
+	var bold_normal = "{lang post_discuzcode_bold_normal}";
+	var italicize_help = "{lang post_discuzcode_italicize}\n\n{lang post_discuzcode_italicize_comment}";
+	var italicize_normal = "{lang post_discuzcode_italicize_normal}";
+	var quote_help = "{lang post_discuzcode_quote}\n\n{lang post_discuzcode_quote_comment}";
+	var quote_normal = "{lang post_discuzcode_quote_normal}";
+	var color_help = "{lang post_discuzcode_color}\n\n{lang post_discuzcode_color_comment}";
+	var color_normal = "{lang post_discuzcode_color_normal}";
+	var center_help = "{lang post_discuzcode_center}\n\n{lang post_discuzcode_center_comment}";
+	var center_normal = "{lang post_discuzcode_center_normal}";
+	var link_help = "{lang post_discuzcode_hyperlink}\n\n{lang post_discuzcode_hyperlink_comment}";
+	var link_normal = "{lang post_discuzcode_hyperlink_normal}";
+	var link_normal_input = "{lang post_discuzcode_hyperlink_normal_input}";
+	var image_help = "{lang post_discuzcode_image}\n\n{lang post_discuzcode_image_comment}";
+	var image_normal = "{lang post_discuzcode_image_normal}";
+	var flash_help = "{lang post_discuzcode_flash}\n\n{lang post_discuzcode_flash_comment}";
+	var flash_normal = "{lang post_discuzcode_flash_normal}";
+	var code_help = "{lang post_discuzcode_code}\n\n{lang post_discuzcode_code_comment}";
+	var code_normal = "{lang post_discuzcode_code_normal}";
+	var list_help = "{lang post_discuzcode_list}\n\n{lang post_discuzcode_list_comment}";
+	var list_normal = "{lang post_discuzcode_list_normal}";
+	var list_normal_error = "{lang post_discuzcode_list_normal_error}";
+	var list_normal_input = "{lang post_discuzcode_list_normal_input}";
+	var underline_help = "{lang post_discuzcode_underline}\n\n{lang post_discuzcode_underline_comment}";
+	var underline_normal = "{lang post_discuzcode_underline_normal}";
+	</script>
+
+	<script language="JavaScript" src="include/bbcode.js"></script>
+	<tr>
+	<td bgcolor="{ALTBG1}">{lang post_discuzcode}<br><span class="smalltxt">
+	<input type="radio" name="mode" value="2" onclick="chmode('2')" checked> {lang post_discuzcode_normal_mode}<br>
+	<input type="radio" name="mode" value="0" onclick="chmode('0')"> {lang post_discuzcode_adv_mode}<br>
+	<input type="radio" name="mode" value="1" onclick="chmode('1')"> {lang post_discuzcode_help_mode}
+	</span></td><td bgcolor="{ALTBG2}">
+	<select name="font" onFocus="this.selectedIndex=0"  onChange="chfont(this.options[this.selectedIndex].value)" size="1">
+	<option value=""></option>
+{lang post_discuzcode_extra_font}
+	<option value="Arial">Arial</option>
+	<option value="Book Antiqua">Book Antiqua</option>
+	<option value="Century Gothic">Century Gothic</option>
+	<option value="Courier New">Courier New</option>
+	<option value="Georgia">Georgia</option>
+	<option value="Impact">Impact</option>
+	<option value="Tahoma">Tahoma</option>
+	<option value="Times New Roman">Times New Roman</option>
+	<option value="Verdana" selected>Verdana</option></select>
+	<select name="size" onFocus="this.selectedIndex=0"  onChange="chsize(this.options[this.selectedIndex].value)" size="1">
+	<option value=""></option>
+	<option value="-2">-2</option>
+	<option value="-1">-1</option>
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3" selected>3</option>
+	<option value="4">4</option>
+	<option value="5">5</option>
+	<option value="6">6</option></select>
+	<select name="color" onFocus="this.selectedIndex=0" onChange="chcolor(this.options[this.selectedIndex].value)" size="1">
+	<option value="" ></option>
+	<option value="White" style="color:white;">White</option>
+	<option value="Black" style="color:black;" selected>Black</option>
+	<option value="Red" style="color:red;">Red</option>
+	<option value="Yellow" style="color:yellow;">Yellow</option>
+	<option value="Pink" style="color:pink;">Pink</option>
+	<option value="Green" style="color:green;">Green</option>
+	<option value="Orange" style="color:orange;">Orange</option>
+	<option value="Purple" style="color:purple;">Purple</option>
+	<option value="Blue" style="color:blue;">Blue</option>
+	<option value="Beige" style="color:beige;">Beige</option>
+	<option value="Brown" style="color:brown;">Brown</option>
+	<option value="Teal" style="color:teal;">Teal</option>
+	<option value="Navy" style="color:navy;">Navy</option>
+	<option value="Maroon" style="color:maroon;">Maroon</option>
+	<option value="LimeGreen" style="color:limegreen;">LimeGreen</option></select>
+	<br><br>
+	<a href="javascript:bold()"><img src="{IMGDIR}/bb_bold.gif" border="0" alt="{lang post_discuzcode_bold}"></a>
+	<a href="javascript:italicize()"><img src="{IMGDIR}/bb_italicize.gif" border="0" alt="{lang post_discuzcode_italicize}"></a>
+	<a href="javascript:underline()"><img src="{IMGDIR}/bb_underline.gif" border="0" alt="{lang post_discuzcode_underline}"></a>
+	<a href="javascript:center()"><img src="{IMGDIR}/bb_center.gif" border="0" alt="{lang post_discuzcode_center}"></a>
+	<a href="javascript:hyperlink()"><img src="{IMGDIR}/bb_url.gif" border="0" alt="{lang post_discuzcode_hyperlink}"></a>
+	<a href="javascript:email()"><img src="{IMGDIR}/bb_email.gif" border="0" alt="{lang post_discuzcode_email}"></a>
+	<a href="javascript:image()"><img src="{IMGDIR}/bb_image.gif" border="0" alt="{lang post_discuzcode_image}"></a>
+	<a href="javascript:flash()"><img src="{IMGDIR}/bb_flash.gif" border="0" alt="{lang post_discuzcode_flash}"></a>
+	<a href="javascript:code()"><img src="{IMGDIR}/bb_code.gif" border="0" alt="{lang post_discuzcode_code}"></a>
+	<a href="javascript:quote()"><img src="{IMGDIR}/bb_quote.gif" border="0" alt="{lang post_discuzcode_quote}"></a>
+	<a href="javascript:list()"><img src="{IMGDIR}/bb_list.gif" border="0" alt="{lang post_discuzcode_list}"></a>
+	</td></tr>
+<!--{/if}-->

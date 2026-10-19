@@ -1,0 +1,42 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> $navigation &raquo; {lang admin_move}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="topicadmin.php?action=move">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<input type="hidden" name="page" value="$page">
+<input type="hidden" name="fpage" value="$fpage">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang admin_move}</td>
+</tr>
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang username}:</td>
+<td bgcolor="{ALTBG2}">$discuz_userss  <span class="smalltxt">[<a href="logging.php?action=logout">{lang member_logout}</a>]</span></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang admin_move_target}:</td>
+<td bgcolor="{ALTBG2}"><select name="moveto">
+$forumselect
+</select></td>
+</tr>
+<tr>
+<td bgcolor="{ALTBG1}" valign="top">{lang admin_move_type}:</td>
+<td bgcolor="{ALTBG2}"><input type="radio" name="type" value="normal" checked> {lang admin_move}<br>
+<input type="radio" name="type" value="redirect"> {lang admin_move_redirect}<br>
+</td>
+</tr>
+
+</table>
+</td></tr></table><br>
+<input type="hidden" name="fid" value="$fid">
+<input type="hidden" name="tid" value="$tid">
+<center><input type="submit" name="movesubmit" value="{lang admin_move}"></center>
+</form>
+{template footer}

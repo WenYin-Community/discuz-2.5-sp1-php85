@@ -1,0 +1,71 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang stats}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr style="color: {HEADERTEXT}; font-weight: {BOLD}"><td>{lang stats}</td><td align="right">({lang stats_update_time} $stats_update_time )</td>
+</tr></table></td>
+</tr><tr bgcolor="{ALTBG1}"><td colspan ="2">
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}"><table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr bgcolor="{ALTBG2}"><td align="center" class="smalltxt">
+<a href="stats.php">[ {lang stats_main} ]</a>
+&nbsp; <a href="stats.php?type=week">[ {lang stats_week} ]</a> 
+&nbsp; <a href="stats.php?type=hour">[ {lang stats_hour} ]</a> 
+&nbsp; <a href="stats.php?type=agent">[ {lang stats_agent} ]</a> 
+&nbsp; <a href="stats.php?type=threads">[ {lang stats_threads} ]</a>
+&nbsp; <a href="stats.php?type=member">[ {lang stats_members} ]</a>
+</td></tr></table></td></tr></table><br>
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_main_member}:</span><br>
+{lang stats_main_members}: <span class="bold">$stats_cache_main['members']</span> &nbsp;|&nbsp; {lang stats_main_admins}: <span class="bold">$stats_cache_main['admins']</span> &nbsp;|&nbsp; {lang stats_main_new}: <span class="bold">$lastmember</span> &nbsp;|&nbsp; {lang stats_main_topposter} <span class="bold">$stats_cache_main['bestmem']</span> - {lang stats_main_total_posted} <span class="bold">$stats_cache_main['bestmempost']</span> <br>
+{lang stats_main_posters}: <span class="bold">$stats_cache_main['mempost']</span> &nbsp;|&nbsp; {lang stats_main_nonposters}: <span class="bold">$stats_cache_main['memnonpost']</span> &nbsp;|&nbsp; {lang stats_main_posters_percent} <span class="bold">$stats_cache_main['mempostpercent']%</span> &nbsp;|&nbsp; {lang stats_main_posts_avg}: <span class="bold">$stats_cache_main['mempostavg']</span> 
+</td></tr></table></td></tr></table>
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_main_board}:</span><br>
+{lang stats_main_forums_count}: <span class="bold">$stats_cache_main['forums']</span> &nbsp;|&nbsp; {lang stats_main_threads_count}: <span class="bold">$stats_cache_main['threads']</span> &nbsp;|&nbsp; {lang stats_main_posts_count}: <span class="bold">$stats_cache_main['posts']</span> &nbsp;|&nbsp; {lang stats_main_rpt}: <span class="bold">$stats_cache_main['threadreplyavg']</span> <br>
+{lang stats_main_nppd}: <span class="bold">$stats_cache_main['postsaddavg']</span> | {lang stats_main_members}: <span class="bold">$stats_cache_main['membersaddavg']</span> &nbsp;|&nbsp; {lang stats_main_todays_newposts}: <span class="bold">$stats_cache_main['postsaddtoday']</span> , {lang stats_main_members_count}: <span class="bold">$stats_cache_main['membersaddtoday']</span><br>
+{lang stats_main_hot_forum}: <span class="bold"><a href="forumdisplay.php?fid=$stats_cache_main['hotforum'][fid]">$stats_cache_main['hotforum']['name']</a></span> - {lang stats_main_threads_count} <span class="bold">$stats_cache_main['hotforum'][threads]</span>, {lang stats_main_posts_count} <span class="bold">$stats_cache_main['hotforum'][posts]</span> &nbsp;|&nbsp; Discuz! {lang stats_main_board_activity}: <span class="bold">$stats_cache_main['activeindex']</span><br>
+</td></tr></table></td></tr></table>
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_main_pageview}: </span>
+<br>
+<!--{if $statstatus}-->
+{lang stats_main_total_pageview}: <span class="bold">$stats_cache_main[stats_total][hits]</span> &nbsp;|&nbsp; {lang stats_main_total_visitors}: <span class="bold">$stats_cache_main[stats_total][visitors]</span> {lang stats_main_person_time} - {lang member}: <span class="bold">$stats_cache_main[stats_total][members]</span>, {lang guest}: <span class="bold">$stats_cache_main[stats_total][guests]</span> &nbsp;|&nbsp; {lang stats_main_pv_avg}: <span class="bold">$stats_cache_main[pageviewavg]</span><br>
+{lang stats_main_maxpv_month}, {lang stats_main_total_pageview} <span class="bold">$stats_cache_main['maxmonth']</span> &nbsp;|&nbsp; 
+{lang stats_main_period_of_time}: <span class="bold">$stats_cache_main['maxhourfrom']</span> {lang to} <span class="bold">$stats_cache_main['maxhourto']</span>, {lang stats_main_total_pageview} <span class="bold">$stats_cache_main['maxhour']</span>
+<!--{else}-->
+	&nbsp;&nbsp;&nbsp;&nbsp;{lang function_closed}
+<!--{/if}-->
+</td></tr></table></td></tr></table>
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+<tr bgcolor="{ALTBG2}"><td><span class="bold">{lang stats_main_month}:</span><br>
+<!--{if $statstatus}-->
+<table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="610" class="smalltxt">
+$stats_cache_main['statsbar_month']
+</table>
+<!--{else}-->
+	&nbsp;&nbsp;&nbsp;&nbsp;{lang function_closed}
+<!--{/if}-->
+</td></tr></table></td></tr></table><br><br>
+</td></tr></table></td></tr></table>
+{template footer}

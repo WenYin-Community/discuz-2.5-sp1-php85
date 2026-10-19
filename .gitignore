@@ -1,0 +1,19 @@
+# 运行时生成物（不纳入版本控制）
+upload/forumdata/cache/*
+!upload/forumdata/cache/index.htm
+upload/forumdata/templates/*
+!upload/forumdata/templates/index.htm
+upload/forumdata/accesslogs/
+upload/forumdata/cplog.php
+upload/forumdata/*.log
+upload/attachments/*
+!upload/attachments/index.htm
+upload/customavatars/*
+!upload/customavatars/index.htm
+
+# 容器数据
+docker/mysql-data/
+
+# 编辑器/系统
+*.swp
+.DS_Store

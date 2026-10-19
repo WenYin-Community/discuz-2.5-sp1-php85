@@ -1,0 +1,46 @@
+<form method="post" action="pm.php?action=delete&folder=$folder">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="99%">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr align="center" class="header"><td width="45"><input type="checkbox" name="chkall" class="header" onclick="checkall(this.form)">{lang delete_check}</td>
+<td width="50%">{lang subject}</td><td><!--{if $folder != 'outbox' && $folder != 'track'}-->{lang from}<!--{else}-->{lang to}<!--{/if}--></td>
+<!--{if $folder == 'track'}--><td>{lang pm_haveread}</td><!--{/if}-->
+<td>{lang time}</td>
+</tr>
+<!--{loop $pmlist $pm}-->
+	<tr>
+	<td bgcolor="{ALTBG1}" align="center">
+	<!--{if $folder == 'track' && !$pm[new]}-->
+	<!--{else}-->
+		<input type="checkbox" name="delete[]" value="$pm[pmid]">
+	<!--{/if}-->
+	</td>
+	<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'"><a href="pm.php?action=view&folder=$folder&pmid=$pm[pmid]">$pm[subject]</a></td>
+	<td bgcolor="{ALTBG1}" align="center">
+	<!--{if $folder == 'inbox'}-->
+		<!--{if $folder == 'inbox' && $pm[msgfromid]}-->
+			<a href="viewpro.php?uid=$pm[msgfromid]">$pm[msgfrom]</a>
+		<!--{else}-->
+			$pm[msgfrom]
+		<!--{/if}-->
+	<!--{else}-->
+		<a href="viewpro.php?uid=$pm[msgtoid]">$pm[msgto]</a>
+	<!--{/if}-->
+	</td>
+	<!--{if $folder == 'track'}-->
+		<td bgcolor="{ALTBG2}" align="center">
+		<!--{if $pm[new]}-->
+			{lang pm_notread}
+		<!--{else}-->
+			{lang pm_haveread}
+		<!--{/if}-->
+		</td>
+	<!--{/if}-->
+	<td bgcolor="{ALTBG2}" align="center"><span class="smalltxt">$pm[dateline]</span></td>
+	</tr>
+<!--{/loop}-->
+</table></td></tr>
+<tr class="multi"><td>$multipage</td></tr>
+</table><br><center><input type="submit" value="{lang submit}"></center>
+</form>

@@ -1,0 +1,51 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang lostpassword}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="member.php?action=lostpasswd">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang lostpassword}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang username}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="username" size="25"></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang email}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="email" size="25"><br>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang security_question}:</td>
+<td bgcolor="{ALTBG2}"><select name="questionid">
+<option value="0">&nbsp;</option>
+<option value="1">{lang security_question_1}</option>
+<option value="2">{lang security_question_2}</option>
+<option value="3">{lang security_question_3}</option>
+<option value="4">{lang security_question_4}</option>
+<option value="5">{lang security_question_5}</option>
+<option value="6">{lang security_question_6}</option>
+<option value="7">{lang security_question_7}</option>
+</select></td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}">{lang security_answer}:</td>
+<td bgcolor="{ALTBG2}"><input type="text" name="answer" size="25"></td>
+</tr>
+
+</table>
+</td></tr></table><br>
+<center><input type="submit" name="lostpwsubmit" value="{lang submit}"></center>
+</form>
+</table></td></tr></table>
+{template footer}

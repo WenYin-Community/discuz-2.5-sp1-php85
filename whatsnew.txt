@@ -1,0 +1,96 @@
+/********************************************************************************/
+/* Crossday Discuz! Board							*/
+/* ========================      						*/
+/* 欢迎使用 Discuz! 论坛,在您开始使用之前,请务必完整阅读本软件附带的全部说明档	*/
+/********************************************************************************/
+/* Welcome to http://www.crossday.com & http://www.Discuz.net			*/
+/********************************************************************************/
+
+
+    论坛新贴功能
+
+    I. 功能简介
+
+    您可以看到 Discuz! 目录中的 whatsnew.php 文件.这是一个可以用 javascript 调用的
+在 html 页面显示论坛新贴的程序.您可以通过给定不同的参数,来实现在 html 页面自由调用
+论坛主题的功能.
+
+    II. 基本设置
+
+    使用之前需对 whatsnew.php 进行以下设置:
+
+	$enabled = 0;				// Whether enable what's new feature, 1=yes, 0=no
+						// 是否启用 what's new 功能, 1=是, 0=否
+
+	$num = 10;				// Default amount of new threads
+						// 默认显示新贴数量
+
+	$length = 50;				// Max. length of title(bytes)
+						// 标题最大字节数
+
+	$pre = '<li>';				// Prefix of title
+						// 标题显示前缀
+
+    请根据旁边的注释设置相应的值,一般情况下是不需要改动的,但特别提醒如果需要使用本
+功能,务必将 $enabled 设置为 1.
+    
+    III. 动态参数
+
+    (1) num	指定特殊的显示新帖数量,可不按照默认设置(whatsnew.php 中的 $num)显示
+    (2) finin	读取某些指定论坛的新帖,多个论坛 id 之间,以 "_" 分隔
+    (3) finout	不读取某些指定论坛的新帖,多个论坛 id 之间,以 "_" 分隔
+
+    IV. 调用实例
+
+    在您的主页中需要放置论坛新贴的地方加入如下代码(地址需改动):
+
+	<script src="http://yourhost.com/cdb/whatsnew.php?YOUR_PARAMETERS"></script>
+
+    地址中 "YOUR_PARAMETERS" 为条件查询所设置.目前提供可选读取论坛和可选不读取论坛
+功能,即可以显示出某一个(或几个)论坛的新贴,或排除/不显示某一个(或几个)论坛新帖.要用
+此功能的朋友需先得到论坛的 fid.Discuz! 首页论坛链接为 ../forumdisplay.php?fid=x 格
+式,其中 x 就是论坛的 fid 号码.
+
+    例如: 需要显示 fid 为 2 的论坛的新帖,代码为
+
+	<script src="http://yourhost.com/discuz/whatsnew.php?fidin=2"></script>
+
+    再如: 显示 fid 为 2 和 10 两个论坛的新帖,代码
+
+	<script src="http://yourhost.com/discuz/whatsnew.php?fidin=2_10"></script>
+
+    fid 之间用下划线(_)分割即可.
+
+    再如: 显示除了 fid 为 2 和 10 以外所有论坛的新帖,且条目数为 100,代码
+
+	<script src="http://yourhost.com/cdb/whatsnew.php?fidout=2_10&num=100"></script>
+
+    或: 显示全部论坛新帖,且条目数为 50
+
+	<script src="http://yourhost.com/cdb/whatsnew.php?num=50"></script>
+
+    这样就可以在 html 页面里显示论坛的新帖和链接了.
+
+    V. 注意事项
+
+    从 Discuz! 3.1.2 开始,whatsnew.php 被重新编写,可支持使用文件 cache,每 100 秒自
+动更新.效率上比以往提高非常多,同时需要 ./forumdata 目录属性为 777(可读写),并且可以
+正常使用 unlink() 函数删除过期的 cache 文件.
+    不满足以上条件将无法使用 whatsnew.php 调用新帖.
+
+    VI. 常见错误提示
+
+    功能未启用,请将 whatsnew.php 中 $enabled 变为设置为 1 即可.提示如下
+
+	Access denied. If you'd like to display new threads in html pages,
+	please switch $enabled to "1" in whatsnew.php and try again.
+
+    ./forumdata 无法写入或不存在,请将该目录属性设置为 777,并删除其中的
+whatsnew_xxx.php 文件.提示如下:
+
+	Unable to write to whatsnew's cache file!
+	Please chmod ./forumdata to 777, delete all
+	"whatsnew_xxx.php" files and try again.
+					Crossday Studio, 2004-12-1 13:16
+					http://forum.crossday.com
+					http://www.crossday.com

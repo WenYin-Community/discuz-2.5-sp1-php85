@@ -1,0 +1,30 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> $navigation &raquo; {lang admin_delthread}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<form method="post" action="topicadmin.php?action=delete">
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<input type="hidden" name="page" value="$page">
+<input type="hidden" name="fpage" value="$fpage">
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td colspan="2">{lang admin_delthread}</td>
+</tr>
+
+<tr>
+<td bgcolor="{ALTBG1}" width="21%">{lang username}:</td>
+<td bgcolor="{ALTBG2}">$discuz_userss  <span class="smalltxt">[<a href="logging.php?action=logout">{lang member_logout}</a>]</span></td>
+</tr>
+
+</table>
+</td></tr></table><br>
+<input type="hidden" name="fid" value="$fid">
+<input type="hidden" name="tid" value="$tid">
+<center><input type="submit" name="deletesubmit" value="{lang admin_delthread}"></center>
+</form>
+{template footer}

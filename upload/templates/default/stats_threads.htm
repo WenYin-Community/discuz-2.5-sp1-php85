@@ -1,0 +1,42 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang stats}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr class="header">
+<td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr style="color: {HEADERTEXT}; font-weight: {BOLD}"><td>{lang stats}</td><td align="right">({lang stats_update_time} $stats_update_time )</td>
+</tr></table></td>
+</tr><tr bgcolor="{ALTBG1}"><td colspan ="2">
+
+<br><table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}"><table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr bgcolor="{ALTBG2}"><td align="center" class="smalltxt">
+<a href="stats.php">[ {lang stats_main} ]</a> &nbsp; <a href="stats.php?type=week">[ {lang stats_week} ]</a> &nbsp; 
+<a href="stats.php?type=hour">[ {lang stats_hour} ]</a> &nbsp; <a href="stats.php?type=agent">[ {lang stats_agent} ]</a> &nbsp; 
+<a href="stats.php?type=threads">[ {lang stats_threads} ]</a> &nbsp; <a href="stats.php?type=member">[ {lang stats_members} ]</a></td></tr>
+</table></td></tr></table><br>
+
+<table cellspacing="0" cellpadding="0" border="0" width="85%" align="center">
+<tr><td bgcolor="{BORDERCOLOR}">
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+<tr><td bgcolor="{ALTBG1}"><table border="0" cellspacing="0" cellpadding="{TABLESPACE}" width="99%" align="center">
+<tr class="smalltxt"><td align="center" bgcolor="{ALTBG2}" colspan="2" class="bold">{lang stats_threads_most_views}</td><td width="1%"></td>
+<td align="center" bgcolor="{ALTBG2}" colspan="2" class="bold">{lang stats_threads_most_replies}</td></tr>
+
+<!--{loop $threadview $key $val}-->
+	<!--{if $key % 2}--><tr bgcolor="{ALTBG2}"><!--{else}--><tr><!--{/if}-->
+	<td><a href="viewthread.php?tid=$threadview[$key][tid]">$threadview[$key][subject]</a></td><td align="right">$threadview[$key][views]</td><td bgcolor="{ALTBG1}"></td>
+	<td><a href="viewthread.php?tid=$threadreply[$key][tid]">$threadreply[$key][subject]</a><td align="right">$threadreply[$key][replies]</td></tr>
+<!--{/loop}-->
+
+</td></table></td></tr></table></td></tr></table><br>
+
+
+</td></tr></table>
+</td></tr></table><br>
+{template footer}

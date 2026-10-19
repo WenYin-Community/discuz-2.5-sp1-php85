@@ -1,0 +1,84 @@
+{template header}
+{template memcp_navbar}
+<!--{if $action == 'favorites'}-->
+	<form method="post" action="memcp.php?action=favorites">
+	<input type="hidden" name="formhash" value="{FORMHASH}">
+	<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}"
+	align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+	<tr align="center" class="header">
+	<td width="45"><input type="checkbox" name="chkall" class="header" onclick="checkall(this.form)">{lang delete_check}</td>
+	<td width="45%" align="center">{lang subject}</td>
+	<td>{lang forum}</td>
+	<td>{lang replies}</td>
+	<td>{lang lastpost}</td>
+	</tr>
+
+	<!--{if $favlist}-->
+		<!--{loop $favlist $fav}-->
+			<tr>
+			<td bgcolor="{ALTBG1}" align="center"><input type="checkbox" name="delete[]" value="$fav[tid]"></td>
+			<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'"><a href="viewthread.php?tid=$fav[tid]">$fav[subject]</a></td>
+			<td bgcolor="{ALTBG1}" align="center"><a href="forumdisplay.php?fid=$fav[fid]">$fav[name]</a></td>
+			<td bgcolor="{ALTBG2}" align="center">$fav[replies]</td>
+			<td bgcolor="{ALTBG1}" align="center"><font class="smalltxt">$fav[lastpost] by <!--{if $fav['lastposter']}--><a href="viewpro.php?username=$fav[lastposterenc]">$fav[lastposter]</a><!--{else}-->{lang guest}<!--{/if}--></font></td>
+			</tr>
+		<!--{/loop}-->
+	<!--{else}-->
+		<td bgcolor="{ALTBG1}" colspan="5">{lang memcp_nofavs}</td></tr>
+	<!--{/if}-->
+
+	</table></td></tr></table><br>
+	<center><input type="submit" name="favsubmit" value="{lang submit}"></center>
+	</form>
+<!--{elseif $action == 'subscriptions'}-->
+	<form method="post" action="memcp.php?action=subscriptions">
+	<input type="hidden" name="formhash" value="{FORMHASH}">
+	<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}"
+	align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%">
+	<tr align="center" class="header">
+	<td width="45"><input type="checkbox" name="chkall" class="header" onclick="checkall(this.form)">{lang delete_check}</td>
+	<td width="45%" align="center">{lang subject}</td>
+	<td align="center">{lang forum}</td>
+	<td align="center">{lang replies}</td>
+	<td align="center">{lang lastpost}</td>
+	</tr>
+
+	<!--{if $subslist}-->
+		<!--{loop $subslist $subs}-->
+			<tr>
+			<td bgcolor="{ALTBG1}" align="center"><input type="checkbox" name="delete[]" value="$subs[tid]"></td>
+			<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'"><a href="viewthread.php?tid=$subs[tid]">$subs[subject]</a></td>
+			<td bgcolor="{ALTBG1}" align="center"><a href="forumdisplay.php?fid=$subs[fid]">$subs[name]</a></td>
+			<td bgcolor="{ALTBG2}" align="center">$subs[replies]</td>
+			<td bgcolor="{ALTBG1}" align="center"><font class="smalltxt">$subs[lastpost] by <!--{if $subs['lastposter']}--><a href="viewpro.php?username=$subs[lastposterenc]">$subs[lastposter]</a><!--{else}-->{lang guest}<!--{/if}--></font></td>
+			</tr>
+		<!--{/loop}-->
+	<!--{else}-->
+		<td bgcolor="{ALTBG1}" colspan="5">{lang memcp_nosubs}</td></tr>
+	<!--{/if}-->
+
+	</table></td></tr></table><br>
+	<center><input type="submit" name="subsubmit" value="{lang submit}"></center>
+	</form>
+<!--{elseif $action == 'viewavatars'}-->
+	<form method="post" action="memcp.php?action=viewavatars">
+	<input type="hidden" name="formhash" value="{FORMHASH}">
+	<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+	<tr><td>$multipage &nbsp; &nbsp; {lang total} $num {lang avatars}</td></tr>
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" style="table-layout: fixed">
+	<tr><td colspan="4" class="header">{lang memcp_avatar_list}</td></tr>
+	$avatarlist
+	</table></td></tr>
+	<tr><td>$multipage</td></tr></table><br>
+	<center><input type="submit" name="avasubmit" value="{lang submit}"></center>
+	</form>
+<!--{/if}-->
+
+{template footer}

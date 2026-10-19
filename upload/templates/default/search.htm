@@ -1,0 +1,112 @@
+{template header}
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center" style="table-layout: fixed"> 
+<tr><td class="nav" width="90%" align="left" nowrap>&nbsp;<a href="index.php">$bbname</a> &raquo; {lang search}</td>
+<td align="right" width="10%">&nbsp;<a href="#bottom"><img src="{IMGDIR}/arrow_dw.gif" border="0" align="absmiddle"></a></td>        
+</tr></table><br>
+
+<!--{if !$searchsubmit && !$page}-->
+	<form method="post" action="search.php">
+	<input type="hidden" name="formhash" value="{FORMHASH}">
+	<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" class="smalltxt">
+	<tr class="header"><td>{lang search_keywords}</td><td>{lang username}</td></tr>
+
+	<tr>
+	<td bgcolor="{ALTBG2}" width="60%">
+	<input type="text" name="srchtxt" size="25" maxlength="40">
+	&nbsp; &nbsp;{lang search_keywords_comment}</td>
+
+	<td bgcolor="{ALTBG2}" width="40%"><input type="text" name="srchuname" size="25" maxlength="40">
+	<br><br>{lang search_username_comment}</td>
+	</tr>
+
+	<tr class="header"><td>{lang search_range}</td><td>{lang search_orderby}</td></tr>
+
+	<tr>
+	<td bgcolor="{ALTBG2}">
+
+	<table cellspacing="0" cellpadding="0" border="0" width="100%" class="smalltxt"><tr><td width="40%">
+	<br><select name="srchfid">
+	<option value="all">{lang search_all_forums}</option>
+	<option value="">&nbsp;</option>$forumselect</select><br><br>
+	<input type="radio" name="titleonly" value="1" checked> {lang search_titleonly}<br>
+	<input type="radio" name="titleonly" value="" <!--{if $allowsearch != 2}-->disabled<!--{/if}-->> {lang search_fulltext}
+	</td><td>
+	<br><select name="srchfrom">
+	<option value="0">{lang search_any_date}</option>
+	<option value="86400">{lang 1_days_ago}</option>
+	<option value="172800">{lang 2_days_ago}</option>
+	<option value="432000">{lang 7_days_ago}</option>
+	<option value="1296000">{lang 30_days_ago}</option>
+	<option value="5184000">{lang 90_days_ago}</option>
+	<option value="8640000">{lang 180_days_ago}</option>
+	<option value="31536000">{lang 356_days_ago}</option>
+	</select><br><br>
+	<input type="radio" name="before" value="" checked> {lang search_newer}<br>
+	<input type="radio" name="before" value="1"> {lang search_older}
+	</td></tr></table>
+	</td>
+	
+	<td bgcolor="{ALTBG2}">
+	<br><select name="orderby">
+	<option value="lastpost" selected="selected">{lang search_lastpost}</option>
+	<option value="replies">{lang search_replies}</option>
+	<option value="views">{lang search_views}</option>
+	</select><br>
+	<br><input type="radio" name="ascdesc" value="asc"> {lang search_asc}<br>
+	<input type="radio" name="ascdesc" value="desc" checked> {lang search_desc}</td>
+	</tr>
+
+	</table></td></tr></table><br>
+	<center><input type="submit" name="searchsubmit" value="{lang submit}"></center>
+	</form>
+<!--{else}-->
+	<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center">
+	<tr><td class="multi">
+	<!--{if $threadlist}-->
+	 		$multipage &nbsp; &nbsp; {lang search_total_results}
+	<!--{/if}-->
+	</td></tr>
+	<tr><td bgcolor="{BORDERCOLOR}">
+	<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" style="table-layout: fixed; word-wrap: break-word">
+	<tr class="header">
+	<td align="center" width="43%">{lang subject}</td>
+	<td align="center" width="14%">{lang forum}</td>
+	<td align="center" width="12%">{lang author}</td>
+	<td align="center" width="6%">{lang replies}</td>
+	<td align="center" width="6%">{lang views}</td>
+	<td align="center" width="19%">{lang lastpost}</td>
+	</tr>
+	<!--{if $threadlist}-->
+		<!--{loop $threadlist $thread}-->
+			<tr>
+			<td bgcolor="{ALTBG2}" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'">
+			<!--{if $thread['digest']}--><img src="{IMGDIR}/digest.gif" align="absmiddle"> {lang thread_digest}<b>{eval echo substr('III', - $thread['digest']);}</b>:&nbsp;
+			<!--{elseif $thread['displayorder']}--><img src="{IMGDIR}/pin.gif" align="absmiddle"> {lang thread_sticky}<b>{eval echo substr('III', - $thread['displayorder']);}</b>:&nbsp;
+			<!--{elseif $thread['poll']}--><img src="{IMGDIR}/pollsmall.gif" align="absmiddle"> {lang thread_poll}:&nbsp;
+			<!--{/if}-->$thread['attachment']<a href="viewthread.php?tid=$thread[tid]&fpage=1&highlight=$index[keywords]" target="_blank" $thread[highlight]>$thread[subject]</a>$thread[multipage]</td>
+			<td bgcolor="{ALTBG1}" align="center"><a href="forumdisplay.php?fid=$thread[fid]">$thread[forumname]</a></td>
+			<td bgcolor="{ALTBG2}" align="center">			
+			<!--{if $thread['authorid']}--><a href="viewpro.php?uid=$thread[authorid]">$thread[author]</a><!--{else}-->{lang guest}<!--{/if}-->
+			<br><span class="smalltxt">$thread[dateline]</span></td>
+			<td bgcolor="{ALTBG1}" align="center">$thread[replies]</td>
+			<td bgcolor="{ALTBG2}" align="center">$thread[views]</td>
+			<td bgcolor="{ALTBG1}" align="center">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr align="right">
+			<td nowrap><font class="smalltxt">$thread[lastpost]<br>
+			by <!--{if $thread['lastposter']}--><a href="viewpro.php?username=$thread[lastposterenc]">$thread[lastposter]</a><!--{else}-->{lang guest}<!--{/if}-->
+			</font></td><td nowrap>&nbsp;<a href="redirect.php?tid=$thread[tid]&goto=lastpost&highlight=$index[keywords]#lastpost"><img src="{IMGDIR}/lastpost.gif" border="0"></a>
+			</td></tr></table>
+			</td>
+			</tr>
+		<!--{/loop}-->
+	<!--{else}-->
+		<tr><td bgcolor="{ALTBG1}" colspan="6"><span class="mediumtxt ">{lang search_nomatch}</span></td></tr>
+	<!--{/if}-->
+	</table></td></tr>
+	<tr><td height="3"></td></tr>
+	<tr><td class="multi">$multipage</td></tr>
+	</table>
+<!--{/if}-->
+{template footer}

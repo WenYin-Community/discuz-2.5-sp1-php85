@@ -1,0 +1,140 @@
+/********************************************************************************/
+/* Crossday Discuz! Board							*/
+/* ========================      						*/
+/* 欢迎使用 Discuz! 论坛,在您开始使用之前,请务必完整阅读本软件附带的全部说明档	*/
+/********************************************************************************/
+/* Welcome to http://www.crossday.com & http://www.Discuz.net			*/
+/********************************************************************************/
+
+
+    本文档用于帮助您将 Discuz! 升级为新的版本.在您开始升级 Discuz! 之前,请仔细阅读
+以下的升级说明:
+    
+    1. 升级之前,为了确保无误,强烈建议您备份原有数据,我们不对没有升级前备份的用户提
+       供任何技术保证
+    2. 每次升级,Discuz! 都会在 ./tools 文件夹中提供名为 upgrade(x).php 的升级
+       程序,其中(x)为数字
+    3. 每个升级程序必须放到 Discuz! 运行的目录中才可使用,否则会出现错误提示
+    4. 升级程序可能会将新的模板覆盖原有内容而不加提示,所以升级之前如您的模板很重要,
+       请妥善备份
+    5. 每个升级程序只提供从某一版本到另一版本 Discuz! 的升级,而并不能一次完成多个
+       版本的升级.假如, upgrade1.php 用于从 Discuz! 1.0 升级到 1.2,而 upgrade2.php
+       用户从 Discuz! 1.2 升级到 1.3,那么,如需要从 Discuz! 1.0 升级到 1.3,必须先运
+       行 upgrade1.php,再运行 upgrade2.php 才能升级成功
+    6. 如果你的论坛使用了 Hack,我们只能提供有限的保证在升级后的版本中,Hack 数据字段
+       仍被保留,而 Hack 的程序代码,可能需要重新修改.但一般设计合理的,有独立程序的插
+       件通常不在此列
+    7. 论坛升级可能偶尔需要一点编程知识,因此最好在本地机器上调试成功后再升级.我们
+       (北京康盛世纪科技有限公司)将只对商业用户提供有保障的升级技术支持
+    8. 升级也可能需要手动重建缓存或恢复缓存,在系统设置中点相应的选项即可
+    9. 升级成功后,必须马上删除服务器上的 upgrade(x).php 升级程序,以避免可能的安全问题
+
+	<!-- 从 Discuz! 2.5F 升级到 Discuz! 2.5F_SP1 -->
+	1. 上传upload目录中除config.php 和 install.php 以外的所有文件，到你的空间，覆盖旧的程序和模版。
+	2. 后台进行数据库升级，内容如下：
+		ALTER TABLE cdb_usergroups CHANGE attachextensions attachextensions CHAR( 255 ) NOT NULL;
+		ALTER TABLE cdb_members CHANGE timeoffset timeoffset CHAR( 4 ) NOT NULL;
+		ALTER TABLE cdb_forums CHANGE name name CHAR( 255 ) NOT NULL;
+		ALTER TABLE cdb_attachtypes CHANGE extension extension CHAR( 10 ) NOT NULL;
+		INSERT INTO cdb_settings VALUES ('delayreply', 0);
+		INSERT INTO cdb_settings VALUES ('announcements_num', 1);
+	3. 后台更新缓存
+
+    <!-- 从 Discuz! 2.0/2.2F 升级到 Discuz! 2.5F -->
+
+    1. 上传全部 2.5F 文件到服务器上覆盖原版本
+    2. 上传相应的升级文件upgrade25.php，并运行
+    3. 上传 fast25.php ，并运行（此处升级不是必须，仅仅是为了提高论坛旧贴的读贴速度）
+    4. 进入论坛后台更新缓存并进行数据统计。
+
+    <!-- 从 Discuz! 2.0 COML 升级到 Discuz! 2.2F -->
+
+    1. 上传全部 2.2F 程序文件（.php）到服务器上覆盖原版本
+    2. 覆盖forumdisplay.htm、viewthread.htm两个模板及语言包templates.lang.php，或将全部模板及语言包恢复默认
+    3. 更新缓存
+
+    <!-- 从 Discuz! 1.01 升级到 Discuz! 2.0 COML -->
+
+    1. 将服务器上原 ./datatemp 目录改为 ./forumdata, 并在其下新建 templates, cache
+       两个新目录,三个目录属性全部设置为 777.
+    2. 上传全部 2.0 文件到服务器覆盖原 1.0
+    3. 编辑 2.0 的 config.php,上传至服务器覆盖原文件(这点非常重要!)
+    4. 上传 utilities/upgeade2.php 到服务器目录下.运行之即可完成数据结构升级
+    5. 升级完请关闭浏览器.如果出现无法登录的情况,请清空 Cookies 即可解决.
+    6. 此时论坛界面可能出现显示不正常的状况,这是正常的.请登录系统设置,在"风格方案"
+       中的导入界面方案框中,贴入如下代码并执行:
+
+# Discuz! Style Dump
+# Version: Discuz! 2.0 <b style='color: #FF9900'>COML</b>
+# Time: 2002-12-22 09:46 PM
+# From: Discuz! Board (http://localhost/dc/)
+#
+# This file was BASE64 encoded
+#
+# Discuz! Community: http://www.Discuz.net
+# Please visit our website for newest infomation about Discuz!
+# --------------------------------------------------------
+
+
+YTo4OntzOjQ6Im5hbWUiO3M6OToiserXvL3nJ8PmIjtzOjEwOi
+J0ZW1wbGF0ZWlkIjtzOjE6IjEiO3M6NzoidHBsbmFtZSI7czo3
+OiJEZWZhdWx0IjtzOjc6ImNoYXJzZXQiO3M6NjoiZ2IyMzEyIj
+tzOjk6ImRpcmVjdG9yeSI7czoxOToiLi90ZW1wbGF0ZXMvZGVm
+YXVsdCI7czo5OiJjb3B5cmlnaHQiO3M6Mjc6IkRlc2lnbmVkIG
+J5IENyb3NzZGF5IFN0dWRpbyI7czo3OiJ2ZXJzaW9uIjtzOjM4
+OiIyLjAgPGIgc3R5bGU9J2NvbG9yOiAjRkY5OTAwJz5DT01MPC
+9iPiI7czo1OiJzdHlsZSI7YToyMjp7czo3OiJiZ2NvbG9yIjtz
+Ojc6IiNGRkZGRkYiO3M6NjoiYWx0YmcxIjtzOjc6IiNFM0UzRU
+EiO3M6NjoiYWx0YmcyIjtzOjc6IiNFRUVFRjYiO3M6NDoibGlu
+ayI7czo3OiIjM0E0MjczIjtzOjExOiJib3JkZXJjb2xvciI7cz
+o3OiIjMDAwMDAwIjtzOjExOiJoZWFkZXJjb2xvciI7czoxMzoi
+aGVhZGVyX2JnLmdpZiI7czoxMDoiaGVhZGVydGV4dCI7czo3Oi
+IjRjFGM0ZCIjtzOjg6ImNhdGNvbG9yIjtzOjEwOiJjYXRfYmcu
+Z2lmIjtzOjk6InRhYmxldGV4dCI7czo3OiIjNDY0Rjg2IjtzOj
+Q6InRleHQiO3M6NzoiIzQ2NEY4NiI7czoxMToiYm9yZGVyd2lk
+dGgiO3M6MToiMSI7czoxMDoidGFibGV3aWR0aCI7czozOiI5OS
+UiO3M6MTA6InRhYmxlc3BhY2UiO3M6MToiMyI7czo0OiJmb250
+IjtzOjE1OiJUYWhvbWEsIFZlcmRhbmEiO3M6ODoiZm9udHNpem
+UiO3M6NDoiMTJweCI7czo2OiJub2JvbGQiO3M6MToiMCI7czo4
+OiJib2FyZGltZyI7czo4OiJsb2dvLmdpZiI7czo2OiJpbWdkaX
+IiO3M6MTU6ImltYWdlcy9zdGFuZGFyZCI7czo1OiJzbWRpciI7
+czoxNDoiaW1hZ2VzL3NtaWxpZXMiO3M6NzoiY2F0dGV4dCI7cz
+o3OiIjRDlEOUU5IjtzOjEwOiJzbWZvbnRzaXplIjtzOjQ6IjEx
+cHgiO3M6Njoic21mb250IjtzOjY6IlRhaG9tYSI7fX0=
+
+
+    7. 进入常规选项,将 Default Style 设置为论坛默认界面,同时将原有其他界面的"可用"
+       的选项去掉.
+    8. 升级完成.
+
+    <!-- 从 Discuz! 1.0 升级到 Discuz! 1.01 -->
+
+    1. 上传全部 Discuz! 1.01 文件到服务器覆盖原 1.0
+
+    2. 将模板恢复默认.
+       如果您的模板改动较多,也可手工恢复模板,1.01 与 1.0 相比,修改了如下模板:
+       index_forumlink,index(只改动了一个变量),forumdisplay(只增加了一个变量),
+       viewthread(只增加了一个变量),forumdisplay_fastpost(只增加了JS的一个条件),
+       post_newthread(只增加了JS的一个条件),u2u_row,buddylist_edit_buddy.
+       新增模板 u2uprompt.
+
+    3. 数据管理 => 数据库升级 运行一下语句升级版本号.
+       UPDATE cdb_settings SET version='1.01';
+
+    4. 系统工具 => 更新缓存.
+
+
+    <!-- 从 CDB3 RC1 升级到 Discuz! 1.0 -->
+
+    1. 上传全部 Discuz! 1.0 文件到服务器覆盖原 RC1
+
+    2. 运行 upgrade1.php 自动升级数据结构.
+
+    3. 将模板恢复默认,重建缓存.
+
+
+
+
+					Crossday Studio, 2004-12-30 13:31
+					http://www.Discuz.net
+					http://www.crossday.com

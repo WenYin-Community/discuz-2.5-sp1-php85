@@ -1,0 +1,39 @@
+<br>
+<table cellspacing="0" cellpadding="0" border="0" width="{TABLEWIDTH}" align="center"> 
+<tr><td bgcolor="{BORDERCOLOR}"> 
+<table border="0" cellspacing="{BORDERWIDTH}" cellpadding="{TABLESPACE}" width="100%" align="center"> 
+<tr><td width="6%" class="header">&nbsp;</td>
+<td width="46%" class="header" align="center">{lang forum_name}</td>
+<td width="8%" class="header" align="center">{lang forum_threads}</td>
+<td width="8%" class="header" align="center">{lang forum_posts}</td>
+<td width="15%" class="header" align="center">{lang forum_lastpost}</td>
+<td width="17%" class="header" align="center">{lang forum_moderators}</td>
+</tr>
+<!--{loop $sublist $forum}-->
+	<!--{if $forum['permission']}-->
+		<tr align="center">
+		<td bgcolor="{ALTBG1}">$forum[folder]</td>
+		<td bgcolor="{ALTBG2}" align="left" onMouseOver ="this.style.backgroundColor='{ALTBG1}'" onMouseOut ="this.style.backgroundColor='{ALTBG2}'">
+		$forum[icon]<a href="forumdisplay.php?fid=$forum[fid]"><span class="bold">$forum[name]</span></a>
+		<br><span class="smalltxt">$forum[description]</span></td>
+		<td bgcolor="{ALTBG1}">$forum[threads]</td>
+		<td bgcolor="{ALTBG2}">$forum[posts]</td>
+		<td bgcolor="{ALTBG1}">
+		<!--{if $forum['permission'] == 1}-->
+			{lang private_forum}
+		<!--{else}-->
+			<!--{if $forum['lastpost']}-->
+				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr><td align="right" class="smalltxt" title="{lang title}: $forum[lastpost][0]" nowrap>
+				$forum[lastpost][1]<br>by <!--{if $forum['lastpost'][2]}-->$forum[lastpost][2]<!--{else}-->{lang guest}<!--{/if}--></td>
+				<td nowrap>&nbsp;<a href="redirect.php?fid=$forum[fid]&goto=lastpost#lastpost"><img src="{IMGDIR}/lastpost.gif" border="0"></a></td>
+				</tr></table>
+			<!--{else}-->
+				{lang never}
+			<!--{/if}-->
+		<!--{/if}-->
+		</td><td bgcolor="{ALTBG2}" style="word-break: keep-all">$forum[moderator]</td>
+		</tr>
+	<!--{/if}-->
+<!--{/loop}-->
+</table></td></tr></table><br><br>

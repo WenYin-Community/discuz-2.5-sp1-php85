@@ -1,0 +1,14 @@
+#
+# robots.txt for Discuz! Board
+# Version 2.5
+#
+
+User-agent: *
+Disallow: /admin
+Disallow: /attachments
+Disallow: /images
+Disallow: /forumdata
+Disallow: /include
+Disallow: /ipdata
+Disallow: /templates
+Disallow: /plugins

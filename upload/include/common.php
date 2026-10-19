@@ -69,7 +69,7 @@ $predefined = array('navtitle', 'page', 'goto', 'p', 'order', 'ascdesc', 'desc',
 	'replysubmit', 'editsubmit', 'subject', 'navigation', 'viewperm', 'usesigcheck', 'urloffcheck',
 	'smileoffcheck', 'smileyoffcheck', 'codeoffcheck', 'poll', 'polloptions', 'ismoderator',
 	'searchsubmit', 'uid', 'orderby', 'titleonly', 'srchuname', 'srchuid', 'srchtxt', 'srchfrom',
-	'srchtype', 'touser', 'pmid', 'srchfid', 'before');
+	'srchtype', 'touser', 'pmid', 'srchfid', 'before', 'loginmode', 'questionid', 'answer');
 foreach($predefined as $prevar) {
 	if(!isset($$prevar)) {
 		$$prevar = '';

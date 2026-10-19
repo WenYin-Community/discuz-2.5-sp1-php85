@@ -44,7 +44,7 @@ if($action == 'logout') {
 		}
 
 		$year_checked = $day_checked = $hour_checked = $task_checked = $month_checked = '';
-		switch($_COOKIE['_cookietime']) {
+		switch(isset($_COOKIE['_cookietime']) ? $_COOKIE['_cookietime'] : '') {
 			case '31536000': $year_checked = 'checked'; break;
 			case '86400': $day_checked = 'checked'; break;
 			case '3600': $hour_checked = 'checked'; break;
@@ -76,7 +76,14 @@ if($action == 'logout') {
 		$query = $db->query("SELECT m.uid AS discuz_uid, m.username AS discuz_user, m.password AS discuz_pw, m.adminid, m.groupid, m.credit, m.styleid AS styleidmem, m.lastvisit, m.lastpost, u.type as usertype, u.creditshigher, u.creditslower, u.allowinvisible
 					FROM $table_members m LEFT JOIN $table_usergroups u USING (groupid)
 					WHERE username='$username' AND password='$password' AND secques='$secques'");
-		@extract($db->fetch_array($query));
+		$memberrow = $db->fetch_array($query);
+		if(is_array($memberrow)) {
+			// 登录必须覆盖已有的同名全局变量(adminid/groupid/discuz_uid 等), 因此用 EXTR_OVERWRITE
+			extract($memberrow, EXTR_OVERWRITE);
+		} else {
+			// 登录失败: 预置为空值, 后续分支按未登录处理
+			$discuz_uid = $discuz_user = $discuz_pw = $adminid = $groupid = $credit = $loginperm = $usertype = '';
+		}
 
 		if($bbclosed && $adminid != 1) {
 			showmessage($closedreason ? $closedreason : 'board_closed');

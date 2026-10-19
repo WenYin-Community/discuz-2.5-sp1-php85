@@ -2,79 +2,87 @@
 
 ## 项目概览
 
-- 2005 年的 Discuz! 2.5F SP1 简体中文版（GBK）论坛程序，PHP 4 时代代码库，已被上游停止维护。
-- 没有 Composer/npm、构建、Lint、自动化测试；当前目录也不是 Git 仓库。
-- 可部署源码全部在 `upload/`；仓库根目录的 `*.txt` 是 GBK 编码的官方文档。
-- 本包带有 `//fix: BY pk0909` 本地补丁（`index.php`、`forumdisplay.php`、`include/forum.php`、`admin/global.php`、`utilities/upgrade25.php` 等），不要回退这些修复。
+- Discuz! 2.5F SP1 简体中文版（GBK）论坛，PHP 4 时代代码库，**已移植到 PHP 8.5 + MySQL 5.7**。
+- 源码在 `upload/`；根目录 `*.txt` 是 GBK 编码的原始官方文档；`php85-upgrade-report.md` 记录本次移植的全部改动与验证结果。
+- 本包带有 `//fix: BY pk0909` 本地补丁，不要回退。
+- 不是 Composer/npm 项目，无构建链与自动化测试；版本控制为 Git（基线提交 `aee87b2`）。
 
-## 目录结构
+## 运行方式
 
-- `upload/*.php`：前台入口，一文件一功能（`index.php`、`forumdisplay.php`、`viewthread.php`、`post.php`、`memcp.php`、`admincp.php` 等）。
-- `upload/include/`：公共库。`common.php` 是引导核心，`global.php` 是函数库，`db_mysql.php` 是数据库类，`template.php` 是模板编译器，`cache.php` 是缓存生成器；`forum.php`、`post.php`、`misc.php` 等为多个入口共享的业务逻辑。
-- `upload/admin/`：后台业务脚本；`upload/admin/tpl/`：后台视图与语言包。
+```bash
+cd docker && podman-compose up -d      # 启动 php8.5-fpm + mysql5.7 + nginx
+# 访问 http://127.0.0.1:8081/ ，MySQL 在 127.0.0.1:3317
+cd docker && podman-compose down       # 停止（数据保留在 docker/mysql-data）
+podman logs -f discuz25-php            # 查看 PHP 错误日志
+```
+
+- **重启 php 容器后必须重启 nginx**（nginx 缓存上游容器 IP，否则 502）。
+- 数据库/连接字符集固定为 `gbk`，服务器 `sql_mode=''`；不要改成 utf8，否则存量 GBK 数据会损坏。
+- `php.ini` 必须保持 `short_open_tag=On`（模板编译器与部分后台视图使用 `<?`）。
+- php-fpm 必须保持 `chdir = /var/www/html`（程序用 `./forumdata/...` 相对路径写缓存）。
+- php 服务使用 `userns_mode: keep-id`，池进程 uid 1000 才能写入 `forumdata/` 且文件归属不变。
+
+## 校验命令
+
+```bash
+# 语法检查（全部源文件）
+podman run --rm -v "$PWD:/repo:ro,Z" --entrypoint sh localhost/wenyinos-php:8.5-fpm \
+  -c 'for f in $(find /repo/upload /repo/utilities -name "*.php" -not -path "*/forumdata/*"); do php -l "$f" || exit 1; done'
+
+# 页面冒烟（登录态 cookie 需先通过 logging.php 获取）
+curl -s -b /tmp/cj http://127.0.0.1:8081/index.php | iconv -f gb2312 -t utf-8 | grep -cE "Warning|Fatal error"
+
+# 清空缓存强制重建（删除后首次访问自动生成）
+rm -f upload/forumdata/cache/*.php upload/forumdata/templates/*.tpl.php
+```
+
+无单元测试；改动后的最低验证：全量 `php -l` + 前后台关键页面冒烟 + 发帖/回复中文不乱码。
+
+## 目录与分层
+
+- `upload/*.php`：前台入口，一文件一功能；入口先定义 `CURRSCRIPT`，再 `require './include/common.php'`。
+- `upload/include/common.php`：引导核心（配置、DB、会话、用户组、风格、缓存自动重建、输入提取）。
+- `upload/include/global.php`：函数库（`showmessage`、`template`、`submitcheck`、`transsid`、`dhtmlspecialchars`、`dinterpolate`、`random`）。
+- `upload/include/db_mysql.php`：**mysqli 版** `dbstuff` 类，全站唯一数据库访问层。
+- `upload/include/template.php`：模板编译器（`/e` 已全部改为 `preg_replace_callback`）。
+- `upload/include/discuzcode.php`：BBCode 解析（含 `[code]/[php]/[hide]/[img]/[url]` 回调）。
+- `upload/include/cache.php`：缓存生成器；`forumdata/cache/*.php` 与 `forumdata/templates/*.tpl.php` 都是生成物，不要手改。
+- `upload/admin/`：后台业务；`upload/admin/tpl/`：后台视图。
 - `upload/templates/default/`：默认模板（`*.htm`）与语言包（`*.lang.php`）。
-- `upload/forumdata/`：运行时目录。`cache/` 存生成的缓存 PHP，`templates/` 存编译后的模板；两者都由程序生成，不要手改。
-- `upload/plugins/`：插件 PHP 与 `plugin.lang.php`。
-- `upload/attachments/`、`upload/customavatars/`：用户上传目录，必须可写且可被 Web 访问。
-- `utilities/`：独立升级/修复/转换脚本，不属于部署内容；必须复制到论坛根目录才能运行，用完删除。
+- `utilities/`：一次性升级/修复脚本，不属于部署内容，用完删除。
 
-## 运行与验证
+## 编码与编辑规则
 
-- 运行时要求：PHP ≤ 5.6（代码使用 `mysql_*`、`set_magic_quotes_runtime`、模板编译器中的 `preg_replace /e`，PHP 7+ 无法运行）；MySQL 5.1 或更早（`install.php` 建表 SQL 含 `TYPE=HEAP` 等旧语法，MySQL 8 会拒绝）。当前开发机未安装 PHP，MySQL 服务未运行，无法本地启动或做 HTTP 冒烟测试。
-- 语法检查：`php -l upload/include/common.php`（仅检查语法，不验证运行）。
-- 本地临时启动（需 PHP 5.4–5.6）：`php -S 127.0.0.1:8080 -t upload`。
-- 部署：把 `upload/` 内容放到 Web 根目录；`config.php` 填数据库账号；将 `templates/`、`attachments/`、`customavatars/`、`forumdata/`、`forumdata/cache/`、`forumdata/templates/`、`forumdata/accesslogs/` 设为 777；浏览器访问 `install.php` 完成安装。`forumdata/accesslogs/` 初始不存在，需手动创建。
-- 安装后必须删除 `install.php`，不要把 `utilities/` 上传到服务器；这些脚本可修改数据库或重置管理员。
-- 修改 `templates.lang.php` 后必须到后台执行“更新缓存”，否则编译模板仍使用旧文案。
-- 无自动测试。改动后的最低验证：`php -l` + 浏览器手工走首页、版块、主题、发帖、短消息、后台设置。
+- **所有原始 PHP/HTM 文件是 GB2312/GBK + CRLF**。新增中文必须写回 GBK，不要转 UTF-8。
+- 读取乱码文件：`iconv -f gb2312 -t utf-8 <file>`；写回：`iconv -f utf-8 -t gb2312`。
+- 修改源码时优先用字节安全的脚本（Python 以 `gbk`/`surrogateescape` 读写），不要用会按 UTF-8 保存的编辑器直接改中文。
+- 页面继续声明 `charset=gb2312`；表单按 GBK 提交，数据库 HEX 应与 GBK 编码一致。
 
-## 请求与分层
+## 代码约定（PHP 8 下仍保持 PHP 4 风格）
 
-- 前台入口模式：定义 `CURRSCRIPT` → `require './include/common.php'` → 按需 `require DISCUZ_ROOT.'./include/xxx.php'` → `include template('xxx')` → 结束时 `output()` 或 `dexit()`。
-- `include/common.php` 负责：加载 `config.php`、`global.php`、数据库类；模拟 `register_globals`（对 `$_GET`/`$_POST` 做 `daddslashes` 后 `extract`）；恢复会话、用户组、风格；缓存缺失时自动调用 `updatecache()` 并输出“刷新页面”提示。
-- `include/` 下的文件必须保留 `if(!defined('IN_DISCUZ')) exit('Access Denied');` 守卫；后台脚本使用 `IN_ADMINCP`。
-- 后台路由：`admincp.php` 按 `action` 白名单映射到 `admin/*.php`；视图在 `admin/tpl/*.php`，页面统一用 `cpheader()` / `cpfooter()` / `cpmsg()`，表单用 `showsetting()`，分组用 `showtype()`。后台文案在 `templates/default/admincp.lang.php`。
-- 插件：`plugins.php?p=<key>` 加载 `plugins/<key>.php`；元数据与配置存 `cdb_plugins`、`cdb_plugins_settings`；插件文案放 `plugins/plugin.lang.php` 的 `$plglang` / `$msglang`。
+- 全局变量、无命名空间/类型声明；匹配现有风格，不要顺手现代化。
+- 用户输入经 `extract()` 成为裸变量；SQL 拼接用 `intval()`/`addslashes()`，HTML 输出用 `dhtmlspecialchars()`（**不要用裸 `htmlspecialchars()`**，PHP 8 默认 UTF-8 会把 GBK 字节变成空串）。
+- 改状态的 POST 表单必须带 `formhash` 并调用 `submitcheck()`；前台提示用 `showmessage()`，后台用 `cpmsg()`。
+- `include/` 下文件保留 `IN_DISCUZ` 守卫；后台脚本保留 `IN_ADMINCP` 守卫。
+- 数据库只用 `$db->query()/fetch_array()/result()/num_rows()/insert_id()/affected_rows()`；表名用 `$table_<name>` 全局（前缀 `$tablepre`）。
+- `mysqli_report(MYSQLI_REPORT_OFF)` 必须保留（代码依赖“查询失败返回 false”）。
 
-## 数据库
+## 移植后的关键陷阱
 
-- 通过 `include/db_mysql.php` 的 `dbstuff` 类访问，底层是已移除的 `mysql_*` 扩展；不引入 PDO/MySQLi，除非明确要求整体迁移。
-- 表名通过全局变量 `$table_<name>` 使用，前缀由 `config.php` 的 `$tablepre` 决定（默认 `cdb_`）。
-- 查询是原生 SQL 字符串：`$db->query()`、`$db->fetch_array()`、`$db->result()`、`$db->num_rows()`、`$db->insert_id()`、`$db->affected_rows()`；可用类型标记 `CACHE`、`UNBUFFERED`、`SILENT`。
-- 完整表结构（37 张 `cdb_*` 表）在 `upload/install.php` 的 heredoc SQL 中；升级逻辑在 `utilities/upgrade*.php`。
-- 拼接 SQL 前对整数用 `intval()`、对字符串用 `addslashes()`；这是本项目的既有安全边界，不要移除。
-
-## 编码与代码风格
-
-- 所有原始文件是 GB2312/GBK 编码 + CRLF 换行，`file` 会显示 ISO-8859；页面声明 `charset=gb2312`。编辑中文时必须保持 GBK 与 CRLF，不要转成 UTF-8。
-- 查看乱码文件：`iconv -f gb2312 -t utf-8 <file>`；写回时反向转换。改动前后用 `file` 确认编码未被破坏。
-- 代码是 PHP 4 风格：`var` 声明、无命名空间/类型声明/严格模式、短标签 `<?`、大量全局变量。修改现有文件时匹配该风格，不要顺手现代化。
-- 用户输入经 `extract` 后以裸变量出现（如 `$action`、`$fid`、`$tid`），先校验再使用；输出 HTML 前用 `dhtmlspecialchars()`。
-- 会修改数据的 POST 表单必须带隐藏 `formhash` 并调用 `submitcheck('submitname')`；前台错误/跳转用 `showmessage()`，后台用 `cpmsg()`。
-- 权限判断依赖 `$adminid`、`$groupid`、`$isadmin`、`$forum[...]` 权限位、`modcheck()`；不要弱化这些检查。
-- 链接统一经 `transsid()` 或 `output()` 处理（Cookie 被禁用时自动附加 `sid`）。
-
-## 模板、语言与缓存
-
-- 模板语法：`{lang key}`、`{template name}`、`{if expr}...{elseif}...{else}...{/if}`、`{loop $arr $v}...{/loop}`、`$var`；`<!--{...}-->` 在编译时被剥离。
-- 模板在首次访问时编译到 `forumdata/templates/{templateid}_{name}.tpl.php`；源 `.htm` 更新且 `tplrefresh=1` 时自动重编译，编译产物不要手改。
-- 缓存由 `include/cache.php` 生成到 `forumdata/cache/`（`cache_*.php`、`style_*.php`、`usergroup_*.php`），删除后会自动重建，但会先输出“Caches successfully created, please refresh.”。
-- 官方文档明确要求不要修改 `templates/default/`；需要换肤时新建 `templates/<name>/`，只放有差异的 `.htm`/`.lang.php`，再在后台注册模板套系与风格。
-- CSS 与配色来自 `css.htm` 及数据库中的 `stylevars`；尺寸/颜色常量如 `{IMGDIR}`、`{MAINTABLEWIDTH}` 由风格缓存注入。
-
-## 安全与已知风险
-
-- 这是 EOL 代码，历史上存在大量 SQL 注入、XSS、任意文件包含/删除类漏洞。不要以“现代化”为由重写认证、权限或数据库层；改动敏感逻辑前先说明影响面。
-- 永远不要放宽 `IN_DISCUZ` / `IN_ADMINCP` 守卫，也不要在生产环境保留 `install.php`、`utilities/` 或可写的 `forumdata/` 直链访问。
-- `config.php` 含数据库凭据；本仓库中是占位值。不要把真实密码写入仓库或提交到版本库。
-- 生产环境将 `$errorreport` 设为 0、`$debug_on` 设为 0，避免泄露 SQL 与路径。
+- **不要预置 `action`、`searchid`、`fid`、`previewpost`、`showattach`、`tids`、`change`、`expand` 这些全局变量**：代码用 `isset()` 区分“是否提交/是否存在”，预置会改变分支行为。
+- `$forum` 只在“已经是数组”时补字段；不要把它从 `false` 改成 `array()`，否则 `if($tid && $forum)`、`if($forum)` 这类真值判断会失效。
+- `include/cache.php` 的 `array_del()` 现在**有意为空实现**：原版 `trim($f)`（`$f` 是数组）在 PHP 5/7 下恒为假，从未删除任何键，而 `welcomemsg/bbrules/bbrulestxt` 依赖它们留在缓存中。
+- 模板条件里写变量必须带 `$`（如 `$allowdelpost`）；裸标识符在 PHP 8 下是未定义常量，会致命。
+- 字符串插值中的链式下标必须写成 `{$a[$b]['c']}`；`"$a[$b][c]"` 中的 `[c]` 会被当作字面文本。
+- 稀疏数组（`array($value => 'checked')`）在模板里访问其他键会告警；按模板实际键集合预填充。
+- `dinterpolate()` 取代了语言包的 `eval()`；它支持裸键，但不会转换 `{LF}`（与原行为一致）。
+- 密码仍是 md5（兼容老用户）；后台二次密码比较已用 `hash_equals()`。
+- 附件上传目录禁止执行脚本（nginx 已配置），上传白名单为空时回退内置白名单。
 
 ## 改动前先读
 
-- `template.txt`：模板/风格/多语言机制。
-- `plugin.txt`：2.5 插件规范与后台插件中心。
-- `language.txt`：语言包与 `templates.lang.php` 的缓存要求。
-- `files.txt`：目录职责与 777 权限清单。
-- `upgrade.txt`、`changelog.txt`：版本差异与 SP1 修复内容。
-- 涉及权限、认证、安装、缓存时，先读 `include/common.php`、`include/global.php`、`include/cache.php`、`admin/global.php`、`install.php`。
-- 以上文档均为 GBK，阅读前用 `iconv -f gb2312 -t utf-8` 转码。
+- `php85-upgrade-report.md`：移植清单、验证结果、已知限制。
+- `CHANGELOG.md`：本次与后续变更记录。
+- `docker/README.md`：容器启停、重置数据库、排查。
+- `template.txt`、`plugin.txt`、`language.txt`、`files.txt`、`upgrade.txt`：GBK 官方文档，阅读前 `iconv`。
+- 涉及权限、认证、安装、缓存时，先读 `include/common.php`、`include/global.php`、`include/db_mysql.php`、`include/cache.php`、`admin/global.php`、`install.php`。

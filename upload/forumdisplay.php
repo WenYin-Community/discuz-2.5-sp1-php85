@@ -213,7 +213,7 @@ while($thread = $db->fetch_array($query)) {
 		$thread['folder'] = 'lock_folder.gif';
 	} else {
 		$thread['folder'] = 'folder.gif';
-		if($lastvisit < $thread['lastpost'] && !strstr($_COOKIE['oldtopics'], "\t{$thread['tid']}\t")) {
+		if($lastvisit < $thread['lastpost'] && !strstr(isset($_COOKIE['oldtopics']) ? $_COOKIE['oldtopics'] : '', "\t{$thread['tid']}\t")) {
 			$thread['new'] = 1;
 			$thread['folder'] = 'red_'.$thread['folder'];
 		} else {

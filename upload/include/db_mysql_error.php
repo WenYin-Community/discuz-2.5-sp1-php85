@@ -95,7 +95,7 @@ if($dberrno == 1114) {
 		if(!in_array($dberrno, $errnos)) {
 			$errorlogs .= "$timestamp\t$dberrno\n";
 			echo "<br><br>An error report has been dispatched to our administrator.";
-			if(function_exists('sendmail')) @sendmail($GLOBALS['adminemail'], '[Discuz!] MySQL Error Report',
+			if(function_exists('sendmail') && defined('TPLDIR')) @sendmail($GLOBALS['adminemail'], '[Discuz!] MySQL Error Report',
 					"There seems to have been a problem with the database of your Discuz! Board\n\n".
 					strip_tags($errmsg)."\n\n".
 					"Please check-up your MySQL server and forum scripts, similar errors will not be reported again in recent 24 hours\n".

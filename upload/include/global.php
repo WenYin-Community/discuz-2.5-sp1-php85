@@ -166,8 +166,8 @@ function isemail($email) {
 }
 
 function language($file, $templateid = 0, $tpldir = '') {
-	$tpldir = $tpldir ? $tpldir : TPLDIR;
-	$templateid = $templateid ? $templateid : TEMPLATEID;
+	$tpldir = $tpldir ? $tpldir : (defined('TPLDIR') ? TPLDIR : './templates/default');
+	$templateid = $templateid ? $templateid : (defined('TEMPLATEID') ? TEMPLATEID : 1);
 
 	$languagepack = DISCUZ_ROOT.'./'.$tpldir.'/'.$file.'.lang.php';
 	if(file_exists($languagepack)) {
@@ -344,12 +344,12 @@ function submitcheck($var, $allowget = 0) {
 function template($file, $templateid = 0, $tpldir = '') {
 	global $tplrefresh;
 
-	$tpldir = $tpldir ? $tpldir : TPLDIR;
-	$templateid = $templateid ? $templateid : TEMPLATEID;
+	$tpldir = $tpldir ? $tpldir : (defined('TPLDIR') ? TPLDIR : './templates/default');
+	$templateid = $templateid ? $templateid : (defined('TEMPLATEID') ? TEMPLATEID : 1);
 
 	$tplfile = DISCUZ_ROOT.'./'.$tpldir.'/'.$file.'.htm';
 	$objfile = DISCUZ_ROOT.'./forumdata/templates/'.$templateid.'_'.$file.'.tpl.php';
-	if(TEMPLATEID != 1 && $templateid != 1 && !file_exists($tplfile)) {
+	if((defined('TEMPLATEID') ? TEMPLATEID : 1) != 1 && $templateid != 1 && !file_exists($tplfile)) {
 		return template($file, 1, './templates/default/');
 	}
 	if($tplrefresh == 1 || ($tplrefresh > 1 && substr($GLOBALS['timestamp'], -1) > $tplrefresh)) {

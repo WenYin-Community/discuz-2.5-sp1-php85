@@ -107,9 +107,15 @@ $_DSESSION = $_DCACHE = array();
 
 $cachelost = (@include DISCUZ_ROOT.'./forumdata/cache/cache_settings.php') ? '' : 'settings';
 
-@extract((array)$_DCACHE['settings'], EXTR_OVERWRITE);
-if(!is_array($_DCACHE['settings'])) {
+if(!isset($_DCACHE['settings']) || !is_array($_DCACHE['settings'])) {
 	$_DCACHE['settings'] = array();
+}
+@extract($_DCACHE['settings'], EXTR_OVERWRITE);
+if(!isset($topicperpage)) {
+	$topicperpage = 20;
+}
+if(!isset($postperpage)) {
+	$postperpage = 10;
 }
 
 $tables = array('access', 'admingroups', 'adminsessions', 'attachments', 'attachtypes', 'announcements', 'banned', 'bbcodes', 'caches','failedlogins', 'favorites','forumlinks', 'forums', 'karmalog', 'members', 'onlinelist', 'polls', 'posts', 'ranks', 'searchindex', 'sessions', 'settings','smilies', 'stats', 'styles', 'stylevars', 'subscriptions', 'templates', 'threads', 'pms', 'usergroups', 'words', 'buddys','plugins','plugins_settings'); 

@@ -58,6 +58,7 @@ podman logs -f discuz25-mysql
 
 - **修改代码后**：无需重启，`$tplrefresh = 1` 会自动重编译模板。若修改了语言包，请到后台“更新缓存”。
 - **重启 php 容器后必须重启 nginx**：nginx 启动时解析 `php` 上游地址并缓存，容器 IP 变化会导致 502。
+- **访问后台首页会自动删除 `install.php`**：这是 Discuz 自带的安全特性（`admin/home.php`）。若仍需安装程序，用 `git checkout HEAD -- upload/install.php` 恢复；生产环境安装完成后本来就应该删除它。
 - **缓存写不进去**：确认 `upload/forumdata/`、`cache/`、`templates/` 可由 uid 1000 写入（`userns_mode: keep-id` 已处理归属）。
 - **中文乱码**：确认数据库/连接字符集为 `gbk`（`docker/php-fpm.conf` 与 `podman-compose.yml` 已固定）。
 

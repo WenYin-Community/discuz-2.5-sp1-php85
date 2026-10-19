@@ -78,6 +78,7 @@ rm -f upload/forumdata/cache/*.php upload/forumdata/templates/*.tpl.php
 - `dinterpolate()` 取代了语言包的 `eval()`；它支持裸键，但不会转换 `{LF}`（与原行为一致）。
 - 密码仍是 md5（兼容老用户）；后台二次密码比较已用 `hash_equals()`。
 - 附件上传目录禁止执行脚本（nginx 已配置），上传白名单为空时回退内置白名单。
+- **访问后台首页（`admincp.php?action=home`）会自动删除源码目录里的 `install.php`**（`admin/home.php` 的安全特性）。冒烟测试后台后若发现 `install.php` 消失，用 `git checkout HEAD -- upload/install.php` 恢复；生产部署则应在安装完成后主动删除它。
 
 ## 改动前先读
 

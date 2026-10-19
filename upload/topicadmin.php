@@ -22,6 +22,8 @@ require_once DISCUZ_ROOT.'./include/post.php';
 $discuz_action = 151;
 
 $tid   = $tid ? $tid :'';
+$fid   = isset($fid) ? $fid : 0;
+$action = isset($action) ? $action : '';
 $page  = intval($page);
 $fpage = intval($fpage);
 

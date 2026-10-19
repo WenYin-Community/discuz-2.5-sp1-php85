@@ -18,6 +18,10 @@ define('CURRSCRIPT',  'post');
 
 require './include/common.php';
 
+if(!is_array($forum)) {
+	showmessage($tid ? 'thread_nonexistence' : 'forum_nonexistence');
+}
+
 $ismoderator = modcheck($discuz_user);
 $postcredits = $forum['postcredits'] != -1 ? $forum['postcredits'] : $postcredits;
 $replycredits = $forum['replycredits'] != -1 ? $forum['replycredits'] : $replycredits;
@@ -50,7 +54,7 @@ if(!$forum['allowview']) {
 	}
 }
 
-if($thread['creditsrequire'] && $thread['creditsrequire'] > $credit && !$ismoderator && ($thread['authorid'] !=$discuz_uid)) {
+if(!empty($thread['creditsrequire']) && $thread['creditsrequire'] > $credit && !$ismoderator && (!empty($thread['authorid']) && $thread['authorid'] !=$discuz_uid)) {
 	showmessage('thread_nopermission', NULL, 'HALTED');
 }
 
@@ -59,7 +63,7 @@ if(empty($action)) {
 }
 
 
-if(!$bbcodeoff && !$allowhidecode && preg_match("/\[hide=?\d*\].+?\[\/hide\]/is", $message)) {
+if(empty($bbcodeoff) && !$allowhidecode && preg_match("/\[hide=?\d*\].+?\[\/hide\]/is", isset($message) ? $message : '')) {
 	showmessage('post_hide_nopermission');
 }
 
@@ -79,11 +83,11 @@ require DISCUZ_ROOT.'./include/discuzcode.php';
 require DISCUZ_ROOT.'./include/post.php';
 require DISCUZ_ROOT.'./include/attachment.php';
 
-$subject = $subject ? dhtmlspecialchars(censor(trim($subject))) :'';
-$message = $message ? censor(trim($message)) : '';
+$subject = isset($subject) && $subject ? dhtmlspecialchars(censor(trim($subject))) :'';
+$message = isset($message) && $message ? censor(trim($message)) : '';
 
 $smilies = '';
-if($previewpost || (!$previewpost && !$topicsubmit && !$replysubmit && !$editsubmit)) {
+if(!empty($previewpost) || (empty($previewpost) && empty($topicsubmit) && empty($replysubmit) && empty($editsubmit))) {
 
 	$enctype = $allowpostattach ? 'enctype="multipart/form-data"' : NULL;
 
@@ -109,7 +113,7 @@ if($previewpost || (!$previewpost && !$topicsubmit && !$replysubmit && !$editsub
 		$usesigcheck = 'checked';
 	}
 
-	if($previewpost) {
+	if(!empty($previewpost)) {
 		if (!$_DCACHE['bbcodes']) {
 			require_once DISCUZ_ROOT.'./forumdata/cache/cache_viewthread.php';
 		}
@@ -139,7 +143,7 @@ if($previewpost || (!$previewpost && !$topicsubmit && !$replysubmit && !$editsub
 
 }
 
-if($forum['password'] != $_COOKIE["fidpw$fid"] && $forum['password'] != $_DSESSION["fidpw$fid"] && $forum['password']) {
+if($forum['password'] != (isset($_COOKIE["fidpw$fid"]) ? $_COOKIE["fidpw$fid"] : '') && $forum['password'] != (isset($_DSESSION["fidpw$fid"]) ? $_DSESSION["fidpw$fid"] : '') && $forum['password']) {
 	header("Location: {$boardurl}forumdisplay.php?fid=$fid&sid=$sid");
 	exit();
 }

@@ -243,6 +243,7 @@ while($thread = $db->fetch_array($query)) {
 
 }
 
+$check = array(0 => '', 172800 => '', 86400 => '', 604800 => '', 2592000 => '', 7948800 => '', 15897600 => '', 31536000 => '', 'asc' => '', 'desc' => '', 'digest' => '');
 $check[$filter] = 'selected="selected"';
 $ascdesc == 'ASC' ? $check['asc'] = 'selected="selected"' : $check['desc'] = 'selected="selected"';
 

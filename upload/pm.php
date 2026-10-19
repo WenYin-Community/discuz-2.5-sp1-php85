@@ -19,6 +19,9 @@
 define('CURRSCRIPT',  'pm');
 
 require './include/common.php';
+
+$action = isset($action) ? $action : '';
+$folder = isset($folder) ? $folder : '';
 require DISCUZ_ROOT.'./include/discuzcode.php';
 
 $discuz_action = 101;

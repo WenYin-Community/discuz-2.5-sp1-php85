@@ -28,7 +28,7 @@ function print(){
 	<b>{lang author}: </b>$post[author] &nbsp; &nbsp; <b>{lang time}: </b>$post[dateline]
 	<!--{if $post['subject']}--> &nbsp; &nbsp; <b>{lang subject}: </b>$post[subject]<br><!--{/if}-->
 	<br>$post[message]
-<!--{if $attachelist[$post[pid]]}-->
+<!--{if !empty($attachelist[$post[pid]])}-->
 	<!--{eval $attacount = 0; }-->
 	<blockquote><!--{loop $attachelist[$post[pid]] $vkey $attach}-->
 			{lang attachment} <!--{echo ++$attacount }--> : $attach[attachicon] <a href="attachment.php?aid=$attach[aid]&checkid=$attach[checkid]&download=1" target="_blank">$attach[filename]</a> ($attach['dateline'],&nbsp;$attach[attachsize]

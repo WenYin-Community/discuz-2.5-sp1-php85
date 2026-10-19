@@ -247,7 +247,7 @@ function random($length) {
 	$hash = '';
 	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
 	$max = strlen($chars) - 1;
-	mt_srand((double)microtime() * 1000000);
+	mt_srand((float)microtime() * 1000000);
 	for($i = 0; $i < $length; $i++) {
 		$hash .= $chars[mt_rand(0, $max)];
 	}
@@ -294,7 +294,7 @@ function showstars($num) {
 
 function submitcheck($var, $allowget = 0) {
 	global $_SERVER;
-	if($GLOBALS[$var]) {
+	if(!empty($GLOBALS[$var])) {
 		if($allowget || ($_SERVER['REQUEST_METHOD'] == 'POST' && $GLOBALS['formhash'] == formhash() &&
 			(empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST'])))) {
 			return TRUE;

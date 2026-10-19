@@ -61,9 +61,14 @@ if(!$register_globals || !$magic_quotes_gpc) {
 
 // PHP 8 把“未定义变量/数组下标”从 E_NOTICE 提升为 E_WARNING, 旧代码会在页面上出现大量提示;
 // 这里按 PHP 5 的语义把常用的请求级变量预置为空值, 未提供的参数行为与旧版一致(均为假值)
-$predefined = array('navtitle', 'page', 'goto', 'p', 'action', 'order', 'ascdesc', 'desc', 'keyword',
+// 注意: action / searchid / fid / previewpost 等变量在代码中用 isset() 区分“是否提交”,
+// 不能预置, 否则会改变 isset() 的语义
+$predefined = array('navtitle', 'page', 'goto', 'p', 'order', 'ascdesc', 'desc', 'keyword',
 	'srchmem', 'fpage', 'id', 'urlret', 'signature', 'currtime', 'admins', 'regsubmit', 'statstatus',
-	'searchid', 'pid', 'digest', 'invisible', 'type', 'tid', 'fid');
+	'pid', 'digest', 'invisible', 'type', 'tid', 'topicsubmit',
+	'replysubmit', 'editsubmit', 'subject', 'navigation', 'viewperm', 'usesigcheck', 'urloffcheck',
+	'smileoffcheck', 'smileyoffcheck', 'codeoffcheck', 'poll', 'polloptions', 'ismoderator',
+	'searchsubmit');
 foreach($predefined as $prevar) {
 	if(!isset($$prevar)) {
 		$$prevar = '';

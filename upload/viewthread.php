@@ -22,6 +22,8 @@ require_once DISCUZ_ROOT.'./include/forum.php';
 require_once DISCUZ_ROOT.'./include/discuzcode.php';
 
 $discuz_action = 3;
+$action = isset($action) ? $action : '';
+$highlight = isset($highlight) ? $highlight : '';
 
 if ($tid && $forum){
 	$thread = $forum;

@@ -18,6 +18,8 @@
 define('CURRSCRIPT', 'logging');
 require './include/common.php';
 
+$action = isset($action) ? $action : '';
+
 if($action == 'logout') {
 
 	if($adminid <>0){

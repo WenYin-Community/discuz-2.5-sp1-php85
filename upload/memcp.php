@@ -20,6 +20,7 @@ if(!$discuz_uid) {
 
 if(!isset($action)) {
 
+	$action = '';
 	$query = $db->query("SELECT avatar, avatarwidth, avatarheight FROM $table_members WHERE uid='$discuz_uid'");
 	$avatar = $db->fetch_array($query);
 

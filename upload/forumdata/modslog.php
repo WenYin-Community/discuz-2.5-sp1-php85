@@ -1,1 +1,0 @@
-<?PHP exit("Access Denied"); ?>

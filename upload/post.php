@@ -143,7 +143,7 @@ if(!empty($previewpost) || (empty($previewpost) && empty($topicsubmit) && empty(
 
 }
 
-if($forum['password'] != (isset($_COOKIE["fidpw$fid"]) ? $_COOKIE["fidpw$fid"] : '') && $forum['password'] != (isset($_DSESSION["fidpw$fid"]) ? $_DSESSION["fidpw$fid"] : '') && $forum['password']) {
+if($forum['password'] != (isset($_COOKIE["fidpw$fid"]) ? ($_COOKIE["fidpw$fid"] ?? '') : '') && $forum['password'] != (isset($_DSESSION["fidpw$fid"]) ? $_DSESSION["fidpw$fid"] : '') && $forum['password']) {
 	header("Location: {$boardurl}forumdisplay.php?fid=$fid&sid=$sid");
 	exit();
 }

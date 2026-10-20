@@ -170,9 +170,9 @@ http://www.Discuz.com；北京康盛世纪科技有限公司的官方网站为 http://www.comsenz.c
 error_reporting(7);
 // PHP 8 起 set_magic_quotes_runtime() 已移除, 安装程序无需再做魔术引号设置
 define('IN_DISCUZ', TRUE);
-$action		= isset($_POST['action']) && $_POST['action'] ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : '');
-$language	= isset($_POST['language']) && $_POST['language'] ? $_POST['language'] : (isset($_GET['language']) ? $_GET['language'] : 'chinese_gb2312');
-$PHP_SELF	= (isset($_SERVER['PHP_SELF']) && $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : (isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '')).'?language='.urlencode($language);
+$action		= isset($_POST['action']) && ($_POST['action'] ?? '') ? ($_POST['action'] ?? '') : (isset($_GET['action']) ? ($_GET['action'] ?? '') : '');
+$language	= isset($_POST['language']) && ($_POST['language'] ?? '') ? ($_POST['language'] ?? '') : (isset($_GET['language']) ? ($_GET['language'] ?? '') : 'chinese_gb2312');
+$PHP_SELF	= (isset($_SERVER['PHP_SELF']) && ($_SERVER['PHP_SELF'] ?? '') ? ($_SERVER['PHP_SELF'] ?? '') : (isset($_SERVER['SCRIPT_NAME']) ? ($_SERVER['SCRIPT_NAME'] ?? '') : '')).'?language='.urlencode($language);
 
 @set_time_limit(1000);
 @include DISCUZ_ROOT.'./config.php';
@@ -591,12 +591,12 @@ if(!$action) {
 
 	if(!empty($_POST['saveconfig']) && is_writeable('./config.php')) {
 
-		$dbhost = $_POST['dbhost'];
-		$dbuser = $_POST['dbuser'];
-		$dbpw = $_POST['dbpw'];
-		$dbname = $_POST['dbname'];
-		$adminemail = $_POST['adminemail'];
-		$tablepre = $_POST['tablepre'];
+		$dbhost = ($_POST['dbhost'] ?? '');
+		$dbuser = ($_POST['dbuser'] ?? '');
+		$dbpw = ($_POST['dbpw'] ?? '');
+		$dbname = ($_POST['dbname'] ?? '');
+		$adminemail = ($_POST['adminemail'] ?? '');
+		$tablepre = ($_POST['tablepre'] ?? '');
 
 		$fp = fopen('./config.php', 'r');
 		$configfile = fread($fp, filesize('./config.php'));
@@ -921,10 +921,10 @@ if(!$action) {
 
 } elseif($action == 'install') {
 
-	$username = $_POST['username'];
-	$email = $_POST['email'];
-	$password1 = $_POST['password1'];
-	$password2 = $_POST['password2'];
+	$username = ($_POST['username'] ?? '');
+	$email = ($_POST['email'] ?? '');
+	$password1 = ($_POST['password1'] ?? '');
+	$password2 = ($_POST['password2'] ?? '');
 
 ?>
         <tr>

@@ -40,12 +40,12 @@ $filter_viewperm = 1;	//是否过滤掉含有权限设置的板块的主题
 $enabled ? define('IN_DISCUZ', TRUE) : exit("document.write(\"Access denied. If you'd like to display new threads in html pages,<br>please switch \$enabled to \\\"1\\\" in whatsnew.php and try again.\");");
 
 $timestamp = time();
-$PHP_SELF = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
-$boardurl = 'http://'.$_SERVER['HTTP_HOST'].substr($PHP_SELF, 0, strrpos($PHP_SELF, '/'));
+$PHP_SELF = ($_SERVER['PHP_SELF'] ?? '') ? ($_SERVER['PHP_SELF'] ?? '') : ($_SERVER['SCRIPT_NAME'] ?? '');
+$boardurl = 'http://'.($_SERVER['HTTP_HOST'] ?? '').substr($PHP_SELF, 0, strrpos($PHP_SELF, '/'));
 
-$fidin = addslashes(trim($_GET['fidin']));
-$fidout = addslashes(trim($_GET['fidout']));
-$num_get = $_GET['num'] ? intval($_GET['num']) : 0;
+$fidin = addslashes(trim(($_GET['fidin'] ?? '')));
+$fidout = addslashes(trim(($_GET['fidout'] ?? '')));
+$num_get = ($_GET['num'] ?? '') ? intval(($_GET['num'] ?? '')) : 0;
 $num = $num_get ? ($num_get > $num_max ? $num_max : $num_get) : $num;
 
 if($timestamp % 3 == 1 && @$dir = dir('./forumdata/')) {

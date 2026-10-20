@@ -122,7 +122,7 @@ if(empty($gid)) {
 		$whosonlinestatus = 1;
 
 		$onlineinfo = explode("\t", $onlinerecord);
-		$detailstatus = ((!isset($_COOKIE['onlinedetail']) && $onlineinfo[0] < 500) || ($_COOKIE['onlinedetail'] || $showoldetails == 'yes')) && $showoldetails != 'no';
+		$detailstatus = ((!isset($_COOKIE['onlinedetail']) && $onlineinfo[0] < 500) || (($_COOKIE['onlinedetail'] ?? '') || $showoldetails == 'yes')) && $showoldetails != 'no';
 
 		if($detailstatus) {
 			@include language('actions');

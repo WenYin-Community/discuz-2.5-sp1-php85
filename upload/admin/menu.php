@@ -41,7 +41,7 @@
 		if($expand || $expand == '0') {
 			setcookie('expand_menu', $expand, $timestamp + 2592000, $cookiepath, $cookiedomain);
 		} else {
-			$expand = isset($_COOKIE['expand_menu']) ? $_COOKIE['expand_menu'] : '';
+			$expand = isset($_COOKIE['expand_menu']) ? ($_COOKIE['expand_menu'] ?? '') : '';
 		}
 
 		$pluginsarray = array();

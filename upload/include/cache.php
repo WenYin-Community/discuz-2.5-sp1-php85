@@ -148,6 +148,7 @@ function getcachearray($cachename) {
 			$conditions = "WHERE status='1' ORDER BY displayorder";
 			break;
 		case 'forumlinks':
+			$tightlink_logo = $tightlink_text = '';
 			$table = $GLOBALS['table_forumlinks'];
 			$conditions = "ORDER BY displayorder";
 			break;
@@ -318,15 +319,18 @@ function getcachearray($cachename) {
 			}
 
 		case 'ipbanned':
-			$mark='';
+			$mark = $regexp = '';
 			while($ipband = $db->fetch_array($query)) {
 				$data['expiration'] = $ipband['expiration'];
 				$ip = $ipband['ip1']>0?$ipband['ip1']:'\\d+';
 				$ip .='\\.'.($ipband['ip2']>0?$ipband['ip2']:'\\d+');
 				$ip .='\\.'.($ipband['ip3']>0?$ipband['ip3']:'\\d+');
 				$ip .='\\.'.($ipband['ip4']>0?$ipband['ip4']:'\\d+');
-				$data['regexp'] .= "$mark$ip";
+				$regexp .= "$mark$ip";
 				$mark='|';
+			}
+			if($regexp) {
+				$data['regexp'] = $regexp;
 			}
 			break;
 
@@ -375,6 +379,7 @@ function getcachearray($cachename) {
 }
 
 function getcachevars($data, $type = 'VAR') {
+	$evaluate = '';
 	if (is_array($data) && count($data)) {
 		foreach($data as $key => $val) {
 			$val = str_replace("'", "\\'", $val);

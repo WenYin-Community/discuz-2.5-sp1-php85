@@ -23,9 +23,9 @@ require "./include/db_mysql.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 
-$action = ($_POST['action']) ? $_POST['action'] : $_GET['action'];
-$step = $_GET['step'];
-$start = $_GET['start'];
+$action = (($_POST['action'] ?? '')) ? ($_POST['action'] ?? '') : ($_GET['action'] ?? '');
+$step = ($_GET['step'] ?? '');
+$start = ($_GET['start'] ?? '');
 
 $upgrade0 = <<<EOT
 DROP TABLE IF EXISTS cdb_upgrade;
@@ -610,7 +610,7 @@ function redirect($url) {
 
 function user2id($table, $columnorig = 'username', $columnnew = 'uid', $keepold = FALSE) {
 	extract($GLOBALS, EXTR_SKIP);
-	$startrow = intval($_GET['startrow']);
+	$startrow = intval(($_GET['startrow'] ?? ''));
 	$converted = 0;
 	if(!$startrow) {
 		$db->query("ALTER TABLE $table ADD $columnnew mediumint(8) UNSIGNED NOT NULL AFTER $columnorig");

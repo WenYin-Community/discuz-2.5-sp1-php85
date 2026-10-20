@@ -13,9 +13,9 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 define('IN_ADMINCP',TRUE);
 
 if(empty($_GET['action']) || !empty($_GET['direct'])) {
-	$action = empty($_GET['action']) ? 'home' : $_GET['action'];
-	$extr = $_GET['extr'];
-	$sid = $_COOKIE['sid'] ? $_COOKIE['sid'] : $_GET['sid'];
+	$action = empty($_GET['action']) ? 'home' : ($_GET['action'] ?? '');
+	$extr = ($_GET['extr'] ?? '');
+	$sid = ($_COOKIE['sid'] ?? '') ? ($_COOKIE['sid'] ?? '') : ($_GET['sid'] ?? '');
 	include './admin/tpl/index.php';
 	exit();
 }
@@ -88,7 +88,7 @@ if($action == 'menu') {
 		cpheader();
 		cpmsg('noaccess');
 	}elseif($cpaccess == 1) {
-		if ($_POST['cploginsubmit']){
+		if (($_POST['cploginsubmit'] ?? '')){
 			if ($admin_password && dpassword_verify($admin_password, $discuz_pw)){
 				$cpnologin =3;
 				$db->query("UPDATE $table_adminsessions SET errorlog='-1' WHERE uid='$discuz_uid'");

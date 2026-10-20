@@ -423,8 +423,8 @@ if($mod == 'add') {
 
 		ob_end_clean();
 		header('Content-Encoding: none');
-		header('Content-Type: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'application/octetstream' : 'application/octet-stream'));
-		header('Content-Disposition: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'inline; ' : 'attachment; ').'filename="plug_'.$plugarray['groupkey'].'.txt"');
+		header('Content-Type: '.(strpos(($_SERVER['HTTP_USER_AGENT'] ?? ''), 'MSIE') ? 'application/octetstream' : 'application/octet-stream'));
+		header('Content-Disposition: '.(strpos(($_SERVER['HTTP_USER_AGENT'] ?? ''), 'MSIE') ? 'inline; ' : 'attachment; ').'filename="plug_'.$plugarray['groupkey'].'.txt"');
 		header('Content-Length: '.strlen($plug_export));
 		header('Pragma: no-cache');
 		header('Expires: 0');

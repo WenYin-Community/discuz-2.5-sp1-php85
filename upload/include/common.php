@@ -83,11 +83,11 @@ require DISCUZ_ROOT.'./include/db_'.$database.'.php';
 
 $timestamp = time();
 
-$PHP_SELF = !empty($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : (isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '');
+$PHP_SELF = !empty($_SERVER['PHP_SELF']) ? ($_SERVER['PHP_SELF'] ?? '') : (isset($_SERVER['SCRIPT_NAME']) ? ($_SERVER['SCRIPT_NAME'] ?? '') : '');
 $PHP_SELF = str_replace(array("\r", "\n", '"', "'", '<', '>'), '', $PHP_SELF);
-$httphost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+$httphost = isset($_SERVER['HTTP_HOST']) ? ($_SERVER['HTTP_HOST'] ?? '') : '';
 if(!preg_match('/^(\[[0-9a-fA-F:]+\]|[a-zA-Z0-9\.\-]+)(:[0-9]+)?$/', $httphost)) {
-	$httphost = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost';
+	$httphost = isset($_SERVER['SERVER_NAME']) ? ($_SERVER['SERVER_NAME'] ?? '') : 'localhost';
 }
 $boardurl = 'http://'.$httphost.substr($PHP_SELF, 0, strrpos($PHP_SELF, '/') + 1);
 $discuz_root = DISCUZ_ROOT; 
@@ -100,7 +100,7 @@ if(getenv('HTTP_CLIENT_IP')) {
 } elseif(getenv('REMOTE_ADDR')) {
 	$onlineip = getenv('REMOTE_ADDR');
 } else {
-	$onlineip = $_SERVER['REMOTE_ADDR'];
+	$onlineip = ($_SERVER['REMOTE_ADDR'] ?? '');
 }
 
 $_DSESSION = $_DCACHE = array();
@@ -137,11 +137,11 @@ $db->connect($dbhost, $dbuser, $dbpw, $dbname, $pconnect);
 $db->select_db($dbname);
 unset($dbhost, $dbuser, $dbpw, $dbname, $pconnect);
 
-$sid = isset($_GET['sid']) ? $_GET['sid'] :(isset($_POST['sid']) ? $_POST['sid'] :(isset($_COOKIE['sid']) ? $_COOKIE['sid'] : ''));
+$sid = isset($_GET['sid']) ? ($_GET['sid'] ?? '') :(isset($_POST['sid']) ? ($_POST['sid'] ?? '') :(isset($_COOKIE['sid']) ? ($_COOKIE['sid'] ?? '') : ''));
 
-$discuz_uid = isset($_COOKIE['_discuz_uid']) ? $_COOKIE['_discuz_uid'] : '';
-$discuz_pw = isset($_COOKIE['_discuz_pw']) ? $_COOKIE['_discuz_pw'] : '';
-$discuz_secques = isset($_COOKIE['_discuz_secques']) ? $_COOKIE['_discuz_secques'] : '';
+$discuz_uid = isset($_COOKIE['_discuz_uid']) ? ($_COOKIE['_discuz_uid'] ?? '') : '';
+$discuz_pw = isset($_COOKIE['_discuz_pw']) ? ($_COOKIE['_discuz_pw'] ?? '') : '';
+$discuz_secques = isset($_COOKIE['_discuz_secques']) ? ($_COOKIE['_discuz_secques'] ?? '') : '';
 
 $newpm = $newpmexists = $sessionexists = $adminid = $adminglobal = $user_lastactivity = $is_sessionuser = 0;
 $ipbanned = $accessmasks = $credit = 0;
@@ -204,7 +204,7 @@ if($statstatus) {
 	require DISCUZ_ROOT.'./include/counter.php';
 }
 
-if(!isset($_COOKIE['sid']) || $sid != $_COOKIE['sid']) {
+if(!isset($_COOKIE['sid']) || $sid != ($_COOKIE['sid'] ?? '')) {
 	setcookie('sid', $sid, $timestamp + 2592000, $cookiepath, $cookiedomain, false, true);
 }
 
@@ -236,8 +236,8 @@ if(isset($forum) && is_array($forum)) {
 	unset($forumkey);
 }
 
-$styleid = !empty($_GET['styleid']) ? $_GET['styleid'] :
-		(!empty($_POST['styleid']) ? $_POST['styleid'] :
+$styleid = !empty($_GET['styleid']) ? ($_GET['styleid'] ?? '') :
+		(!empty($_POST['styleid']) ? ($_POST['styleid'] ?? '') :
 		(!empty($_DSESSION['styleid']) ? $_DSESSION['styleid'] :
 		(isset($_DCACHE['settings']['styleid']) ? $_DCACHE['settings']['styleid'] : 0)));
 

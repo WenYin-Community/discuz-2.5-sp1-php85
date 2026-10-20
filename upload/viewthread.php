@@ -51,7 +51,7 @@ if (defined('ViewLastPost')) {
 
 $tid = $thread['tid'];
 $codecount = 0;
-$oldtopics = isset($_COOKIE['oldtopics']) && $_COOKIE['oldtopics'] ? $_COOKIE['oldtopics'] : "\t";
+$oldtopics = isset($_COOKIE['oldtopics']) && ($_COOKIE['oldtopics'] ?? '') ? ($_COOKIE['oldtopics'] ?? '') : "\t";
 if(!strstr($oldtopics, "\t$tid\t")) {
 	$oldtopics .= "$tid\t";
 	setcookie('oldtopics', $oldtopics, $timestamp + 900, $cookiepath, $cookiedomain);
@@ -81,7 +81,7 @@ if($thread['creditsrequire'] && $thread['creditsrequire'] > $credit && !$ismoder
 	showmessage('thread_nopermission', NULL, 'HALTED');
 }
 
-if($forum['password'] && $forum['password'] != $_COOKIE["fidpw$fid"]) {
+if($forum['password'] && $forum['password'] != ($_COOKIE["fidpw$fid"] ?? '')) {
 	header("Location: {$boardurl}forumdisplay.php?fid=$fid&sid=$sid");
 	exit();
 }

@@ -52,7 +52,7 @@ if($dberrno == 1114) {
 
 } else {
 
-	$discuz_user = !empty($GLOBALS['_DSESSION']['discuz_user']) ? $GLOBALS['_DSESSION']['discuz_user'] : (isset($_COOKIE['_discuz_user']) ? $_COOKIE['_discuz_user'] : '');
+	$discuz_user = !empty($GLOBALS['_DSESSION']['discuz_user']) ? $GLOBALS['_DSESSION']['discuz_user'] : (isset($_COOKIE['_discuz_user']) ? ($_COOKIE['_discuz_user'] ?? '') : '');
 	if($message) {
 		$errmsg = "<b>Discuz! info</b>: $message\n\n";
 	}

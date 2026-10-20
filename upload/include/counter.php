@@ -14,7 +14,7 @@ if(!defined('IN_DISCUZ')) {
         exit('Access Denied');
 }
 
-$visitor['agent'] = $_SERVER['HTTP_USER_AGENT'];
+$visitor['agent'] = ($_SERVER['HTTP_USER_AGENT'] ?? '');
 $visitor['month'] = date('Ym');
 $visitor['week']  = date('w');
 $visitor['hour']  = date('H');

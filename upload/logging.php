@@ -44,7 +44,7 @@ if($action == 'logout') {
 		}
 
 		$year_checked = $day_checked = $hour_checked = $task_checked = $month_checked = '';
-		switch(isset($_COOKIE['_cookietime']) ? $_COOKIE['_cookietime'] : '') {
+		switch(isset($_COOKIE['_cookietime']) ? ($_COOKIE['_cookietime'] ?? '') : '') {
 			case '31536000': $year_checked = 'checked'; break;
 			case '86400': $day_checked = 'checked'; break;
 			case '3600': $hour_checked = 'checked'; break;
@@ -119,10 +119,10 @@ if($action == 'logout') {
 			}
 
 			$styleid = empty($_POST['styleid']) ? ($styleidmem ? $styleidmem :
-					$_DCACHE['settings']['styleid']) : $_POST['styleid'];
+					$_DCACHE['settings']['styleid']) : ($_POST['styleid'] ?? '');
 			
-			$_cookietime = isset($_POST['cookietime']) ? $_POST['cookietime'] :
-					(!empty($_COOKIE['_cookietime']) ? $_COOKIE['_cookietime'] : 0);
+			$_cookietime = isset($_POST['cookietime']) ? ($_POST['cookietime'] ?? '') :
+					(!empty($_COOKIE['_cookietime']) ? ($_COOKIE['_cookietime'] ?? '') : 0);
 			$cookietime = empty($_cookietime) ? 0 : $timestamp + $_cookietime;
 
 			setcookie('_cookietime', $_cookietime, $timestamp + 31536000, $cookiepath, $cookiedomain);

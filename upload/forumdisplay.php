@@ -58,7 +58,7 @@ if($forum['viewperm'] && !strstr($forum['viewperm'], "\t$groupid\t") && !$forum[
 	showmessage('forum_nopermission', NULL, 'HALTED');
 }
 
-if(!empty($forum['password']) && $forum['password'] != $_COOKIE["fidpw$fid"]) {
+if(!empty($forum['password']) && $forum['password'] != ($_COOKIE["fidpw$fid"] ?? '')) {
 	include template('forumdisplay_passwd');
 	exit();
 }
@@ -119,7 +119,7 @@ $ascdesc == 'ASC' ? $forumdisplayadd .= "&ascdesc=$ascdesc" : $ascdesc = 'DESC';
 if($whosonlinestatus == 2 || $whosonlinestatus == 3) {
 	$whosonlinestatus = 0;
 	$onlineinfo = explode("\t", $onlinerecord);
-	$detailstatus = ((!isset($_COOKIE['onlinedetail']) && $onlineinfo[0] < 500) || ($_COOKIE['onlinedetail'] || $showoldetails == 'yes')) && $showoldetails != 'no';
+	$detailstatus = ((!isset($_COOKIE['onlinedetail']) && $onlineinfo[0] < 500) || (($_COOKIE['onlinedetail'] ?? '') || $showoldetails == 'yes')) && $showoldetails != 'no';
 
 	if($detailstatus) {
 		updatesession();
@@ -213,7 +213,7 @@ while($thread = $db->fetch_array($query)) {
 		$thread['folder'] = 'lock_folder.gif';
 	} else {
 		$thread['folder'] = 'folder.gif';
-		if($lastvisit < $thread['lastpost'] && !strstr(isset($_COOKIE['oldtopics']) ? $_COOKIE['oldtopics'] : '', "\t{$thread['tid']}\t")) {
+		if($lastvisit < $thread['lastpost'] && !strstr(isset($_COOKIE['oldtopics']) ? ($_COOKIE['oldtopics'] ?? '') : '', "\t{$thread['tid']}\t")) {
 			$thread['new'] = 1;
 			$thread['folder'] = 'red_'.$thread['folder'];
 		} else {

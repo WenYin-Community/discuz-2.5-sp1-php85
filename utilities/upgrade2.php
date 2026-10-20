@@ -24,9 +24,9 @@ require "./include/discuzcode.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 
-$action = ($HTTP_POST_VARS['action']) ? $HTTP_POST_VARS['action'] : $HTTP_GET_VARS['action'];
-$step = $HTTP_GET_VARS['step'];
-$start = $HTTP_GET_VARS['start'];
+$action = (($HTTP_POST_VARS['action'] ?? '')) ? ($HTTP_POST_VARS['action'] ?? '') : ($HTTP_GET_VARS['action'] ?? '');
+$step = ($HTTP_GET_VARS['step'] ?? '');
+$start = ($HTTP_GET_VARS['start'] ?? '');
 
 $upgrade1 = <<<EOT
 

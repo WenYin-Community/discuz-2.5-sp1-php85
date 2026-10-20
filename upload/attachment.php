@@ -28,7 +28,7 @@ if ($useimagemessage && stristr($attach['filetype'],"image")){
 	if ($imagesize) $isimage = 1;
 }
 
-if($attachrefcheck && preg_replace("/https?:\/\/([^\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) != $_SERVER['HTTP_HOST']) {
+if($attachrefcheck && preg_replace("/https?:\/\/([^\/]+).*/i", "\\1", ($_SERVER['HTTP_REFERER'] ?? '')) != ($_SERVER['HTTP_HOST'] ?? '')) {
 	showimgmessage('attachment_referer_invalid');
 }
 
@@ -71,7 +71,7 @@ if(is_readable($filename) && $attach) {
 	header('Content-Length: '.$filesize);
 
     if (!$download && $isimage){ 
-		header('Content-Disposition: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'inline; ' : 'attachment; ').'filename='.$attach['filename']); 
+		header('Content-Disposition: '.(strpos(($_SERVER['HTTP_USER_AGENT'] ?? ''), 'MSIE') ? 'inline; ' : 'attachment; ').'filename='.$attach['filename']); 
 		header('Content-Type: '.$attach['filetype']); 
 		readfile($filename); 
     }else{ 

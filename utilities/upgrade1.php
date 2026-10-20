@@ -21,7 +21,7 @@ require "./lib/$database.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 
-$action = ($HTTP_POST_VARS["action"]) ? $HTTP_POST_VARS["action"] : $HTTP_GET_VARS["action"];
+$action = (($HTTP_POST_VARS["action"] ?? '')) ? ($HTTP_POST_VARS["action"] ?? '') : ($HTTP_GET_VARS["action"] ?? '');
 
 $upgrade = <<<EOT
 

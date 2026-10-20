@@ -106,7 +106,7 @@ function unhtmlspecialchars($string) {
 function dreferer() {
 	global $referer;
 
-	$HTTP_REFERER = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+	$HTTP_REFERER = isset($_SERVER['HTTP_REFERER']) ? ($_SERVER['HTTP_REFERER'] ?? '') : '';
 	if(empty($referer) && $HTTP_REFERER) {
 		$referer = preg_replace("/(?:([\?&]sid\=[a-z0-9]{8}&?))/i", '', $HTTP_REFERER);
 		$referer = substr($referer, -1) == '?' ? substr($referer, 0, -1) : $referer;
@@ -119,7 +119,7 @@ function dreferer() {
 	// 只允许跳回本站, 防止借助 Referer 构造开放重定向
 	if(preg_match("#^([a-z]+:)?//#i", $referer)) {
 		$refhost = preg_replace("#^([a-z]+:)?//([^/]+).*#i", "\\2", $referer);
-		$curhost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+		$curhost = isset($_SERVER['HTTP_HOST']) ? ($_SERVER['HTTP_HOST'] ?? '') : '';
 		if(strcasecmp($refhost, $curhost) !== 0) {
 			$referer = 'index.php';
 		}
@@ -326,13 +326,13 @@ function showstars($num) {
 function submitcheck($var, $allowget = 0) {
 	global $_SERVER;
 	if(!empty($GLOBALS[$var])) {
-		$ispost = isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST';
+		$ispost = isset($_SERVER['REQUEST_METHOD']) && ($_SERVER['REQUEST_METHOD'] ?? '') == 'POST';
 		if(!$ispost && !$allowget) {
 			showmessage('submit_invalid');
 		}
 		// 安全加固: GET 与 POST 一律校验 formhash 与来源主机(旧版 GET 会跳过令牌)
 		if(!empty($GLOBALS['formhash']) && $GLOBALS['formhash'] == formhash() &&
-			(empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST']))) {
+			(empty($_SERVER['HTTP_REFERER']) || preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", ($_SERVER['HTTP_REFERER'] ?? '')) == preg_replace("/([^\:]+).*/", "\\1", ($_SERVER['HTTP_HOST'] ?? '')))) {
 			return TRUE;
 		}
 		showmessage('submit_invalid');

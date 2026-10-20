@@ -21,9 +21,9 @@ require "./include/db_mysql.php";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 
-$action = ($_POST['action']) ? $_POST['action'] : $_GET['action'];
-$step = $_GET['step'];
-$start = $_GET['start'];
+$action = (($_POST['action'] ?? '')) ? ($_POST['action'] ?? '') : ($_GET['action'] ?? '');
+$step = ($_GET['step'] ?? '');
+$start = ($_GET['start'] ?? '');
 
 if(!$action) {
 	echo"本程序用于升级 Discuz! 2.2F 论坛帖子到 Discuz! 2.5 ,请确认之前已经顺利完成了论坛的升级。<hr size=1 color=red><br>";

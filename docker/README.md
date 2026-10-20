@@ -19,11 +19,12 @@ podman-compose down -v        # 停止并删除容器（./mysql-data 仍在宿�
 |---|---|
 | Web | `127.0.0.1:8081` |
 | MySQL | `127.0.0.1:3317` |
-| 数据库 | `discuz25`（字符集 `gbk`） |
-| 应用账号 | `discuz25` / `change_me_dev` |
-| root 密码 | `change_me_root` |
+| 数据库 | `MYSQL_DATABASE`（字符集 `gbk`） |
+| 应用账号 | `MYSQL_USER` / `MYSQL_PASSWORD` |
+| root 密码 | `MYSQL_ROOT_PASSWORD` |
 
-`upload/config.php` 已指向上面的容器服务名 `mysql`。这是本地开发凭据，不要用于公网部署。
+数据库凭据放在 `docker/.env`（由 `.env.example` 复制后填写，**不纳入版本控制**）。
+安装向导中的数据库主机填 `mysql`，库名/用户/密码填 `.env` 中的值。`upload/config.php` 由安装程序写入。
 
 ## 首次安装
 
@@ -44,7 +45,7 @@ podman-compose up -d
 或在容器内执行 SQL：
 
 ```bash
-podman exec -i discuz25-mysql mysql -uroot -pchange_me_root discuz25 < dump.sql
+podman exec -i discuz25-mysql mysql -uroot -p discuz25 < dump.sql   # 按提示输入 root 密码
 ```
 
 ## 常用排查

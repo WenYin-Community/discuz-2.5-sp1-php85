@@ -15,17 +15,17 @@ services:
       - --skip-name-resolve
       - --max_allowed_packet=32M
     environment:
-      MYSQL_ROOT_PASSWORD: change_me_root
-      MYSQL_DATABASE: discuz25
-      MYSQL_USER: discuz25
-      MYSQL_PASSWORD: change_me_dev
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       TZ: Asia/Shanghai
     ports:
       - "3317:3306"
     volumes:
       - ./mysql-data:/var/lib/mysql:Z
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pchange_me_root"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 5s
       timeout: 5s
       retries: 20

@@ -11,8 +11,9 @@ upload/attachments/*
 upload/customavatars/*
 !upload/customavatars/index.htm
 
-# 容器数据
+# 容器数据与本地凭据
 docker/mysql-data/
+docker/.env
 
 # 编辑器/系统
 *.swp

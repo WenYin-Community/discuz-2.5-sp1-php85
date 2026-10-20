@@ -5,11 +5,11 @@
 // [EN]	Set below parameters according to your account information provided by your hosting
 // [CH] 以下变量请根据空间商提供的账号参数修改,如有疑问,请联系服务器提供商
 
-	$dbhost = 'mysql';   			// database server 
-	$dbuser = 'discuz25';   				// database username 
-	$dbpw = 'change_me_dev';   					// database password 
-	$dbname = 'discuz25';					// database name
-	$adminemail = 'admin@your.com';		// admin's email
+	$dbhost = 'localhost';   			// database server 
+	$dbuser = 'username';   				// database username 
+	$dbpw = 'password';   					// database password 
+	$dbname = 'dbname';					// database name
+	$adminemail = 'admin@example.com';		// admin's email
 	$dbreport = 0;						// send db error report? 1=yes
 					
 
